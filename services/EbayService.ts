@@ -1,270 +1,652 @@
-import {configDotenv} from "dotenv";
-import {
-    EbayEbayFindItemsByKeywordsResponse,
-    EbayItem,
-    EbayItemDetailResponse,
-    EbayLocalizedAspect,
-    EbayOAuthTokenResponse,
-    EbayXmlConditionDescriptor,
-    EbayXmlConditionDetails
-} from "#types/ebay";
-import type {Card} from "#types/payload";
-import {conditionDescriptor} from "#constants/conditionDescriptors";
-import {graders} from "#constants/graders";
-import {grades} from "#constants/grades";
-import {ungradedConditions} from "#constants/ungradedConditions";
+import "dotenv/config";
+
+import fetch from "node-fetch";
+
+const SANDBOX_URL =
+    "https://api.sandbox.ebay.com/ws/api.dll";
+
+const PRODUCTION_URL =
+    "https://api.ebay.com/ws/api.dll";
+
+const ENVIRONMENT =
+    (process.env.EBAY_ENVIRONMENT || "sandbox")
+        .toLowerCase();
+
+const SITE_ID = "77";
+
+const COMPATIBILITY_LEVEL = "1477";
+
+const SANDBOX_TOKEN =
+    process.env.EBAY_AUTH_TOKEN_SANDBOX;
+
+const PRODUCTION_TOKEN =
+    process.env.EBAY_AUTH_TOKEN_PRODUCTION;
+
+const SANDBOX_APP_ID =
+    process.env.EBAY_APP_ID_SANDBOX;
+
+const SANDBOX_DEV_ID =
+    process.env.EBAY_DEV_ID_SANDBOX;
+
+const SANDBOX_CERT_ID =
+    process.env.EBAY_CERT_ID_SANDBOX;
+
+const PRODUCTION_APP_ID =
+    process.env.EBAY_APP_ID_PRODUCTION;
+
+const PRODUCTION_DEV_ID =
+    process.env.EBAY_DEV_ID_PRODUCTION;
+
+const PRODUCTION_CERT_ID =
+    process.env.EBAY_CERT_ID_PRODUCTION;
 
 
-configDotenv()
-
-type EbayEnv = 'sandbox' | 'production';
-
-export default class EbayService {
-    /* SANDBOX */
-    static EBAY_API_URL_SANDBOX: string = 'https://api.sandbox.ebay.com/ws/api.dll';
-    static EBAY_APP_ID_SANDBOX: string = process.env.EBAY_APP_ID_SANDBOX || '';
-    static EBAY_DEV_ID_SANDBOX: string = process.env.EBAY_DEV_ID_SANDBOX || '';
-    static EBAY_CERT_ID_SANDBOX: string = process.env.EBAY_CERT_ID_SANDBOX || '';
-    static EBAY_AUTH_TOKEN_SANDBOX: string = process.env.EBAY_AUTH_TOKEN_SANDBOX || '';
-
-    /* PRODUCTION */
-    static EBAY_API_URL_PROD: string = 'https://api.ebay.com/ws/api.dll';
-    static EBAY_APP_ID_PROD: string = process.env.EBAY_APP_ID_PROD || '';
-    static EBAY_DEV_ID_PROD: string = process.env.EBAY_DEV_ID_PROD || '';
-    static EBAY_CERT_ID_PROD: string = process.env.EBAY_CERT_ID_PROD || '';
-    static EBAY_AUTH_TOKEN_PROD: string = process.env.EBAY_AUTH_TOKEN_PROD || '';
-
-    // SANDBOX OR PRODUCTION
-    static EBAY_ENV: EbayEnv = 'production';
-
-    /* COMPUTED ENV WITH EBAY ENV */
-    static EBAY_API_URL: string = this.EBAY_ENV === 'sandbox' ? this.EBAY_API_URL_SANDBOX : this.EBAY_API_URL_PROD;
-    static EBAY_APP_ID: string = this.EBAY_ENV === 'sandbox' ? this.EBAY_APP_ID_SANDBOX : this.EBAY_APP_ID_PROD;
-    static EBAY_DEV_ID: string = this.EBAY_ENV === 'sandbox' ? this.EBAY_DEV_ID_SANDBOX : this.EBAY_DEV_ID_PROD;
-    static EBAY_CERT_ID: string = this.EBAY_ENV === 'sandbox' ? this.EBAY_CERT_ID_SANDBOX : this.EBAY_CERT_ID_PROD;
-    static EBAY_AUTH_TOKEN: string = this.EBAY_ENV === 'sandbox' ? this.EBAY_AUTH_TOKEN_SANDBOX : this.EBAY_AUTH_TOKEN_PROD
+type EbayConfig = {
+    environment: "sandbox" | "production";
+    url: string;
+    token: string;
+    appId: string;
+    devId: string;
+    certId: string;
+};
 
 
-    static EBAY_OAUTH_TOKEN: string | undefined = undefined;
+function getConfig(): EbayConfig {
 
-    public static setEnv(env: EbayEnv): void {
-        this.EBAY_ENV = env;
-    }
+    if (ENVIRONMENT === "production") {
 
-    public static async addItem(xmlData: string): Promise<void> {
-        const response: Response = await fetch(this.EBAY_API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'text/xml',
-                'X-EBAY-API-SITEID': '71',
-                'X-EBAY-API-CALL-NAME': 'AddItem',
-                'X-EBAY-API-COMPATIBILITY-LEVEL': '967',
-                'X-EBAY-API-APP-NAME': this.EBAY_APP_ID,
-                'X-EBAY-API-DEV-NAME': this.EBAY_DEV_ID,
-                'X-EBAY-API-CERT-NAME': this.EBAY_CERT_ID,
-            },
-            body: xmlData,
-        });
-
-        const textResponse: string = await response.text();
-        const hasError: boolean = !textResponse.includes('Fees');
-
-        if(hasError) {
-            console.error("Failed to add item to Ebay", textResponse);
-        } else {
-            console.log("Ebay Item Added Successfully");
-        }
-    }
-
-    public static async getOAuthToken(): Promise<string | undefined> {
-        const credentials: string = Buffer.from(`${this.EBAY_APP_ID}:${this.EBAY_CERT_ID}`).toString('base64');
-        const url: string = 'https://api.ebay.com/identity/v1/oauth2/token';
-
-        try {
-            const response: Response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': `Basic ${credentials}`,
-                },
-                body: 'grant_type=client_credentials&scope=https://api.ebay.com/oauth/api_scope',
-            });
-
-            const data: EbayOAuthTokenResponse = await response.json();
-            if (data.access_token) {
-                console.log('OAuth Token obtained successfully');
-                return data.access_token;
-            } else {
-                console.error('Failed to obtain OAuth Token', data);
-                return undefined;
-            }
-        } catch (error) {
-            console.error('Error while fetching OAuth Token:', error);
-            return undefined;
-        }
-    }
-
-    public static async setOAuthToken(): Promise<void> {
-        if (!this.EBAY_OAUTH_TOKEN) {
-            this.EBAY_OAUTH_TOKEN = await this.getOAuthToken();
-        }
-    }
-
-    public static async findSimilarItems(keywords: string): Promise<EbayItem[] | undefined> {
-        const encodedKeywords: string = encodeURIComponent(keywords);
-
-        const endpoint: string = `https://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME=findItemsByKeywords&SERVICE-VERSION=1.0.0&SECURITY-APPNAME=${this.EBAY_APP_ID}&GLOBAL-ID=EBAY-FR&keywords=${encodedKeywords}&RESPONSE-DATA-FORMAT=JSON`;
-
-        const response: Response = await fetch(endpoint, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        });
-
-        const jsonResponse: EbayEbayFindItemsByKeywordsResponse = await response.json();
-        return jsonResponse.findItemsByKeywordsResponse[0].searchResult[0].item
-    }
-
-    public static async findItemDetails(itemId: string): Promise<EbayItemDetailResponse | undefined> {
-        if (!this.EBAY_OAUTH_TOKEN) {
-            await this.setOAuthToken();
+        if (!PRODUCTION_TOKEN) {
+            throw new Error(
+                "EBAY_AUTH_TOKEN_PRODUCTION wurde nicht gefunden."
+            );
         }
 
-        const url: string = `https://api.ebay.com/buy/browse/v1/item/v1|${itemId}|0?fieldgroups=ADDITIONAL_SELLER_DETAILS`;
-        const response: Response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${this.EBAY_OAUTH_TOKEN}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (!response.ok) {
-            console.error('Failed to get item details', await response.text());
-            return undefined;
+        if (!PRODUCTION_APP_ID) {
+            throw new Error(
+                "EBAY_APP_ID_PRODUCTION wurde nicht gefunden."
+            );
         }
 
-        return await response.json();
-    }
-
-    public static async findCardSpecifics(card: Card): Promise<EbayLocalizedAspect[] | null> {
-        const keywords: string[] = [
-            `${card.name} ${card.number} ${card.set} ${card.language}`,
-            (`${card.set} ${card.number}`).toLowerCase(),
-            (`${card.name} ${card.set}`).toLowerCase(),
-            `pokemon ${card.number}`
-        ];
-
-
-        let items: EbayItem[] | undefined;
-
-        for (const keyword of keywords) {
-            items = await this.findSimilarItems(keyword);
-
-            console.log(`Using keywords "${keyword}", found ${items?.length || 0} items`);
+        if (!PRODUCTION_DEV_ID) {
+            throw new Error(
+                "EBAY_DEV_ID_PRODUCTION wurde nicht gefunden."
+            );
         }
 
-
-        if (!items || items.length === 0) {
-            console.error('Failed to find similar items');
-            return null;
+        if (!PRODUCTION_CERT_ID) {
+            throw new Error(
+                "EBAY_CERT_ID_PRODUCTION wurde nicht gefunden."
+            );
         }
-
-        // Limit the search to the first 3 listings or fewer
-        const limit: number = Math.min(items.length, 1);
-
-        await this.setOAuthToken();
-
-        const detailsList: EbayItemDetailResponse[] = [];
-        let foundGameSpecific: boolean = false;
-
-
-        for (let i = 0; i < items.length; i++) {
-            const item: EbayItem = items[i];
-            const itemId: string = item.itemId[0];
-            const details: EbayItemDetailResponse | undefined = await this.findItemDetails(itemId);
-
-            if (details && details.localizedAspects) {
-                detailsList.push(details);
-
-                // Check if 'Game' is among the aspects and mark as found
-                const hasGameSpecifics: boolean = details.localizedAspects.some(aspect => aspect.name === 'Jeu');
-                foundGameSpecific = foundGameSpecific || hasGameSpecifics;
-
-                // If 'Game' is found and the limit is reached or exceeded, stop the loop
-                if (foundGameSpecific && i >= (limit - 1)) {
-                    break;
-                }
-            }
-        }
-
-        if (detailsList.length === 0) {
-            console.error('Failed to find item details for any of the items');
-            return null;
-        }
-
-        // Merge all 'localizedAspects' avoiding duplicates
-        const allLocalizedAspects: EbayLocalizedAspect[] = [];
-        const aspectNames: Set<string> = new Set();
-
-        detailsList.forEach(detail => {
-            if(detail.localizedAspects) {
-                detail.localizedAspects.forEach(aspect => {
-                    const aspectNameWithoutSpaces: string = aspect.name.replace(/\s/g, '');
-                    if (!aspectNames.has(aspectNameWithoutSpaces)) {
-                        allLocalizedAspects.push(aspect);
-                        aspectNames.add(aspectNameWithoutSpaces);
-                    }
-                });
-            }
-        });
-
-        return allLocalizedAspects;
-    }
-
-    public static getGradedConditionDetails(card: Card): EbayXmlConditionDetails {
-        const conditionDescriptors: EbayXmlConditionDescriptor[] = []
-
-        const grader: number | undefined = card.gradeCompany ? graders[card.gradeCompany] : undefined;
-        const grade: number | undefined = card.grade ? grades[card.grade] : undefined;
-
-        if(grader) {
-            conditionDescriptors.push({ Name: conditionDescriptor.ProfessionalGrader, Value: grader });
-        }
-
-        if(grade) {
-            conditionDescriptors.push({ Name: conditionDescriptor.Grade, Value: grade });
-        }
-
 
         return {
-            ConditionID: 2750,
-            ConditionDescriptors: conditionDescriptors
+            environment: "production",
+            url: PRODUCTION_URL,
+            token: PRODUCTION_TOKEN.trim(),
+            appId: PRODUCTION_APP_ID.trim(),
+            devId: PRODUCTION_DEV_ID.trim(),
+            certId: PRODUCTION_CERT_ID.trim(),
         };
     }
 
 
-    public static getUngradedConditionDetails(card: Card): EbayXmlConditionDetails {
-        const conditionDescriptors: EbayXmlConditionDescriptor[] = []
-
-        const ungradedCondition: number | undefined = card.condition ? ungradedConditions[card.condition] : undefined;
-
-        if(ungradedCondition) {
-            conditionDescriptors.push({ Name: conditionDescriptor.CardCondition, Value: ungradedCondition });
-        }
-
-        return {
-            ConditionID: 4000,
-            ConditionDescriptors: conditionDescriptors
-        };
+    if (!SANDBOX_TOKEN) {
+        throw new Error(
+            "EBAY_AUTH_TOKEN_SANDBOX wurde nicht gefunden."
+        );
     }
 
-    public static getConditionDetails(card: Card): EbayXmlConditionDetails {
-        if (card.isGraded) {
-            return this.getGradedConditionDetails(card);
-        } else {
-            return this.getUngradedConditionDetails(card);
+    if (!SANDBOX_APP_ID) {
+        throw new Error(
+            "EBAY_APP_ID_SANDBOX wurde nicht gefunden."
+        );
+    }
+
+    if (!SANDBOX_DEV_ID) {
+        throw new Error(
+            "EBAY_DEV_ID_SANDBOX wurde nicht gefunden."
+        );
+    }
+
+    if (!SANDBOX_CERT_ID) {
+        throw new Error(
+            "EBAY_CERT_ID_SANDBOX wurde nicht gefunden."
+        );
+    }
+
+    return {
+        environment: "sandbox",
+        url: SANDBOX_URL,
+        token: SANDBOX_TOKEN.trim(),
+        appId: SANDBOX_APP_ID.trim(),
+        devId: SANDBOX_DEV_ID.trim(),
+        certId: SANDBOX_CERT_ID.trim(),
+    };
+}
+
+
+/**
+ * XML-Text maskieren.
+ *
+ * Wichtig:
+ * Auch der Token wird hierdurch XML-sicher gemacht.
+ */
+function escapeXml(value: string): string {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&apos;");
+}
+
+
+/**
+ * Entfernt vorhandene RequesterCredentials und
+ * fügt genau einen sauberen Credentials-Block ein.
+ */
+function insertTokenIntoXml(
+    originalXml: string,
+    token: string
+): string {
+
+    let xml = originalXml;
+
+    /**
+     * Vorhandene Credentials entfernen.
+     */
+    xml = xml.replace(
+        /<RequesterCredentials>[\s\S]*?<\/RequesterCredentials>/g,
+        ""
+    );
+
+    const requesterCredentials =
+        `<RequesterCredentials><eBayAuthToken>${escapeXml(
+            token.trim()
+        )}</eBayAuthToken></RequesterCredentials>`;
+
+    /**
+     * Credentials direkt nach dem Request-Starttag einfügen.
+     */
+    const result = xml.replace(
+        /(<(?:AddItem|VerifyAddItem)Request\b[^>]*>)/,
+        `$1${requesterCredentials}`
+    );
+
+    if (result === xml) {
+        throw new Error(
+            "Konnte RequesterCredentials nicht in das eBay XML einfügen."
+        );
+    }
+
+    return result;
+}
+
+
+/**
+ * AddItem XML in VerifyAddItem XML umwandeln.
+ */
+function convertToVerifyAddItemXml(
+    originalXml: string
+): string {
+
+    return originalXml
+        .replace(
+            /<AddItemRequest\b/g,
+            "<VerifyAddItemRequest"
+        )
+        .replace(
+            /<\/AddItemRequest>/g,
+            "</VerifyAddItemRequest>"
+        );
+}
+
+
+/**
+ * Ack lesen.
+ */
+function parseAck(
+    xml: string
+): string | undefined {
+
+    return xml
+        .match(/<Ack>([\s\S]*?)<\/Ack>/)?.[1]
+        ?.trim();
+}
+
+
+/**
+ * ItemID lesen.
+ */
+function parseItemId(
+    xml: string
+): string | undefined {
+
+    return xml
+        .match(/<ItemID>([\s\S]*?)<\/ItemID>/)?.[1]
+        ?.trim();
+}
+
+
+/**
+ * eBay-Fehler lesen.
+ */
+function parseErrors(xml: string) {
+
+    const matches = [
+        ...xml.matchAll(
+            /<Errors>([\s\S]*?)<\/Errors>/g
+        ),
+    ];
+
+    return matches.map((match) => {
+
+        const block = match[1];
+
+        return {
+            shortMessage:
+                block
+                    .match(
+                        /<ShortMessage>([\s\S]*?)<\/ShortMessage>/
+                    )?.[1]
+                    ?.trim()
+                ?? "Unbekannter Fehler",
+
+            longMessage:
+                block
+                    .match(
+                        /<LongMessage>([\s\S]*?)<\/LongMessage>/
+                    )?.[1]
+                    ?.trim()
+                ?? "",
+
+            errorCode:
+                block
+                    .match(
+                        /<ErrorCode>([\s\S]*?)<\/ErrorCode>/
+                    )?.[1]
+                    ?.trim()
+                ?? "",
+        };
+    });
+}
+
+
+function decodeEntities(
+    value: string
+): string {
+
+    return value
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&quot;/g, "\"")
+        .replace(/&apos;/g, "'")
+        .replace(/&amp;/g, "&");
+}
+
+
+function printErrors(
+    responseText: string
+): void {
+
+    const errors =
+        parseErrors(responseText);
+
+    if (errors.length === 0) {
+
+        console.log(
+            "Keine detaillierten eBay-Fehler gefunden."
+        );
+
+        return;
+    }
+
+    for (
+        const [index, error]
+        of errors.entries()
+    ) {
+
+        console.log(
+            `\n${index + 1}. ${decodeEntities(
+                error.shortMessage
+            )}`
+        );
+
+        if (error.longMessage) {
+
+            console.log(
+                "   Details:",
+                decodeEntities(
+                    error.longMessage
+                )
+            );
+        }
+
+        if (error.errorCode) {
+
+            console.log(
+                "   ErrorCode:",
+                error.errorCode
+            );
         }
     }
 }
+
+
+function isSuccessfulAck(
+    ack: string | undefined
+): boolean {
+
+    return (
+        ack === "Success" ||
+        ack === "Warning"
+    );
+}
+
+
+/**
+ * eBay Trading API Request.
+ */
+async function callEbay(
+    callName: "VerifyAddItem" | "AddItem",
+    xml: string
+): Promise<string> {
+
+    const config =
+        getConfig();
+
+    console.log(
+        "\n========================================"
+    );
+
+    console.log(
+        `SENDE ${callName} AN EBAY`
+    );
+
+    console.log(
+        "========================================"
+    );
+
+    const response = await fetch(
+        config.url,
+        {
+            method: "POST",
+
+            headers: {
+                "Content-Type":
+                    "text/xml; charset=utf-8",
+
+                "X-EBAY-API-CALL-NAME":
+                    callName,
+
+                "X-EBAY-API-SITEID":
+                    SITE_ID,
+
+                "X-EBAY-API-COMPATIBILITY-LEVEL":
+                    COMPATIBILITY_LEVEL,
+
+                "X-EBAY-API-APP-NAME":
+                    config.appId,
+
+                "X-EBAY-API-DEV-NAME":
+                    config.devId,
+
+                "X-EBAY-API-CERT-NAME":
+                    config.certId,
+            },
+
+            body: xml,
+        }
+    );
+
+    const responseText =
+        await response.text();
+
+    console.log(
+        "\n========================================"
+    );
+
+    console.log(
+        `EBAY ANTWORT – ${callName}`
+    );
+
+    console.log(
+        "========================================"
+    );
+
+    console.log(
+        "HTTP Status:",
+        response.status
+    );
+
+    console.log(
+        "HTTP OK:",
+        response.ok
+    );
+
+    console.log("");
+
+    console.log(responseText);
+
+    console.log(
+        "========================================\n"
+    );
+
+    return responseText;
+}
+
+
+class EbayService {
+
+    /**
+     * Listing prüfen, ohne es zu erstellen.
+     */
+    static async verifyAddItem(
+        originalXml: string
+    ): Promise<boolean> {
+
+        const config =
+            getConfig();
+
+        console.log(
+            "\n========================================"
+        );
+
+        console.log(
+            "VERIFY ADD ITEM"
+        );
+
+        console.log(
+            "========================================"
+        );
+
+        console.log(
+            "Umgebung:",
+            config.environment
+        );
+
+        console.log(
+            "API URL:",
+            config.url
+        );
+
+        console.log(
+            "SiteID:",
+            SITE_ID
+        );
+
+        let verifyXml =
+            convertToVerifyAddItemXml(
+                originalXml
+            );
+
+        verifyXml =
+            insertTokenIntoXml(
+                verifyXml,
+                config.token
+            );
+
+        /**
+         * Sehr wichtig:
+         * Das tatsächlich gesendete XML speichern,
+         * damit wir bei einem Fehler exakt sehen,
+         * was eBay erhalten hat.
+         */
+        console.log(
+            "\nVERIFY XML VORSCHAU:"
+        );
+
+        console.log(
+            "----------------------------------------"
+        );
+
+        console.log(
+            verifyXml
+                .split("\n")
+                .slice(0, 30)
+                .map(
+                    (line, index) =>
+                        `${String(index + 1).padStart(3, " ")} | ${line}`
+                )
+                .join("\n")
+        );
+
+        console.log(
+            "----------------------------------------"
+        );
+
+        const responseText =
+            await callEbay(
+                "VerifyAddItem",
+                verifyXml
+            );
+
+        const ack =
+            parseAck(responseText);
+
+        console.log(
+            "VERIFY ACK:",
+            ack ?? "nicht gefunden"
+        );
+
+        if (
+            isSuccessfulAck(ack)
+        ) {
+
+            console.log(
+                "\n✓ VERIFY ADD ITEM ERFOLGREICH"
+            );
+
+            console.log(
+                "Das Listing ist technisch gültig."
+            );
+
+            console.log(
+                "Es wurde KEIN echtes Listing erstellt."
+            );
+
+            return true;
+        }
+
+        console.log(
+            "\n❌ VERIFY ADD ITEM FEHLGESCHLAGEN"
+        );
+
+        printErrors(
+            responseText
+        );
+
+        return false;
+    }
+
+
+    /**
+     * Echtes Listing erstellen.
+     */
+    static async addItem(
+        originalXml: string
+    ): Promise<void> {
+
+        const config =
+            getConfig();
+
+        console.log(
+            "\n========================================"
+        );
+
+        console.log(
+            "SENDE ADDITEM REQUEST AN EBAY"
+        );
+
+        console.log(
+            "========================================"
+        );
+
+        console.log(
+            "Umgebung:",
+            config.environment
+        );
+
+        console.log(
+            "API URL:",
+            config.url
+        );
+
+        console.log(
+            "SiteID:",
+            SITE_ID
+        );
+
+        const xml =
+            insertTokenIntoXml(
+                originalXml,
+                config.token
+            );
+
+        const responseText =
+            await callEbay(
+                "AddItem",
+                xml
+            );
+
+        const ack =
+            parseAck(responseText);
+
+        if (
+            isSuccessfulAck(ack)
+        ) {
+
+            const itemId =
+                parseItemId(
+                    responseText
+                );
+
+            console.log(
+                "\n✓ EBAY HAT DEN ARTIKEL AKZEPTIERT"
+            );
+
+            console.log(
+                "ItemID:",
+                itemId ?? "nicht gefunden"
+            );
+
+            return;
+        }
+
+        console.log(
+            "\n❌ EBAY HAT DEN ARTIKEL NICHT AKZEPTIERT"
+        );
+
+        printErrors(
+            responseText
+        );
+
+        throw new Error(
+            "eBay AddItem Request wurde abgelehnt."
+        );
+    }
+}
+
+
+export default EbayService;

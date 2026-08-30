@@ -1,4 +1,54 @@
-.idea
+# Secrets / Zugangsdaten
 .env
-node_modules
+.env.*
+!.env.example
+
+# Node
+node_modules/
+
+# Python virtual environment
+.venv/
+
+# IDE
+.idea/
+.vscode/
+
+# Editor temporary files
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Lokale Backups
+backup-*/
+backups/
+*.backup
+*.backup-*
+*.before-*
+*.before-*-*
+
+# Cache
+cache/
+
+# Temporäre Dateien
+0
+1
+tsx
+pokebay@1.0.0
+
+# Bestehende lokale XML-Antwort
 xml/response.xml
+
+# Lokale HTML-/Code-Backups
+*.backup.html
+*.broken-*
+*.save
+*.syntax-ok-backup
+*.backup.ts
+
+# Test- und Entwicklungsdateien
+test-*.ts
+services/test*.ts
+scripts/test*.ts
+hello.ts

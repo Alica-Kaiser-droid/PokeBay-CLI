@@ -1,0 +1,3897 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>PokeBay</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      background: #f4f4f4;
+
+      color: #222;
+    }
+
+    header {
+      background: #1f2937;
+
+      color: white;
+
+      padding: 20px 30px;
+    }
+
+    header h1 {
+      margin: 0;
+    }
+
+    main {
+      max-width: 900px;
+
+      margin: 40px auto;
+
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+
+      padding: 30px;
+
+      margin-bottom: 25px;
+
+      border-radius: 10px;
+
+      box-shadow:
+        0 4px 15px
+        rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .form-row {
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr 1fr;
+
+      gap: 20px;
+    }
+
+    .field {
+      display: flex;
+
+      flex-direction: column;
+    }
+
+    label {
+      font-weight: bold;
+
+      margin-bottom: 8px;
+    }
+
+    input,
+    select {
+      padding: 12px;
+
+      font-size: 16px;
+
+      border:
+        1px solid #ccc;
+
+      border-radius: 6px;
+    }
+
+    button {
+      margin-top: 25px;
+
+      padding:
+        14px 24px;
+
+      font-size: 16px;
+
+      font-weight: bold;
+
+      border: none;
+
+      border-radius: 6px;
+
+      background: #2563eb;
+
+      color: white;
+
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    button.secondary {
+      background: #16a34a;
+    }
+
+    button.secondary:hover {
+      background: #15803d;
+    }
+
+    #message {
+      margin-top: 20px;
+
+      font-weight: bold;
+    }
+
+    .error {
+      color: #dc2626;
+    }
+
+    .success {
+      color: #16a34a;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .result-grid {
+      display: grid;
+
+      grid-template-columns:
+        250px 1fr;
+
+      gap: 30px;
+    }
+
+    .result-image {
+      width: 100%;
+
+      border-radius: 10px;
+
+      border:
+        1px solid #ddd;
+    }
+
+    .details p {
+      margin: 10px 0;
+    }
+
+    .preview {
+      margin-top: 20px;
+
+      padding: 20px;
+
+      background: #f9fafb;
+
+      border:
+        1px solid #ddd;
+
+      border-radius: 8px;
+    }
+
+    .title-preview {
+      font-size: 18px;
+
+      font-weight: bold;
+    }
+
+    @media (
+      max-width: 700px
+    ) {
+
+      .form-row {
+        grid-template-columns:
+          1fr;
+      }
+
+      .result-grid {
+        grid-template-columns:
+          1fr;
+      }
+
+    }
+
+  
+    .photo-preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .preview-item {
+      width: 120px;
+    }
+
+    .preview-item img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .remove-photo {
+      width: 100%;
+      margin-top: 6px;
+      padding: 6px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #dc2626;
+      color: white;
+    }
+
+
+
+    .card-list-item {
+      display: grid;
+      grid-template-columns: 70px 1fr auto;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .card-list-image {
+      width: 70px;
+      border-radius: 6px;
+    }
+
+    .remove-card {
+      background: #dc2626;
+      padding: 10px 14px;
+    }
+
+    .remove-card:hover {
+      background: #b91c1c;
+    }
+
+    #cardCounter {
+      font-size: 16px;
+      font-weight: normal;
+    }
+
+
+
+
+    .listing-preview-item {
+      border-top: 1px solid #ddd;
+      padding: 20px 0;
+      margin-top: 20px;
+    }
+
+    .listing-preview-item:first-child {
+      border-top: none;
+      margin-top: 0;
+    }
+
+    .listing-preview-item h3 {
+      margin-top: 0;
+    }
+
+    .listing-preview-image {
+      max-width: 180px;
+      max-height: 250px;
+      object-fit: contain;
+      margin: 15px 0;
+      border-radius: 8px;
+    }
+
+
+
+
+    /* ========================================
+       MOBILE OPTIMIERUNG
+       ======================================== */
+
+    @media (max-width: 700px) {
+
+      body {
+        overflow-x: hidden;
+      }
+
+      main {
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .card {
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .listing-card {
+        margin-bottom: 24px !important;
+        padding: 16px !important;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+
+      .listing-card h3 {
+        font-size: 18px;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+      }
+
+      .listing-card .form-row {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+      }
+
+      .listing-card input,
+      .listing-card select {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        min-height: 44px;
+      }
+
+      .price-comparison {
+        padding: 12px !important;
+        margin: 16px 0 !important;
+        box-sizing: border-box;
+      }
+
+      .price-comparison button {
+        width: 100%;
+        min-height: 44px;
+        box-sizing: border-box;
+      }
+
+      .price-comparison-result {
+        width: 100%;
+        box-sizing: border-box;
+        overflow-wrap: anywhere;
+      }
+
+      .listing-preview-item {
+        padding: 16px 0;
+      }
+
+      .listing-preview-image {
+        max-width: 100%;
+        width: auto;
+        max-height: 320px;
+      }
+
+      .photo-preview {
+        gap: 8px;
+      }
+
+      .preview-item {
+        width: calc(50% - 4px);
+      }
+
+      .preview-item img {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1 / 1;
+      }
+
+      #allListings,
+      #allListingsPreview {
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      #createAllListingsButton,
+      #showAllListingsPreviewButton {
+        width: 100%;
+        min-height: 48px;
+        box-sizing: border-box;
+      }
+
+    }
+
+
+</style>
+
+</head>
+
+
+<body>
+
+  <header>
+    <h1>🃏 PokeBay</h1>
+  </header>
+
+
+  <main>
+
+    <!-- SCHRITT 1 -->
+
+    <div class="card">
+
+      <h2>1. Karte suchen</h2>
+
+      <p>
+        Gib den Kartennamen und die vollständige Kartennummer ein, z.B. "001/094".
+      </p>
+
+
+      <form id="searchForm">
+
+        <div class="form-row">
+
+          <div class="field">
+
+            <label for="name">
+              Kartenname
+            </label>
+
+            <input
+              id="name"
+              type="text"
+              placeholder="z.B. Glurak"
+              required
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="number">
+              Kartennummer
+            </label>
+
+            <input
+              id="number"
+              type="text"
+              placeholder="z.B. 223"
+              required
+            >
+
+          </div>
+
+
+        <button type="submit">
+
+          🔍 Karte suchen
+
+        </button>
+
+      
+
+      <button
+        id="showAllListingsPreviewButton"
+        type="button"
+        class="green-button"
+        style="margin-top: 25px;"
+      >
+        👀 Alle Listings prüfen
+      </button>
+
+</form>
+
+
+      <div id="message"></div>
+
+    </div>
+
+
+    <!-- SCHRITT 2 -->
+
+    <div
+      id="result"
+      class="card hidden"
+    >
+
+      <h2>2. Gefundene Karte</h2>
+
+
+      <div class="result-grid">
+
+        <div>
+
+          <img
+            id="cardImage"
+            class="result-image"
+            alt="Pokémon Karte"
+          >
+
+        </div>
+
+
+        <div class="details">
+
+          <p>
+            <strong>Name:</strong>
+            <span id="cardName"></span>
+          </p>
+
+          <p>
+            <strong>Nummer:</strong>
+            <span id="cardNumber"></span>
+          </p>
+
+          <p>
+            <strong>Set:</strong>
+            <span id="cardSet"></span>
+          </p>
+
+          <p>
+            <strong>Set ID:</strong>
+            <span id="cardSetId"></span>
+          </p>
+
+          <p>
+            <strong>Seltenheit:</strong>
+            <span id="cardRarity"></span>
+          </p>
+
+          <p>
+            <strong>Sprache:</strong>
+            <span id="cardLanguage"></span>
+          </p>
+
+
+          <button
+            id="useCardButton"
+            type="button"
+            class="secondary"
+          >
+
+            ➕ Zur Kartenliste hinzufügen
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- SCHRITT 3 -->
+
+    <div
+      id="listingFormContainer"
+      class="card hidden"
+    >
+
+      <h2>3. Verkaufsdaten</h2>
+
+
+      <form id="listingForm">
+
+        <div class="form-row">
+
+          <div class="field">
+
+            <label for="variant">
+              Variante
+            </label>
+
+            <select id="variant">
+
+              <option value="normal">
+                Normal
+              </option>
+
+              <option value="holo">
+                Holo
+              </option>
+
+              <option value="reverse-holo">
+                Reverse Holo
+              </option>
+
+              <option value="pokeball">
+                Pokéball
+              </option>
+
+              <option value="masterball">
+                Meisterball
+              </option>
+
+              <option value="ex">
+                EX
+              </option>
+
+              <option value="gx">
+                GX
+              </option>
+
+              <option value="v">
+                V
+              </option>
+
+              <option value="vmax">
+                VMAX
+              </option>
+
+              <option value="vstar">
+                VSTAR
+              </option>
+
+              <option value="full-art">
+                Full Art
+              </option>
+
+              <option value="illustration-rare">
+                Illustration Rare
+              </option>
+
+              <option value="special-illustration-rare">
+                Special Illustration Rare
+              </option>
+
+              <option value="ultra-rare">
+                Ultra Rare
+              </option>
+
+              <option value="hyper-rare">
+                Hyper Rare
+              </option>
+
+              <option value="secret-rare">
+                Secret Rare
+              </option>
+
+              <option value="promo">
+                Promo
+              </option>
+
+              <option value="other">
+                Andere
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="condition">
+              Zustand
+            </label>
+
+            <select id="condition">
+
+              <option value="mint">
+                Mint
+              </option>
+
+              <option
+                value="near-mint"
+                selected
+              >
+                Near Mint
+              </option>
+
+              <option value="excellent">
+                Excellent
+              </option>
+
+              <option value="good">
+                Good
+              </option>
+
+              <option value="light-played">
+                Light Played
+              </option>
+
+              <option value="played">
+                Played
+              </option>
+
+              <option value="poor">
+                Poor
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="quantity">
+              Menge
+            </label>
+
+            <input
+              id="quantity"
+              type="number"
+              min="1"
+              value="1"
+            >
+
+          </div>
+
+        </div>
+
+
+        <div class="form-row">
+
+          <div class="field">
+
+            <label for="price">
+              Preis (€)
+            </label>
+
+            <input
+              id="price"
+              type="number"
+              step="0.01"
+              min="0"
+              placeholder="z.B. 24.99"
+              required
+            >
+
+            <button
+              type="button"
+              id="comparePricesButton"
+              style="margin-top: 12px;"
+            >
+              🔎 Preise vergleichen
+            </button>
+
+            <div
+              id="priceComparison"
+              style="margin-top: 15px;"
+            ></div>
+
+          </div>
+
+
+          <div class="field">
+
+            <label
+      for="camera"
+      class="photo-button"
+    >
+      📷 Foto aufnehmen
+    </label>
+
+    <input
+      type="file"
+      id="camera"
+      accept="image/*"
+      capture="environment"
+    >
+
+    <label for="photos">
+              Fotos
+            </label>
+
+            <input
+              id="photos"
+              type="file"
+              multiple
+              accept="image/*"
+            >
+
+  <div
+    id="photoPreview"
+    class="photo-preview"
+  ></div>
+
+
+          </div>
+
+        </div>
+
+
+        <button type="submit">
+
+          📝 Listing-Vorschau erstellen
+
+        </button>
+
+      </form>
+
+    </div>
+
+
+    <!-- SCHRITT 4 -->
+
+    <div
+      id="preview"
+      class="card hidden"
+    >
+
+      <h2>4. Listing-Vorschau</h2>
+
+
+      <div class="preview">
+
+        <p>
+          <strong>eBay-Titel:</strong>
+        </p>
+
+        <p
+          id="ebayTitle"
+          class="title-preview"
+        ></p>
+
+
+        <p>
+          <strong>Länge:</strong>
+          <span id="titleLength"></span>/80
+        </p>
+
+
+        <p>
+          <strong>Preis:</strong>
+          <span id="previewPrice"></span>
+        </p>
+
+
+        <p>
+          <strong>Zustand:</strong>
+          <span id="previewCondition"></span>
+        </p>
+
+
+        <p>
+          <strong>Variante:</strong>
+          <span id="previewVariant"></span>
+        </p>
+
+
+        <p>
+          <strong>Menge:</strong>
+          <span id="previewQuantity"></span>
+        </p>
+
+      </div>
+
+
+      <button
+        id="createListingButton"
+        type="button"
+        class="secondary"
+      >
+
+        🚀 Listing erstellen
+
+      </button>
+
+    </div>
+
+  
+
+  
+
+    <section
+      id="cardListSection"
+      class="card"
+      style="display: none;"
+    >
+
+      <h2>
+        📦 Kartenliste
+        <span id="cardCounter">0 / 50</span>
+      </h2>
+
+      <p>
+        Hier sammelst du bis zu 50 Karten.
+        Danach kannst du mit allen Karten
+        gemeinsam zu den Verkaufsdaten weitergehen.
+      </p>
+
+      <div id="cardList"></div>
+
+      <button
+        id="continueButton"
+        type="button"
+        class="green-button"
+        style="margin-top: 25px;"
+      >
+
+        ➡️ Weiter zu Verkaufsdaten
+
+      </button>
+
+    </section>
+
+
+    <!-- SCHRITT 4 -->
+    <section
+      id="allListingsPreview"
+      class="card hidden"
+    >
+
+      <h2>4. Listing-Vorschau</h2>
+
+      <p>
+        Überprüfe hier alle Karten, bevor die Listings erstellt werden.
+      </p>
+
+      <div id="allListings"></div>
+
+      <button
+        id="createAllListingsButton"
+        type="button"
+        class="green-button"
+        style="margin-top: 25px;"
+      >
+        🚀 Alle Listings erstellen
+      </button>
+
+    </section>
+
+</main>
+
+
+  <script>
+
+    const MAX_CARDS = 50;
+
+const selectedCards = [];
+
+let selectedCard = null;
+
+
+    const searchForm =
+      document.getElementById(
+        "searchForm"
+      );
+
+
+    const listingForm =
+      document.getElementById(
+        "listingForm"
+      );
+
+
+    const message =
+      document.getElementById(
+        "message"
+      );
+
+
+    const result =
+      document.getElementById(
+        "result"
+      );
+
+
+    const listingFormContainer =
+      document.getElementById(
+        "listingFormContainer"
+      );
+
+
+    const preview =
+      document.getElementById(
+        "preview"
+      );
+
+
+    searchForm.addEventListener(
+      "submit",
+
+      async (event) => {
+
+        event.preventDefault();
+
+
+        const name =
+          document
+            .getElementById("name")
+            .value
+            .trim();
+
+
+        const number =
+          document
+            .getElementById("number")
+            .value
+            .trim();
+
+
+        message.textContent =
+          "Suche Karte...";
+
+
+        message.className =
+          "";
+
+
+        result.classList.add(
+          "hidden"
+        );
+
+
+        listingFormContainer.classList.add(
+          "hidden"
+        );
+
+
+        preview.classList.add(
+          "hidden"
+        );
+
+
+        try {
+
+          const response =
+            await fetch(
+              "/api/cards/search",
+              {
+
+                method:
+                  "POST",
+
+                headers: {
+
+                  "Content-Type":
+                    "application/json"
+
+                },
+
+                body:
+                  JSON.stringify({
+
+                    name,
+                    number})
+
+              }
+            );
+
+
+          const data =
+            await response.json();
+
+
+          if (
+            !response.ok ||
+            !data.success
+          ) {
+
+            throw new Error(
+              data.error ||
+              "Karte wurde nicht gefunden."
+            );
+
+          }
+
+
+          selectedCard =
+            data.card;
+
+
+          document.getElementById(
+            "cardName"
+          ).textContent =
+            selectedCard.name;
+
+
+          document.getElementById(
+            "cardNumber"
+          ).textContent =
+            selectedCard.number;
+
+
+          document.getElementById(
+            "cardSet"
+          ).textContent =
+            selectedCard.setName;
+
+
+          document.getElementById(
+            "cardSetId"
+          ).textContent =
+            selectedCard.setId;
+
+
+          document.getElementById(
+            "cardRarity"
+          ).textContent =
+            selectedCard.rarity ||
+            "-";
+
+
+          document.getElementById(
+            "cardLanguage"
+          ).textContent =
+            selectedCard.language;
+
+
+          const image =
+            document.getElementById(
+              "cardImage"
+            );
+
+
+          if (
+            selectedCard.image
+          ) {
+
+            image.src =
+              selectedCard.image.endsWith(".webp")
+                ? selectedCard.image
+                : selectedCard.image + "/high.webp";
+
+
+            image.style.display =
+              "block";
+
+          } else {
+
+            image.style.display =
+              "none";
+
+          }
+
+
+          result.style.display =
+            "block";
+
+
+          result.classList.remove(
+            "hidden"
+          );
+
+
+          result.scrollIntoView({
+
+            behavior:
+              "smooth",
+
+            block:
+              "nearest"
+
+          });
+
+
+          message.textContent =
+            "✓ Karte gefunden";
+
+
+          message.className =
+            "success";
+
+
+        } catch (
+          error
+        ) {
+
+          console.error(
+            error
+          );
+
+
+          message.textContent =
+            error instanceof Error
+              ? error.message
+              : "Ein unbekannter Fehler ist aufgetreten.";
+
+
+          message.className =
+            "error";
+
+        }
+
+      }
+
+    );
+
+
+
+
+
+
+    listingForm.addEventListener(
+      "submit",
+
+      (event) => {
+
+        event.preventDefault();
+
+
+        const variant =
+          document.getElementById(
+            "variant"
+          ).value;
+
+
+        const condition =
+          document.getElementById(
+            "condition"
+          ).value;
+
+
+        const quantity =
+          Number(
+            document.getElementById(
+              "quantity"
+            ).value
+          );
+
+
+        const price =
+          Number(
+            document.getElementById(
+              "price"
+            ).value
+          );
+
+
+        /*
+         * Vorläufige Titelvorschau.
+         *
+         * Die echte Generierung verbinden
+         * wir als nächsten Schritt mit dem
+         * EbayTitleService.
+         */
+        const titleParts = [
+          "Pokémon Karte",
+          selectedCard.name,
+          selectedCard.number
+        ];
+
+        if (selectedCard.setName) {
+          titleParts.push(
+            `- ${selectedCard.setName}`
+          );
+        }
+
+        if (
+          variant &&
+          variant.toLowerCase() !== "normal"
+        ) {
+          titleParts.push(
+            `- ${variant}`
+          );
+        }
+
+        const title =
+          titleParts.join(" ");
+
+
+        document.getElementById(
+          "ebayTitle"
+        ).textContent =
+          title;
+
+
+        document.getElementById(
+          "titleLength"
+        ).textContent =
+          String(
+            title.length
+          );
+
+
+        document.getElementById(
+          "previewPrice"
+        ).textContent =
+          `${price.toFixed(2)} €`;
+
+
+        document.getElementById(
+          "previewCondition"
+        ).textContent =
+          condition;
+
+
+        document.getElementById(
+          "previewVariant"
+        ).textContent =
+          variant;
+
+
+        document.getElementById(
+          "previewQuantity"
+        ).textContent =
+          String(quantity);
+
+
+        preview.classList.remove(
+          "hidden"
+        );
+
+
+        preview.scrollIntoView({
+
+          behavior:
+            "smooth"
+
+        });
+
+      }
+
+    );
+
+
+    document.getElementById(
+      "createListingButton"
+    ).addEventListener(
+      "click",
+
+      () => {
+
+        alert(
+          "Der nächste Schritt ist jetzt die Verbindung mit dem eBay Listing-Service."
+        );
+
+      }
+
+    );
+
+  
+
+
+document.getElementById(
+  "useCardButton"
+).addEventListener(
+  "click",
+  () => {
+
+    if (!selectedCard) {
+      alert("Keine Karte ausgewählt.");
+      return;
+    }
+
+    if (selectedCards.length >= MAX_CARDS) {
+      alert("Maximal 50 Karten möglich.");
+      return;
+    }
+
+    selectedCards.push({
+      ...selectedCard
+    });
+
+    console.log(
+      "✅ Karte zur Liste hinzugefügt:",
+      selectedCard
+    );
+
+    renderCardList();
+
+    message.textContent =
+      `✓ ${selectedCard.name} wurde zur Kartenliste hinzugefügt (${selectedCards.length}/50)`;
+
+    message.className =
+      "success";
+
+    listingFormContainer.classList.remove(
+      "hidden"
+    );
+
+  }
+);
+
+
+// Fotos aller Karten global speichern
+const cardPhotos = {};
+
+
+function renderAllListingsPreview() {
+
+  const previewSection =
+    document.getElementById(
+      "allListingsPreview"
+    );
+
+  const allListings =
+    document.getElementById(
+      "allListings"
+    );
+
+  if (
+    !previewSection ||
+    !allListings
+  ) {
+
+    return;
+
+  }
+
+
+  allListings.innerHTML = "";
+
+
+  selectedCards.forEach(
+    (card, index) => {
+
+      const variant =
+        document.querySelector(
+          `.card-variant[data-index="${index}"]`
+        );
+
+      const condition =
+        document.querySelector(
+          `.card-condition[data-index="${index}"]`
+        );
+
+      const quantity =
+        document.querySelector(
+          `.card-quantity[data-index="${index}"]`
+        );
+
+      const price =
+        document.querySelector(
+          `.card-price[data-index="${index}"]`
+        );
+
+
+      const item =
+        document.createElement(
+          "div"
+        );
+
+      item.className =
+        "listing-preview-item";
+
+
+      const variantValue =
+        variant ? variant.value : "-";
+
+      const conditionValue =
+        condition ? condition.value : "-";
+
+      const quantityValue =
+        quantity ? quantity.value : "1";
+
+      const priceValue =
+        price && price.value
+          ? price.value
+          : "";
+
+
+      const titleParts = [
+        "Pokémon Karte",
+        card.name,
+        card.number
+      ];
+
+      if (card.setName) {
+        titleParts.push(
+          `- ${card.setName}`
+        );
+      }
+
+      if (
+        variantValue &&
+        variantValue.toLowerCase() !== "normal"
+      ) {
+        titleParts.push(
+          `- ${variantValue}`
+        );
+      }
+
+      const title =
+        titleParts.join(" ");
+
+
+      const description =
+        `Pokémon Karte: ${card.name}
+
+Kartennummer: ${card.number}
+Set: ${card.setName}
+Variante: ${variantValue}
+Zustand: ${conditionValue}
+Sprache: ${card.language || "Deutsch"}
+Menge: ${quantityValue}
+
+Die Karte wird sorgfältig verpackt und versendet.`;
+
+
+      const photos =
+        cardPhotos[index] || [];
+
+
+      const photoHtml =
+        photos.map(
+          (file, photoIndex) => {
+
+            const photoUrl =
+              URL.createObjectURL(
+                file
+              );
+
+            return `
+              <div
+                style="
+                  display: inline-block;
+                  margin: 8px;
+                "
+              >
+                <img
+                  src="${photoUrl}"
+                  alt="Foto ${photoIndex + 1} von ${card.name}"
+                  style="
+                    width: 180px;
+                    max-width: 100%;
+                    border-radius: 8px;
+                    border: 1px solid #ddd;
+                  "
+                >
+              </div>
+            `;
+
+          }
+        ).join("");
+
+
+      item.innerHTML = `
+
+        <h3>
+          ${index + 1}. ${card.name}
+        </h3>
+
+        <p>
+          <strong>Nummer:</strong>
+          ${card.number}
+        </p>
+
+        <p>
+          <strong>Set:</strong>
+          ${card.setName}
+        </p>
+
+        <p>
+          <strong>Variante:</strong>
+          ${variantValue}
+        </p>
+
+        <p>
+          <strong>Zustand:</strong>
+          ${conditionValue}
+        </p>
+
+        <p>
+          <strong>Menge:</strong>
+          ${quantityValue}
+        </p>
+
+        <p>
+          <strong>Preis:</strong>
+          ${priceValue
+            ? priceValue + " €"
+            : "Noch nicht angegeben"}
+        </p>
+
+        <hr>
+
+        <div
+          class="listing-photos"
+          style="
+            margin-bottom: 25px;
+          "
+        >
+
+          <strong>Fotos:</strong>
+
+          <div
+            style="
+              margin-top: 10px;
+            "
+          >
+            ${
+              photoHtml ||
+              "<p>Noch keine Fotos hinzugefügt.</p>"
+            }
+          </div>
+
+        </div>
+
+
+        <label>
+          <strong>eBay-Titel:</strong>
+        </label>
+
+        <input
+          type="text"
+          class="listing-title"
+          data-index="${index}"
+          value="${title}"
+        >
+
+        <br><br>
+
+        <label>
+          <strong>Beschreibung:</strong>
+        </label>
+
+        <textarea
+          class="listing-description"
+          data-index="${index}"
+          rows="10"
+        >${description}</textarea>
+
+      `;
+
+
+      allListings.appendChild(
+        item
+      );
+
+    }
+  );
+
+
+  previewSection.classList.remove(
+    "hidden"
+  );
+
+
+  previewSection.style.display =
+    "block";
+
+
+  previewSection.scrollIntoView({
+
+    behavior:
+      "smooth",
+
+    block:
+      "start"
+
+  });
+
+}
+
+
+const createAllListingsButton =
+  document.getElementById(
+    "createAllListingsButton"
+  );
+
+
+
+
+
+
+
+
+const showAllListingsPreviewButton =
+  document.getElementById(
+    "showAllListingsPreviewButton"
+  );
+
+if (showAllListingsPreviewButton) {
+
+  showAllListingsPreviewButton.addEventListener(
+    "click",
+    () => {
+
+      console.log(
+        "Vorschau-Button geklickt"
+      );
+
+      if (
+        selectedCards.length === 0
+      ) {
+
+        alert(
+          "Bitte füge zuerst mindestens eine Karte zur Liste hinzu."
+        );
+
+        return;
+
+      }
+
+      renderAllListingsPreview();
+
+    }
+  );
+
+}
+
+
+
+
+
+
+
+
+/*
+ * Preisvergleich für eine einzelne Karte.
+ */
+async function compareCardPrice(index) {
+
+  const card =
+    selectedCards[index];
+
+  if (!card) {
+    alert("Karte wurde nicht gefunden.");
+    return;
+  }
+
+
+  const variantElement =
+    document.querySelector(
+      `.card-variant[data-index="${index}"]`
+    );
+
+  const conditionElement =
+    document.querySelector(
+      `.card-condition[data-index="${index}"]`
+    );
+
+
+  const variant =
+    variantElement
+      ? variantElement.value
+      : "normal";
+
+
+  const condition =
+    conditionElement
+      ? conditionElement.value
+      : "near-mint";
+
+
+  const resultElement =
+    document.querySelector(
+      `.price-comparison-result[data-index="${index}"]`
+    );
+
+
+  if (resultElement) {
+
+    resultElement.innerHTML =
+      "🔄 Preise werden verglichen...";
+
+  }
+
+
+  try {
+
+    const response =
+      await fetch(
+        "/api/prices/compare",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body:
+            JSON.stringify({
+              name: card.name,
+              number: card.number,
+              setName: card.setName,
+              variant,
+              condition
+            })
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok || !data.success) {
+
+      throw new Error(
+        data.error ||
+        "Preisvergleich fehlgeschlagen."
+      );
+
+    }
+
+
+    const result =
+      data.result;
+
+
+    const formatPrice =
+      (value) => {
+
+        if (
+          value === null ||
+          value === undefined
+        ) {
+          return "Noch keine Daten";
+        }
+
+        return (
+          Number(value).toFixed(2) +
+          " €"
+        );
+
+      };
+
+
+    if (resultElement) {
+
+      resultElement.innerHTML = `
+        <div
+          style="
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+          "
+        >
+
+          <strong>
+            📊 Preisvergleich
+          </strong>
+
+          <p>
+            🟢 eBay aktive Angebote:
+            <strong>
+              ${formatPrice(result.ebayActive)}
+            </strong>
+          </p>
+
+          <p>
+            🔵 eBay verkauft:
+            <strong>
+              ${formatPrice(result.ebaySold)}
+            </strong>
+          </p>
+
+          <p>
+            🟠 Cardmarket:
+            <strong>
+              ${formatPrice(result.cardmarket)}
+            </strong>
+          </p>
+
+          <hr>
+
+          <p>
+            💡 Empfohlener Preis:
+            <strong>
+              ${formatPrice(result.recommendation)}
+            </strong>
+          </p>
+
+          ${
+            result.recommendation !== null
+              ? `
+                <button
+                  type="button"
+                  class="use-recommended-price"
+                  data-index="${index}"
+                  data-price="${result.recommendation}"
+                >
+                  💰 Empfehlung übernehmen
+                </button>
+              `
+              : ""
+          }
+
+        </div>
+      `;
+
+
+      const recommendedButton =
+        resultElement.querySelector(
+          ".use-recommended-price"
+        );
+
+
+      if (recommendedButton) {
+
+        recommendedButton.addEventListener(
+          "click",
+          () => {
+
+            const priceElement =
+              document.querySelector(
+                `.card-price[data-index="${index}"]`
+              );
+
+
+            if (priceElement) {
+
+              priceElement.value =
+                Number(
+                  result.recommendation
+                ).toFixed(2);
+
+            }
+
+          }
+        );
+
+      }
+
+    }
+
+
+  } catch (error) {
+
+    console.error(
+      "Preisvergleich Fehler:",
+      error
+    );
+
+
+    if (resultElement) {
+
+      resultElement.innerHTML =
+        `
+        <div
+          style="
+            margin-top: 15px;
+            color: red;
+          "
+        >
+          ❌ ${
+            error instanceof Error
+              ? error.message
+              : "Preisvergleich fehlgeschlagen."
+          }
+        </div>
+        `;
+
+    }
+
+  }
+
+}
+
+
+
+
+
+
+
+
+
+</script>
+
+
+<script>
+
+const selectedPhotos = [];
+
+const cameraInput =
+  document.getElementById("camera");
+
+const photosInput =
+  document.getElementById("photos");
+
+const photoPreview =
+  document.getElementById("photoPreview");
+
+
+function addPhotos(files) {
+
+  for (const file of files) {
+
+    if (
+      file.type.startsWith("image/")
+    ) {
+
+      selectedPhotos.push(file);
+
+    }
+
+  }
+
+  renderPhotoPreview();
+
+}
+
+
+function renderPhotoPreview() {
+
+  photoPreview.innerHTML = "";
+
+  selectedPhotos.forEach(
+    (file, index) => {
+
+      const item =
+        document.createElement("div");
+
+      item.className =
+        "preview-item";
+
+
+      const image =
+        document.createElement("img");
+
+      image.src =
+        URL.createObjectURL(file);
+
+
+      const removeButton =
+        document.createElement("button");
+
+      removeButton.type =
+        "button";
+
+      removeButton.className =
+        "remove-photo";
+
+      removeButton.textContent =
+        "❌ Entfernen";
+
+
+      removeButton.addEventListener(
+        "click",
+        () => {
+
+          selectedPhotos.splice(
+            index,
+            1
+          );
+
+          renderPhotoPreview();
+
+        }
+      );
+
+
+      item.appendChild(image);
+
+      item.appendChild(removeButton);
+
+      photoPreview.appendChild(item);
+
+    }
+  );
+
+}
+
+
+if (cameraInput) {
+
+  cameraInput.addEventListener(
+    "change",
+    () => {
+
+      addPhotos(cameraInput.files);
+
+      cameraInput.value = "";
+
+    }
+  );
+
+}
+
+
+if (photosInput) {
+
+  photosInput.addEventListener(
+    "change",
+    () => {
+
+      addPhotos(photosInput.files);
+
+      photosInput.value = "";
+
+    }
+  );
+
+}
+
+
+
+
+
+
+
+/*
+ * Preisvergleich für eine einzelne Karte.
+ */
+async function compareCardPrice(index) {
+
+  const card =
+    selectedCards[index];
+
+  if (!card) {
+    alert("Karte wurde nicht gefunden.");
+    return;
+  }
+
+
+  const variantElement =
+    document.querySelector(
+      `.card-variant[data-index="${index}"]`
+    );
+
+  const conditionElement =
+    document.querySelector(
+      `.card-condition[data-index="${index}"]`
+    );
+
+
+  const variant =
+    variantElement
+      ? variantElement.value
+      : "normal";
+
+
+  const condition =
+    conditionElement
+      ? conditionElement.value
+      : "near-mint";
+
+
+  const resultElement =
+    document.querySelector(
+      `.price-comparison-result[data-index="${index}"]`
+    );
+
+
+  if (resultElement) {
+
+    resultElement.innerHTML =
+      "🔄 Preise werden verglichen...";
+
+  }
+
+
+  try {
+
+    const response =
+      await fetch(
+        "/api/prices/compare",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body:
+            JSON.stringify({
+              name: card.name,
+              number: card.number,
+              setName: card.setName,
+              variant,
+              condition
+            })
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok || !data.success) {
+
+      throw new Error(
+        data.error ||
+        "Preisvergleich fehlgeschlagen."
+      );
+
+    }
+
+
+    const result =
+      data.result;
+
+
+    const formatPrice =
+      (value) => {
+
+        if (
+          value === null ||
+          value === undefined
+        ) {
+          return "Noch keine Daten";
+        }
+
+        return (
+          Number(value).toFixed(2) +
+          " €"
+        );
+
+      };
+
+
+    if (resultElement) {
+
+      resultElement.innerHTML = `
+        <div
+          style="
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+          "
+        >
+
+          <strong>
+            📊 Preisvergleich
+          </strong>
+
+          <p>
+            🟢 eBay aktive Angebote:
+            <strong>
+              ${formatPrice(result.ebayActive)}
+            </strong>
+          </p>
+
+          <p>
+            🔵 eBay verkauft:
+            <strong>
+              ${formatPrice(result.ebaySold)}
+            </strong>
+          </p>
+
+          <p>
+            🟠 Cardmarket:
+            <strong>
+              ${formatPrice(result.cardmarket)}
+            </strong>
+          </p>
+
+          <hr>
+
+          <p>
+            💡 Empfohlener Preis:
+            <strong>
+              ${formatPrice(result.recommendation)}
+            </strong>
+          </p>
+
+          ${
+            result.recommendation !== null
+              ? `
+                <button
+                  type="button"
+                  class="use-recommended-price"
+                  data-index="${index}"
+                  data-price="${result.recommendation}"
+                >
+                  💰 Empfehlung übernehmen
+                </button>
+              `
+              : ""
+          }
+
+        </div>
+      `;
+
+
+      const recommendedButton =
+        resultElement.querySelector(
+          ".use-recommended-price"
+        );
+
+
+      if (recommendedButton) {
+
+        recommendedButton.addEventListener(
+          "click",
+          () => {
+
+            const priceElement =
+              document.querySelector(
+                `.card-price[data-index="${index}"]`
+              );
+
+
+            if (priceElement) {
+
+              priceElement.value =
+                Number(
+                  result.recommendation
+                ).toFixed(2);
+
+            }
+
+          }
+        );
+
+      }
+
+    }
+
+
+  } catch (error) {
+
+    console.error(
+      "Preisvergleich Fehler:",
+      error
+    );
+
+
+    if (resultElement) {
+
+      resultElement.innerHTML =
+        `
+        <div
+          style="
+            margin-top: 15px;
+            color: red;
+          "
+        >
+          ❌ ${
+            error instanceof Error
+              ? error.message
+              : "Preisvergleich fehlgeschlagen."
+          }
+        </div>
+        `;
+
+    }
+
+  }
+
+}
+</script>
+
+<script>
+
+
+function renderCardList() {
+
+  const listingForm =
+    document.getElementById(
+      "listingForm"
+    );
+
+  if (!listingForm) {
+
+    console.error(
+      "listingForm wurde nicht gefunden."
+    );
+
+    return;
+
+  }
+
+
+  listingForm.innerHTML = "";
+
+
+  selectedCards.forEach(
+    (card, index) => {
+
+      const wrapper =
+        document.createElement(
+          "div"
+        );
+
+
+      wrapper.className =
+        "listing-card";
+
+
+      wrapper.style.marginBottom =
+        "40px";
+
+
+      wrapper.style.padding =
+        "25px";
+
+
+      wrapper.style.border =
+        "1px solid #ddd";
+
+
+      wrapper.style.borderRadius =
+        "12px";
+
+
+      wrapper.innerHTML = `
+
+        <h3>
+          ${index + 1}. ${card.name}
+        </h3>
+
+
+        <p>
+
+          <strong>Nummer:</strong>
+          ${card.number || "-"}
+
+          <br>
+
+          <strong>Set:</strong>
+          ${card.setName || "-"}
+
+        </p>
+
+
+        <div class="form-row">
+
+          <div class="field">
+
+            <label>
+              Variante
+            </label>
+
+            <select
+              class="card-variant"
+              data-index="${index}"
+            >
+
+              <option value="normal">
+                Normal
+              </option>
+
+              <option value="holo">
+                Holo
+              </option>
+
+              <option value="reverse-holo">
+                Reverse Holo
+              </option>
+
+              <option value="pokeball">
+                Pokéball
+              </option>
+
+              <option value="masterball">
+                Meisterball
+              </option>
+
+              <option value="ex">
+                EX
+              </option>
+
+              <option value="gx">
+                GX
+              </option>
+
+              <option value="v">
+                V
+              </option>
+
+              <option value="vmax">
+                VMAX
+              </option>
+
+              <option value="vstar">
+                VSTAR
+              </option>
+
+              <option value="full-art">
+                Full Art
+              </option>
+
+              <option value="illustration-rare">
+                Illustration Rare
+              </option>
+
+              <option value="special-illustration-rare">
+                Special Illustration Rare
+              </option>
+
+              <option value="ultra-rare">
+                Ultra Rare
+              </option>
+
+              <option value="hyper-rare">
+                Hyper Rare
+              </option>
+
+              <option value="secret-rare">
+                Secret Rare
+              </option>
+
+              <option value="promo">
+                Promo
+              </option>
+
+              <option value="other">
+                Andere
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Zustand
+            </label>
+
+            <select
+              class="card-condition"
+              data-index="${index}"
+            >
+
+              <option value="mint">
+                Mint
+              </option>
+
+              <option
+                value="near-mint"
+                selected
+              >
+                Near Mint
+              </option>
+
+              <option value="excellent">
+                Excellent
+              </option>
+
+              <option value="good">
+                Good
+              </option>
+
+              <option value="light-played">
+                Light Played
+              </option>
+
+              <option value="played">
+                Played
+              </option>
+
+              <option value="poor">
+                Poor
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Menge
+            </label>
+
+            <input
+              type="number"
+              class="card-quantity"
+              data-index="${index}"
+              value="1"
+              min="1"
+            >
+
+          </div>
+
+        </div>
+
+
+        <div class="form-row">
+
+          <div class="field">
+
+            <label>
+              Preis (€)
+            </label>
+
+            <input
+              type="number"
+              class="card-price"
+              data-index="${index}"
+              placeholder="z.B. 24.99"
+              min="0"
+              step="0.01"
+            >
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="price-comparison"
+          data-index="${index}"
+          style="
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+          "
+        >
+
+          <strong>
+            💰 Preisvergleich
+          </strong>
+
+          <button
+            type="button"
+            class="compare-card-prices"
+            data-index="${index}"
+            style="
+              display: block;
+              margin-top: 12px;
+            "
+          >
+            🔎 Preise vergleichen
+          </button>
+
+          <div
+            class="price-comparison-result"
+            data-index="${index}"
+            style="
+              margin-top: 15px;
+              display: none;
+            "
+          ></div>
+
+        </div>
+
+
+        <div class="form-row">
+
+          <div class="field">
+
+            <label>
+              📷 Foto aufnehmen
+            </label>
+
+            <input
+              type="file"
+              class="card-camera"
+              data-index="${index}"
+              accept="image/*"
+              capture="environment"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Fotos auswählen
+            </label>
+
+            <input
+              type="file"
+              class="card-photos"
+              data-index="${index}"
+              accept="image/*"
+              multiple
+            >
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="card-photo-preview"
+          data-index="${index}"
+        ></div>
+
+        <button
+          type="button"
+          class="remove-card"
+          data-index="${index}"
+          style="margin-top: 20px;"
+        >
+          🗑️ Karte entfernen
+        </button>
+
+      `;
+
+
+      listingForm.appendChild(
+        wrapper
+      );
+
+    }
+  );
+
+
+  document
+    .querySelectorAll(".card-camera")
+    .forEach(
+      (input) => {
+
+        input.addEventListener(
+          "change",
+          () => {
+
+            const index =
+              Number(input.dataset.index);
+
+            if (!cardPhotos[index]) {
+              cardPhotos[index] = [];
+            }
+
+            for (const file of input.files) {
+              if (file.type.startsWith("image/")) {
+                cardPhotos[index].push(file);
+              }
+            }
+
+            renderCardPhotoPreview(index);
+
+            input.value = "";
+
+          }
+        );
+
+      }
+    );
+
+
+  document
+    .querySelectorAll(".card-photos")
+    .forEach(
+      (input) => {
+
+        input.addEventListener(
+          "change",
+          () => {
+
+            const index =
+              Number(input.dataset.index);
+
+            if (!cardPhotos[index]) {
+              cardPhotos[index] = [];
+            }
+
+            for (const file of input.files) {
+              if (file.type.startsWith("image/")) {
+                cardPhotos[index].push(file);
+              }
+            }
+
+            renderCardPhotoPreview(index);
+
+            input.value = "";
+
+          }
+        );
+
+      }
+    );
+
+
+  document
+    .querySelectorAll(".remove-card")
+    .forEach(
+      (button) => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            const index =
+              Number(button.dataset.index);
+
+            selectedCards.splice(index, 1);
+
+            delete cardPhotos[index];
+
+            const newPhotos = {};
+
+            Object.keys(cardPhotos).forEach(
+              (key) => {
+
+                const oldIndex =
+                  Number(key);
+
+                newPhotos[
+                  oldIndex > index
+                    ? oldIndex - 1
+                    : oldIndex
+                ] = cardPhotos[key];
+
+              }
+            );
+
+            Object.keys(cardPhotos).forEach(
+              key => delete cardPhotos[key]
+            );
+
+            Object.assign(
+              cardPhotos,
+              newPhotos
+            );
+
+            renderCardList();
+
+            message.textContent =
+              "✓ Karte wurde aus der Kartenliste entfernt.";
+
+            message.className =
+              "success";
+
+          }
+        );
+
+      }
+    );
+
+
+  const submitButton =
+    document.createElement(
+      "button"
+    );
+
+
+  submitButton.type =
+    "submit";
+
+
+  submitButton.className =
+    "primary";
+
+
+  submitButton.textContent =
+    "📝 Vorschau für alle Listings erstellen";
+
+
+  listingForm.appendChild(
+    submitButton
+  );
+
+  submitButton.addEventListener(
+    "click",
+    (event) => {
+
+      event.preventDefault();
+
+      if (!selectedCards.length) {
+
+        alert(
+          "Bitte füge zuerst mindestens eine Karte zur Kartenliste hinzu."
+        );
+
+        return;
+
+      }
+
+      renderAllListingsPreview();
+
+    }
+  );
+
+}
+
+/*
+ * Preisvergleich pro Karte.
+ */
+document.addEventListener(
+  "click",
+  async (event) => {
+
+    const button =
+      event.target.closest(
+        ".compare-card-prices"
+      );
+
+    if (!button) {
+      return;
+    }
+
+    const index =
+      Number(
+        button.dataset.index
+      );
+
+    const card =
+      selectedCards[index];
+
+    if (!card) {
+      alert(
+        "Karte nicht gefunden."
+      );
+      return;
+    }
+
+    const variant =
+      document.querySelector(
+        `.card-variant[data-index="${index}"]`
+      )?.value ?? "normal";
+
+    const condition =
+      document.querySelector(
+        `.card-condition[data-index="${index}"]`
+      )?.value ?? "near-mint";
+
+    const output =
+      document.querySelector(
+        `.price-comparison-result[data-index="${index}"]`
+      );
+
+    if (!output) {
+      console.error(
+        "Preisvergleich-Ausgabe wurde nicht gefunden.",
+        index
+      );
+      return;
+    }
+
+    button.disabled = true;
+
+    output.style.display =
+      "block";
+
+    output.innerHTML =
+      "🔎 Preise werden verglichen...";
+
+    try {
+
+      const response =
+        await fetch(
+          "/api/prices/compare",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body:
+              JSON.stringify({
+                name:
+                  card.name,
+
+                number:
+                  card.number,
+
+                setName:
+                  card.setName,
+
+                variant,
+
+                condition
+              })
+          }
+        );
+
+      const data =
+        await response.json();
+
+      if (
+        !response.ok ||
+        !data.success
+      ) {
+
+        throw new Error(
+          data.error ??
+          "Preisvergleich fehlgeschlagen."
+        );
+
+      }
+
+      const result =
+        data.result;
+
+      const formatPrice =
+        (value) => {
+
+          if (
+            value === null ||
+            value === undefined
+          ) {
+
+            return "Noch keine Daten";
+
+          }
+
+          return (
+            Number(value).toFixed(2) +
+            " €"
+          );
+
+        };
+
+      output.innerHTML = `
+
+        <div
+          style="
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+          "
+        >
+
+          <strong>
+            📊 Preisvergleich
+          </strong>
+
+
+          <p>
+            🟢 eBay aktive Angebote:
+            <strong>
+              ${formatPrice(
+                result.ebayActive
+              )}
+            </strong>
+          </p>
+
+
+          <p>
+            🔵 eBay verkauft:
+            <strong>
+              ${formatPrice(
+                result.ebaySold
+              )}
+            </strong>
+          </p>
+
+
+          <p>
+            🟠 Cardmarket:
+            <strong>
+              ${formatPrice(
+                result.cardmarket
+              )}
+            </strong>
+          </p>
+
+
+          <hr>
+
+
+          <p>
+            💡 Empfohlener Verkaufspreis:
+            <strong>
+              ${formatPrice(
+                result.recommendation
+              )}
+            </strong>
+          </p>
+
+
+          ${
+            result.recommendation !== null
+              ? `
+                <button
+                  type="button"
+                  class="use-recommended-price"
+                  data-index="${index}"
+                  data-price="${result.recommendation}"
+                >
+                  💰 Empfehlung übernehmen
+                </button>
+              `
+              : ""
+          }
+
+        </div>
+
+      `;
+
+
+      const recommendedButton =
+        output.querySelector(
+          ".use-recommended-price"
+        );
+
+
+      if (recommendedButton) {
+
+        recommendedButton.addEventListener(
+          "click",
+          () => {
+
+            const priceElement =
+              document.querySelector(
+                `.card-price[data-index="${index}"]`
+              );
+
+            if (!priceElement) {
+
+              return;
+
+            }
+
+            priceElement.value =
+              Number(
+                result.recommendation
+              ).toFixed(2);
+
+          }
+        );
+
+      }
+
+    } catch (error) {
+
+      console.error(
+        "Preisvergleich fehlgeschlagen:",
+        error
+      );
+
+      output.style.display =
+        "block";
+
+      output.innerHTML = `
+        <p>
+          ❌ ${
+            error instanceof Error
+              ? error.message
+              : String(error)
+          }
+        </p>
+      `;
+
+    } finally {
+
+      button.disabled =
+        false;
+
+    }
+
+  }
+);
+
+
+const continueButton =
+  document.getElementById(
+    "continueButton"
+  );
+
+
+if (continueButton) {
+
+  continueButton.addEventListener(
+    "click",
+    () => {
+
+      if (
+        selectedCards.length === 0
+      ) {
+
+        alert(
+          "Bitte füge zuerst mindestens eine Karte zur Kartenliste hinzu."
+        );
+
+        return;
+
+      }
+
+
+      renderListingForms();
+
+
+      listingFormContainer.classList.remove(
+        "hidden"
+      );
+
+
+      listingFormContainer.style.display =
+        "block";
+
+
+      listingFormContainer.scrollIntoView({
+
+        behavior:
+          "smooth",
+
+        block:
+          "start"
+
+      });
+
+    }
+  );
+
+}
+
+
+
+
+
+
+
+
+/*
+ * Preisvergleich für eine einzelne Karte.
+ */
+async function compareCardPrice(index) {
+
+  const card =
+    selectedCards[index];
+
+  if (!card) {
+    alert("Karte wurde nicht gefunden.");
+    return;
+  }
+
+
+  const variantElement =
+    document.querySelector(
+      `.card-variant[data-index="${index}"]`
+    );
+
+  const conditionElement =
+    document.querySelector(
+      `.card-condition[data-index="${index}"]`
+    );
+
+
+  const variant =
+    variantElement
+      ? variantElement.value
+      : "normal";
+
+
+  const condition =
+    conditionElement
+      ? conditionElement.value
+      : "near-mint";
+
+
+  const resultElement =
+    document.querySelector(
+      `.price-comparison-result[data-index="${index}"]`
+    );
+
+
+  if (resultElement) {
+
+    resultElement.innerHTML =
+      "🔄 Preise werden verglichen...";
+
+  }
+
+
+  try {
+
+    const response =
+      await fetch(
+        "/api/prices/compare",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body:
+            JSON.stringify({
+              name: card.name,
+              number: card.number,
+              setName: card.setName,
+              variant,
+              condition
+            })
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok || !data.success) {
+
+      throw new Error(
+        data.error ||
+        "Preisvergleich fehlgeschlagen."
+      );
+
+    }
+
+
+    const result =
+      data.result;
+
+
+    const formatPrice =
+      (value) => {
+
+        if (
+          value === null ||
+          value === undefined
+        ) {
+          return "Noch keine Daten";
+        }
+
+        return (
+          Number(value).toFixed(2) +
+          " €"
+        );
+
+      };
+
+
+    if (resultElement) {
+
+      resultElement.innerHTML = `
+        <div
+          style="
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+          "
+        >
+
+          <strong>
+            📊 Preisvergleich
+          </strong>
+
+          <p>
+            🟢 eBay aktive Angebote:
+            <strong>
+              ${formatPrice(result.ebayActive)}
+            </strong>
+          </p>
+
+          <p>
+            🔵 eBay verkauft:
+            <strong>
+              ${formatPrice(result.ebaySold)}
+            </strong>
+          </p>
+
+          <p>
+            🟠 Cardmarket:
+            <strong>
+              ${formatPrice(result.cardmarket)}
+            </strong>
+          </p>
+
+          <hr>
+
+          <p>
+            💡 Empfohlener Preis:
+            <strong>
+              ${formatPrice(result.recommendation)}
+            </strong>
+          </p>
+
+          ${
+            result.recommendation !== null
+              ? `
+                <button
+                  type="button"
+                  class="use-recommended-price"
+                  data-index="${index}"
+                  data-price="${result.recommendation}"
+                >
+                  💰 Empfehlung übernehmen
+                </button>
+              `
+              : ""
+          }
+
+        </div>
+      `;
+
+
+      const recommendedButton =
+        resultElement.querySelector(
+          ".use-recommended-price"
+        );
+
+
+      if (recommendedButton) {
+
+        recommendedButton.addEventListener(
+          "click",
+          () => {
+
+            const priceElement =
+              document.querySelector(
+                `.card-price[data-index="${index}"]`
+              );
+
+
+            if (priceElement) {
+
+              priceElement.value =
+                Number(
+                  result.recommendation
+                ).toFixed(2);
+
+            }
+
+          }
+        );
+
+      }
+
+    }
+
+
+  } catch (error) {
+
+    console.error(
+      "Preisvergleich Fehler:",
+      error
+    );
+
+
+    if (resultElement) {
+
+      resultElement.innerHTML =
+        `
+        <div
+          style="
+            margin-top: 15px;
+            color: red;
+          "
+        >
+          ❌ ${
+            error instanceof Error
+              ? error.message
+              : "Preisvergleich fehlgeschlagen."
+          }
+        </div>
+        `;
+
+    }
+
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* SEARCH FIX */
+document.addEventListener(
+  "submit",
+  async (event) => {
+
+    const form =
+      event.target.closest(
+        "#searchForm"
+      );
+
+    if (!form) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    const name =
+      document.getElementById("name")
+        ?.value
+        ?.trim();
+
+    const number =
+      document.getElementById("number")
+        ?.value
+        ?.trim();
+
+    const message =
+      document.getElementById("message");
+
+    const result =
+      document.getElementById("result");
+
+    if (message) {
+      message.textContent =
+        "Suche Karte...";
+      message.className = "";
+    }
+
+    try {
+
+      const response =
+        await fetch(
+          "/api/cards/search",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body: JSON.stringify({
+              name,
+              number
+            })
+          }
+        );
+
+      const data =
+        await response.json();
+
+      if (
+        !response.ok ||
+        !data.success
+      ) {
+        throw new Error(
+          data.error ||
+          "Karte wurde nicht gefunden."
+        );
+      }
+
+      selectedCard =
+        data.card;
+
+      document.getElementById(
+        "cardName"
+      ).textContent =
+        selectedCard.name;
+
+      document.getElementById(
+        "cardNumber"
+      ).textContent =
+        selectedCard.number;
+
+      document.getElementById(
+        "cardSet"
+      ).textContent =
+        selectedCard.setName;
+
+      document.getElementById(
+        "cardSetId"
+      ).textContent =
+        selectedCard.setId;
+
+      document.getElementById(
+        "cardRarity"
+      ).textContent =
+        selectedCard.rarity || "-";
+
+      document.getElementById(
+        "cardLanguage"
+      ).textContent =
+        selectedCard.language;
+
+      const image =
+        document.getElementById(
+          "cardImage"
+        );
+
+      if (
+        image &&
+        selectedCard.image
+      ) {
+        const imageUrl =
+          selectedCard.image.endsWith(".webp")
+            ? selectedCard.image
+            : selectedCard.image.replace(/\/$/, "") + "/high.webp";
+
+        image.onerror = () => {
+          console.error(
+            "Kartenbild konnte nicht geladen werden:",
+            imageUrl
+          );
+        };
+
+        image.src = imageUrl;
+
+        image.style.display =
+          "block";
+      }
+
+      if (result) {
+        result.style.display =
+          "block";
+
+        result.classList.remove(
+          "hidden"
+        );
+      }
+
+      if (message) {
+        message.textContent =
+          "✓ Karte gefunden";
+
+        message.className =
+          "success";
+      }
+
+    } catch (error) {
+
+      console.error(
+        "Kartensuche:",
+        error
+      );
+
+      if (message) {
+        message.textContent =
+          error instanceof Error
+            ? error.message
+            : "Ein unbekannter Fehler ist aufgetreten.";
+
+        message.className =
+          "error";
+      }
+
+    }
+
+  },
+  true
+);
+/* END SEARCH FIX */
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+/*
+ * EINZIGER Handler zum Erstellen der Listings.
+ *
+ * - nur eine Bestätigung
+ * - nur ein POST-Request
+ * - übernimmt aktuelle Formularwerte
+ * - FormData inklusive Bilder
+ */
+document
+  .getElementById("createAllListingsButton")
+  ?.addEventListener(
+    "click",
+    async () => {
+
+      const button =
+        document.getElementById(
+          "createAllListingsButton"
+        );
+
+      if (!selectedCards.length) {
+        alert(
+          "Keine Karten zum Einstellen vorhanden."
+        );
+        return;
+      }
+
+      /*
+       * Aktuelle Werte aus den Formularfeldern
+       * zurück in selectedCards übernehmen.
+       */
+      selectedCards.forEach(
+        (card, index) => {
+
+          const priceElement =
+            document.querySelector(
+              `.card-price[data-index="${index}"]`
+            );
+
+          const quantityElement =
+            document.querySelector(
+              `.card-quantity[data-index="${index}"]`
+            );
+
+          const variantElement =
+            document.querySelector(
+              `.card-variant[data-index="${index}"]`
+            );
+
+          const conditionElement =
+            document.querySelector(
+              `.card-condition[data-index="${index}"]`
+            );
+
+          if (priceElement) {
+
+            const price =
+              Number(priceElement.value);
+
+            if (
+              Number.isFinite(price) &&
+              price > 0
+            ) {
+              card.price = price;
+            }
+
+          }
+
+          if (quantityElement) {
+
+            const quantity =
+              Number(quantityElement.value);
+
+            if (
+              Number.isInteger(quantity) &&
+              quantity > 0
+            ) {
+              card.quantity = quantity;
+            }
+
+          }
+
+          if (variantElement) {
+            card.variant =
+              variantElement.value;
+          }
+
+          if (conditionElement) {
+            card.condition =
+              conditionElement.value;
+          }
+
+        }
+      );
+
+      console.log(
+        "📦 Listing-Daten vor Versand:",
+        selectedCards
+      );
+
+      if (
+        !confirm(
+          `${selectedCards.length} Listing(s) wirklich bei eBay einstellen?`
+        )
+      ) {
+        return;
+      }
+
+      if (!button) {
+        alert("Listing-Button nicht gefunden.");
+        return;
+      }
+
+      if (button.disabled) {
+        return;
+      }
+
+      button.disabled = true;
+
+      button.textContent =
+        "⏳ Listings werden erstellt...";
+
+      try {
+
+        const formData =
+          new FormData();
+
+        formData.append(
+          "cards",
+          JSON.stringify(
+            selectedCards
+          )
+        );
+
+        selectedCards.forEach(
+          (card, index) => {
+
+            const photos =
+              cardPhotos[index] ||
+              [];
+
+            photos.forEach(
+              file => {
+
+                formData.append(
+                  `images_${index}`,
+                  file,
+                  file.name
+                );
+
+              }
+            );
+
+          }
+        );
+
+        const response =
+          await fetch(
+            "/api/listings/create",
+            {
+              method: "POST",
+              body: formData
+            }
+          );
+
+        const data =
+          await response.json();
+
+        console.log(
+          "Listing-Ergebnis:",
+          data
+        );
+
+        if (!response.ok) {
+
+          throw new Error(
+            data.error ||
+            "Serverfehler beim Erstellen des Listings."
+          );
+
+        }
+
+        const results =
+          Array.isArray(data.results)
+            ? data.results
+            : [];
+
+        const successCount =
+          results.filter(
+            result =>
+              result &&
+              result.success === true
+          ).length;
+
+        /*
+         * Nur echte erfolgreiche Listings
+         * als Erfolg melden.
+         */
+        if (
+          successCount > 0
+        ) {
+
+          alert(
+            `✓ Fertig!\n\n` +
+            `Erfolgreich: ${successCount}\n` +
+            `Fehlgeschlagen: ${
+              selectedCards.length -
+              successCount
+            }`
+          );
+
+          return;
+
+        }
+
+        const errorMessages =
+          results
+            .map(
+              result =>
+                result?.error
+            )
+            .filter(Boolean)
+            .join("\n");
+
+        throw new Error(
+          errorMessages ||
+          data.error ||
+          "eBay hat kein erfolgreiches Listing bestätigt."
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Listing-Fehler:",
+          error
+        );
+
+        alert(
+          "Fehler beim Erstellen der Listings:\n\n" +
+          (
+            error instanceof Error
+              ? error.message
+              : String(error)
+          )
+        );
+
+      } finally {
+
+        button.disabled = false;
+
+        button.textContent =
+          "🚀 Alle Listings erstellen";
+
+      }
+
+    }
+  );
+
+</script>
+
+</body>
+
+</html>

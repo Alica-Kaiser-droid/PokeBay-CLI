@@ -1,222 +1,837 @@
-import {Card} from "#types/payload";
-import type {EbayLocalizedAspect, EbayXmlConditionDescriptor, EbayXmlConditionDetails} from "#types/ebay";
-import EbayService from "#services/EbayService";
+import type { Card } from "#types/payload";
 import ImageUploadService from "#services/ImageUploadService";
 
-export default class EbayXmlBuilderService {
-    /* UTILS */
-    private static computeTitle(card: Card): string {
-        return `${card.name} ${card.number} - ${card.set} Carte Pokémon ${card.language}`;
-    }
-
-    private static getCardQuantity(card: Card): number {
-        if(card.startPrice) {
-            return 1
-        }
-        return card.quantity || 1
-    }
-
-    /* BUILDS */
-    public static buildRequesterCredentialsXML(): string {
-        const ebayAuthToken: string = EbayService.EBAY_AUTH_TOKEN;
-        return `<RequesterCredentials>\n<eBayAuthToken>${ebayAuthToken}</eBayAuthToken>\n</RequesterCredentials>\n`;
-    }
-
-    public static async buildPictureDetailsXML(card: Card): Promise<string> {
-        let pictureDetailsXML: string = '<PictureDetails>\n';
-
-        // Check if there are images in the card
-        if (card.images && card.images.length > 0) {
-            // Download images to Imgur
-            const uploadedImageURLs: string[] = await ImageUploadService.uploadMultipleImages(card.images);
-
-            // Constructs the <PictureURL> tag for each uploaded image URL
-            uploadedImageURLs.forEach((imageURL: string): void => {
-                pictureDetailsXML += `<PictureURL>${imageURL}</PictureURL>\n`;
-            });
-        }
-
-        pictureDetailsXML += '</PictureDetails>\n';
-        return pictureDetailsXML;
-    }
-
-    public static buildTitleXML(card: Card): string {
-        return `<Title>${this.computeTitle(card)}</Title>`;
-    }
-
-    public static buildConditionXML(card: Card): string {
-        const conditionDetails: EbayXmlConditionDetails = EbayService.getConditionDetails(card);
-        let conditionXML: string = `<ConditionID>${conditionDetails.ConditionID}</ConditionID>\n`;
-
-        if (conditionDetails.ConditionDescriptors.length > 0) {
-            conditionXML += `<ConditionDescriptors>\n`;
-            conditionDetails.ConditionDescriptors.forEach((descriptor: EbayXmlConditionDescriptor) => {
-                conditionXML += `<ConditionDescriptor>\n`;
-                conditionXML += `<Name>${descriptor.Name}</Name>\n`;
-                conditionXML += `<Value>${descriptor.Value}</Value>\n`;
-                conditionXML += `</ConditionDescriptor>\n`;
-            });
-            conditionXML += `</ConditionDescriptors>\n`;
-        }
-
-        return conditionXML;
-    }
-
-    public static buildItemSpecificsXML(specifics: EbayLocalizedAspect[]): string {
-        let itemSpecificsXML: string = '<ItemSpecifics>\n';
-
-        specifics.forEach((specific: EbayLocalizedAspect) => {
-            itemSpecificsXML += `    <NameValueList>\n`;
-            itemSpecificsXML += `        <Name>${specific.name}</Name>\n`;
-            itemSpecificsXML += `        <Value>${specific.value}</Value>\n`;
-            itemSpecificsXML += `    </NameValueList>\n`;
-        });
-
-        itemSpecificsXML += '</ItemSpecifics>\n';
-        return itemSpecificsXML;
-    }
-
-    public static buildDescriptionXML(card: Card): string {
-        const titleDescription: string = this.computeTitle(card);
-        const contactInfo: string = "Pour plus d'informations, n'hésitez pas à me contacter sur eBay ou sur mon adresse mail : dibopokemon@gmail.com";
-
-        let descriptionXML: string = `<Description>\n`;
-        descriptionXML += `<![CDATA[\n`;
-        descriptionXML += `${titleDescription}\n`;
-        descriptionXML += `${contactInfo}\n`;
-        descriptionXML += `]]>\n`;
-        descriptionXML += `</Description>\n`;
-
-        return descriptionXML;
-    }
-
-    public static buildListingDetailsXML(card: Card): string {
-        let listingDetailsXML: string = '';
-        if (card.startPrice) {
-            const listingDuration: string = 'Days_7';
-            const listingType: string = 'Chinese';
-            listingDetailsXML += `<ListingDuration>${listingDuration}</ListingDuration>\n`;
-            listingDetailsXML += `<ListingType>${listingType}</ListingType>\n`;
-            listingDetailsXML += `<StartPrice currencyID="EUR">${card.startPrice}</StartPrice>\n`;
-
-            if (card.price && card.price !== card.startPrice) {
-                listingDetailsXML += `<BuyItNowPrice>${card.price}</BuyItNowPrice>\n`;
-            }
-        } else if (card.price) {
-            const listingDuration: string = 'GTC';
-            const listingType: string = 'FixedPriceItem';
-            listingDetailsXML += `<ListingDuration>${listingDuration}</ListingDuration>\n`;
-            listingDetailsXML += `<ListingType>${listingType}</ListingType>\n`;
-            listingDetailsXML += `<StartPrice currencyID="EUR">${card.price}</StartPrice>\n`;
-        }
-
-        // Add the quantity
-        listingDetailsXML += `<Quantity>${this.getCardQuantity(card)}</Quantity>\n`;
-
-        // Add the best offer option
-        const isAuctionWithBuyItNow: boolean = card.startPrice !== undefined && card.price !== undefined;
-        if(!isAuctionWithBuyItNow) {
-            listingDetailsXML += `<BestOfferDetails>\n<BestOfferEnabled>true</BestOfferEnabled>\n</BestOfferDetails>\n`;
-
-            if(card.minimumBestOfferAmount) {
-                listingDetailsXML += `<ListingDetails>\n<MinimumBestOfferPrice>${card.minimumBestOfferAmount}</MinimumBestOfferPrice>\n</ListingDetails>\n`;
-            }
-        }
-
-        return listingDetailsXML;
-    }
-
-    public static replaceSpecialXmlCharacters(input: string): string {
-        return input
+class EbayXmlBuilderService {
+    /**
+     * XML-Sonderzeichen maskieren.
+     */
+    private static escapeXml(value: unknown): string {
+        return String(value ?? "")
             .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&apos;");
     }
 
-    public static formattedCard(card: Card): Card {
-        // Limit name to 80 characters
-        let formattedName = card.name.slice(0, 80);
-        // Replaces special characters for 'name' and 'set'
-        formattedName = this.replaceSpecialXmlCharacters(formattedName);
-        const formattedSet = this.replaceSpecialXmlCharacters(card.set);
+    /**
+     * Preis sauber formatieren.
+     */
+    private static formatPrice(price: number): string {
+        const numericPrice = Number(price);
 
-        return {
-            ...card,
-            name: formattedName,
-            set: formattedSet,
-        };
-    }
-
-    public static formatCardSpecifics(cardSpecifics: EbayLocalizedAspect[]): EbayLocalizedAspect[] {
-        return cardSpecifics.map((specific: EbayLocalizedAspect) => {
-            const formattedName = this.replaceSpecialXmlCharacters(specific.name);
-            const formattedValue = this.replaceSpecialXmlCharacters(specific.value);
-            return {
-                type: specific.type,
-                name: formattedName,
-                value: formattedValue,
-            };
-        });
-    }
-
-
-    public static async buildAddItemXML(card: Card): Promise<string> {
-        const formattedCard: Card = this.formattedCard(card);
-        const requesterCredentialsXML: string = this.buildRequesterCredentialsXML();
-        const pictureDetailsXML: string = await this.buildPictureDetailsXML(formattedCard);
-        const titleXML: string = this.buildTitleXML(formattedCard);
-        const conditionXML: string = this.buildConditionXML(formattedCard);
-        const cardSpecifics: EbayLocalizedAspect[] | null = await EbayService.findCardSpecifics(formattedCard);
-
-        let itemSpecificsXML: string = '';
-
-        if (cardSpecifics) {
-            itemSpecificsXML = this.buildItemSpecificsXML(this.formatCardSpecifics(cardSpecifics));
+        if (
+            !Number.isFinite(numericPrice) ||
+            numericPrice <= 0
+        ) {
+            throw new Error(
+                `Ungültiger Preis: ${price}`
+            );
         }
 
-        const descriptionXML: string = this.buildDescriptionXML(formattedCard);
-        const listingDetailsXML: string = this.buildListingDetailsXML(formattedCard);
+        return numericPrice.toFixed(2);
+    }
 
-        const additionalXML = `
-<Country>FR</Country>
-<Currency>EUR</Currency>
-<DispatchTimeMax>5</DispatchTimeMax>
-<PostalCode>35000</PostalCode>
+    /**
+     * Menge ermitteln.
+     */
+    private static getQuantity(card: Card): number {
+        const quantity = Number(card.quantity ?? 1);
+
+        if (
+            !Number.isInteger(quantity) ||
+            quantity < 1
+        ) {
+            throw new Error(
+                `Ungültige Menge für "${card.name}": ${quantity}`
+            );
+        }
+
+        return quantity;
+    }
+
+    /**
+     * Angebotsart bestimmen.
+     *
+     * Wenn price gesetzt ist:
+     * Sofort-Kaufen
+     *
+     * Sonst:
+     * Auktion
+     */
+    private static getListingType(
+        card: Card
+    ): "Chinese" | "FixedPriceItem" {
+
+        /*
+         * Angebotsart:
+         *
+         * auction → klassische Auktion
+         *
+         * fixed oder keine Angabe →
+         * Sofort-Kaufen als Standard
+         */
+        if (card.listingMode === "auction") {
+            return "Chinese";
+        }
+
+        return "FixedPriceItem";
+    }
+
+    /**
+     * eBay-Titel erzeugen.
+     *
+     * Maximal 80 Zeichen.
+     */
+    private static computeTitle(card: Card): string {
+        let formattedNumber = "";
+
+        if (card.number) {
+            const number =
+                String(card.number);
+
+            const match =
+                number.match(
+                    /^(\d+)\s*\/\s*(\d+)$/
+                );
+
+            if (match) {
+                formattedNumber =
+                    `${match[1].padStart(3, "0")}/${match[2]}`;
+            } else {
+                formattedNumber =
+                    number;
+            }
+        }
+
+        const setName =
+            String(
+                (card as any).setName ||
+                (typeof (card as any).set === "object"
+                    ? (card as any).set?.name
+                    : "") ||
+                card.set ||
+                ""
+            );
+
+        const parts: string[] = [
+            "Pokémon Karte",
+        ];
+
+        if (card.name) {
+            parts.push(
+                String(card.name)
+            );
+        }
+
+        if (formattedNumber) {
+            parts.push(
+                formattedNumber
+            );
+        }
+
+        if (setName) {
+            parts.push(
+                setName
+            );
+        }
+
+        if (card.promo) {
+            parts.push(
+                "Promo"
+            );
+        }
+
+        if (card.reverseHolo) {
+            parts.push(
+                "Reverse Holo"
+            );
+        } else if (card.holo) {
+            parts.push(
+                "Holo"
+            );
+        }
+
+        if (card.isGraded) {
+            if (
+                card.gradeCompany &&
+                card.grade !== undefined &&
+                card.grade !== null
+            ) {
+                parts.push(
+                    `${card.gradeCompany} ${card.grade}`
+                );
+            } else {
+                parts.push(
+                    "Graded"
+                );
+            }
+        }
+
+        const title =
+            parts
+                .filter(Boolean)
+                .join(" - ");
+
+        return this.escapeXml(
+            title.slice(0, 80)
+        );
+    }
+
+    /**
+     * Bilder hochladen und PictureDetails erzeugen.
+     *
+     * Unterstützt mehrere Bilder.
+     */
+    private static async buildPictureDetailsXML(
+        card: Card
+    ): Promise<string> {
+        if (
+            !Array.isArray(card.images) ||
+            card.images.length === 0
+        ) {
+            throw new Error(
+                `Keine Bilder für "${card.name}" vorhanden.`
+            );
+        }
+
+        console.log(
+            `\nLade ${card.images.length} Bild(er) hoch...`
+        );
+
+        const imageUrls =
+            await ImageUploadService.uploadMultipleImages(
+                card.images
+            );
+
+        if (
+            !Array.isArray(imageUrls) ||
+            imageUrls.length === 0
+        ) {
+            throw new Error(
+                "Es konnte keine Bild-URL erzeugt werden."
+            );
+        }
+
+        const pictureUrls = imageUrls
+            .map(
+                (imageUrl) =>
+                    `<PictureURL>${this.escapeXml(
+                        imageUrl
+                    )}</PictureURL>`
+            )
+            .join("\n");
+
+        return `
+<PictureDetails>
+${pictureUrls}
+</PictureDetails>`;
+    }
+
+    /**
+     * Item Specifics erzeugen.
+     */
+    private static buildItemSpecificsXML(
+        card: Card
+    ): string {
+        const specifics: Array<{
+            name: string;
+            value: string;
+        }> = [];
+
+        /*
+         * Fallback aus deinem bisherigen Projekt.
+         */
+        specifics.push({
+            name: "Spiel",
+            value: "Pokémon",
+        });
+
+        if (card.number) {
+            specifics.push({
+                name: "Kartennummer",
+                value: String(card.number),
+            });
+        }
+
+        if (card.set) {
+            specifics.push({
+                name: "Set",
+                value: String(card.set),
+            });
+        }
+
+        if (card.language) {
+            specifics.push({
+                name: "Sprache",
+                value: String(card.language),
+            });
+        }
+
+        if (card.promo) {
+            specifics.push({
+                name: "Besonderheiten",
+                value: "Promo",
+            });
+        }
+
+        if (card.reverseHolo) {
+            specifics.push({
+                name: "Besonderheiten",
+                value: "Reverse Holo",
+            });
+        } else if (card.holo) {
+            specifics.push({
+                name: "Besonderheiten",
+                value: "Holo",
+            });
+        }
+
+        if (card.isGraded) {
+            specifics.push({
+                name: "Zustand",
+                value: "Gegradet",
+            });
+
+            if (card.gradeCompany) {
+                specifics.push({
+                    name: "Bewertungsunternehmen",
+                    value: String(
+                        card.gradeCompany
+                    ),
+                });
+            }
+
+            if (
+                card.grade !== undefined &&
+                card.grade !== null
+            ) {
+                specifics.push({
+                    name: "Bewertung",
+                    value: String(card.grade),
+                });
+            }
+        }
+
+        // Zustand wird nicht als separates Item Specific gesendet.
+        // Der erforderliche Kartenzustand wird separat gesetzt.
+
+        const nameValueLists = specifics
+            .map(
+                (specific) => `
+<NameValueList>
+    <Name>${this.escapeXml(
+        specific.name
+    )}</Name>
+    <Value>${this.escapeXml(
+        specific.value
+    )}</Value>
+</NameValueList>`
+            )
+            .join("");
+
+        return `
+<ItemSpecifics>
+<NameValueList>
+    <Name>Kartenzustand</Name>
+    <Value>Near Mint oder besser</Value>
+</NameValueList>
+
+<NameValueList>
+    <Name>Zustand</Name>
+    <Value>Ungraded</Value>
+</NameValueList>
+
+${nameValueLists}
+</ItemSpecifics>`;
+    }
+
+    /**
+     * Artikelbeschreibung erzeugen.
+     */
+    private static buildDescription(
+        card: Card,
+        listingType: "Chinese" | "FixedPriceItem",
+        quantity: number
+    ): string {
+        const details: string[] = [];
+
+        details.push(
+            `${card.name ?? ""} ${card.number ?? ""}`.trim()
+        );
+
+        if (card.set) {
+            details.push(
+                `Set: ${card.set}`
+            );
+        }
+
+        if (card.language) {
+            details.push(
+                `Sprache: ${card.language}`
+            );
+        }
+
+        if (card.promo) {
+            details.push(
+                "Besonderheit: Promo"
+            );
+        }
+
+        if (card.reverseHolo) {
+            details.push(
+                "Besonderheit: Reverse Holo"
+            );
+        } else if (card.holo) {
+            details.push(
+                "Besonderheit: Holo"
+            );
+        }
+
+        if (card.isGraded) {
+            let gradingText =
+                "Zustand: Gegradet";
+
+            if (card.gradeCompany) {
+                gradingText +=
+                    ` – ${card.gradeCompany}`;
+            }
+
+            if (
+                card.grade !== undefined &&
+                card.grade !== null
+            ) {
+                gradingText +=
+                    ` ${card.grade}`;
+            }
+
+            details.push(gradingText);
+        } else if (card.condition) {
+            details.push(
+                `Zustand: ${card.condition}`
+            );
+        }
+
+        if (
+            listingType === "FixedPriceItem"
+        ) {
+            details.push(
+                "Angebotsart: Sofort-Kaufen"
+            );
+        } else {
+            details.push(
+                "Angebotsart: Auktion"
+            );
+        }
+
+        if (quantity > 1) {
+            details.push(
+                `Verfügbare Menge: ${quantity} Stück`
+            );
+        }
+
+        details.push("");
+        details.push(
+            "Original Pokémon Sammelkarte."
+        );
+        details.push("");
+        details.push(
+            "Die Karte wird sorgfältig verpackt und versendet."
+        );
+        details.push("");
+        details.push(
+            "Bei Fragen kannst du mich gerne über eBay kontaktieren."
+        );
+
+        return `<![CDATA[
+${details.join("\n")}
+]]>`;
+    }
+
+    /**
+     * Rückgaberecht.
+     */
+    private static buildReturnPolicyXML(): string {
+        return `
 <ReturnPolicy>
     <ReturnsAcceptedOption>ReturnsNotAccepted</ReturnsAcceptedOption>
-</ReturnPolicy>
+</ReturnPolicy>`;
+    }
+
+    /**
+     * Versanddetails.
+     */
+    private static buildShippingDetailsXML(): string {
+        const shippingCostRaw =
+            process.env.EBAY_SHIPPING_COST ?? "1.10";
+
+        const shippingCost = Number(shippingCostRaw);
+
+        if (
+            !Number.isFinite(shippingCost) ||
+            shippingCost < 0
+        ) {
+            throw new Error(
+                `Ungültige Versandkosten: ${shippingCostRaw}`
+            );
+        }
+
+        const environment =
+            (
+                process.env.EBAY_ENVIRONMENT ??
+                "sandbox"
+            ).toLowerCase();
+
+        /*
+         * Der Service wurde mit GeteBayDetails geprüft.
+         *
+         * DE_DeutschePostBrief ist gültig und ein
+         * nationaler Versandservice.
+         *
+         * Über die .env kann der Wert weiterhin für
+         * Sandbox und Produktion separat überschrieben werden.
+         */
+        const shippingService =
+            environment === "production"
+                ? (
+                    process.env
+                        .EBAY_SHIPPING_SERVICE_PRODUCTION ??
+                    "DE_DeutschePostBrief"
+                )
+                : (
+                    process.env
+                        .EBAY_SHIPPING_SERVICE_SANDBOX ??
+                    "DE_DeutschePostBrief"
+                );
+
+        const postalCode =
+            process.env.EBAY_POSTAL_CODE ??
+            "53859";
+
+        console.log(
+            "\nVERSANDKONFIGURATION:"
+        );
+
+        console.log(
+            "Land: Deutschland"
+        );
+
+        console.log(
+            "PLZ:",
+            postalCode
+        );
+
+        console.log(
+            `Versandkosten: ${shippingCost.toFixed(2)} EUR`
+        );
+
+        console.log(
+            `Umgebung: ${environment}`
+        );
+
+        console.log(
+            `Versandservice: ${shippingService}`
+        );
+
+        return `
 <ShippingDetails>
     <ShippingType>Flat</ShippingType>
+
     <ShippingServiceOptions>
         <ShippingServicePriority>1</ShippingServicePriority>
-        <ShippingServiceCost currencyID="EUR">1.80</ShippingServiceCost>
-        <ShippingService>FR_PostOfficeLetter</ShippingService>
-    </ShippingServiceOptions>
-    <ShippingServiceOptions>
-        <ShippingServicePriority>2</ShippingServicePriority>
-        <ShippingServiceCost currencyID="EUR">2.35</ShippingServiceCost>
-        <ShippingService>FR_PostOfficeLetterFollowed</ShippingService>
-    </ShippingServiceOptions>
-</ShippingDetails>
-`;
 
-        // Assemble the complete XML
-        return `<?xml version="1.0" encoding="utf-8"?>
+        <ShippingService>${this.escapeXml(
+            shippingService
+        )}</ShippingService>
+
+        <ShippingServiceCost currencyID="EUR">${shippingCost.toFixed(
+            2
+        )}</ShippingServiceCost>
+    </ShippingServiceOptions>
+</ShippingDetails>`;
+    }
+
+    /**
+     * Listing- und Preis-XML erzeugen.
+     */
+    private static buildListingPriceXML(
+        card: Card,
+        listingType: "Chinese" | "FixedPriceItem"
+    ): string {
+        if (
+            listingType === "FixedPriceItem"
+        ) {
+            if (
+                card.price === undefined ||
+                card.price === null
+            ) {
+                throw new Error(
+                    `Für Sofort-Kaufen fehlt der Preis bei "${card.name}".`
+                );
+            }
+
+            return `
+<ListingType>FixedPriceItem</ListingType>
+
+<StartPrice currencyID="EUR">${this.formatPrice(
+    Number(card.price)
+)}</StartPrice>`;
+        }
+
+        const startPrice =
+            card.startPrice ?? 1.00;
+
+        return `
+<ListingType>Chinese</ListingType>
+
+<StartPrice currencyID="EUR">${this.formatPrice(
+    Number(startPrice)
+)}</StartPrice>`;
+    }
+
+    /**
+     * Optional Best Offer.
+     */
+    private static buildBestOfferXML(
+        card: Card
+    ): string {
+        if (
+            card.minimumBestOfferAmount === undefined ||
+            card.minimumBestOfferAmount === null
+        ) {
+            return "";
+        }
+
+        return `
+<BestOfferDetails>
+    <BestOfferEnabled>true</BestOfferEnabled>
+
+    <MinimumBestOfferPrice currencyID="EUR">${this.formatPrice(
+        Number(card.minimumBestOfferAmount)
+    )}</MinimumBestOfferPrice>
+</BestOfferDetails>`;
+    }
+
+    /**
+     * AddItem XML erzeugen.
+     */
+    static async buildAddItemXML(
+        card: Card
+    ): Promise<string> {
+        console.log(
+            "\n========================================"
+        );
+
+        console.log(
+            "ERSTELLE EBAY ADDITEM XML"
+        );
+
+        console.log(
+            "========================================"
+        );
+
+        /*
+         * Grundwerte bestimmen.
+         */
+        const listingType =
+            this.getListingType(card);
+
+        const quantity =
+            this.getQuantity(card);
+
+        console.log("\nARTIKELDATEN:");
+
+        console.log(
+            "Name:",
+            card.name
+        );
+
+        console.log(
+            "Angebotsart:",
+            listingType === "FixedPriceItem"
+                ? "Sofort-Kaufen"
+                : "Auktion"
+        );
+
+        console.log(
+            "Menge:",
+            quantity
+        );
+
+        if (
+            listingType === "FixedPriceItem"
+        ) {
+            console.log(
+                "Sofort-Kaufen Preis:",
+                card.price
+            );
+        } else {
+            console.log(
+                "Auktions-Startpreis:",
+                card.startPrice ?? 1.00
+            );
+        }
+
+        /*
+         * Bilder hochladen.
+         */
+        const pictureDetailsXML =
+            await this.buildPictureDetailsXML(
+                card
+            );
+
+        /*
+         * Titel.
+         */
+        const title =
+            this.computeTitle(card);
+
+        /*
+         * Item Specifics.
+         */
+        console.log(
+            "\n========================================"
+        );
+
+        console.log(
+            "ERSTELLE EBAY ITEM SPECIFICS"
+        );
+
+        console.log(
+            "========================================"
+        );
+
+        const itemSpecificsXML =
+            this.buildItemSpecificsXML(
+                card
+            );
+
+        /*
+         * Beschreibung.
+         */
+        const description =
+            this.buildDescription(
+                card,
+                listingType,
+                quantity
+            );
+
+        /*
+         * Preis.
+         */
+        const listingPriceXML =
+            this.buildListingPriceXML(
+                card,
+                listingType
+            );
+
+        /*
+         * Best Offer nur bei Sofort-Kaufen.
+         */
+        const bestOfferXML =
+            listingType === "FixedPriceItem"
+                ? this.buildBestOfferXML(card)
+                : "";
+
+        /*
+         * Konfiguration.
+         */
+        const postalCode =
+            process.env.EBAY_POSTAL_CODE ??
+            "53859";
+
+        const categoryId =
+            process.env.EBAY_CATEGORY_ID ??
+            "183454";
+
+        /*
+         * XML erstellen.
+         *
+         * WICHTIG:
+         * RequesterCredentials werden hier NICHT eingefügt.
+         *
+         * EbayService.ts fügt den Token später
+         * direkt vor dem Request ein.
+         */
+        const xml = `<?xml version="1.0" encoding="utf-8"?>
 <AddItemRequest xmlns="urn:ebay:apis:eBLBaseComponents">
-    ${requesterCredentialsXML}
+
     <ErrorLanguage>en_US</ErrorLanguage>
+
     <WarningLevel>High</WarningLevel>
+
     <Item>
-        <Site>France</Site>
+
+        <Site>Germany</Site>
+
         ${pictureDetailsXML}
-        ${titleXML}
+
+        <Title>${title}</Title>
+
         <PrimaryCategory>
-            <CategoryID>183454</CategoryID>
+            <CategoryID>${this.escapeXml(
+                categoryId
+            )}</CategoryID>
         </PrimaryCategory>
-        ${conditionXML}
+
+        <ConditionID>${this.escapeXml(
+            process.env.EBAY_CONDITION_ID ?? "3000"
+        )}</ConditionID>
+
         ${itemSpecificsXML}
-        ${descriptionXML}
-        ${listingDetailsXML}
-        ${additionalXML}
+
+        <Description>${description}</Description>
+
+        <ListingDuration>${
+            listingType === "FixedPriceItem"
+                ? "GTC"
+                : "Days_7"
+        }</ListingDuration>
+
+        ${listingPriceXML}
+
+        <Quantity>${quantity}</Quantity>
+
+        ${bestOfferXML}
+
+        <Country>DE</Country>
+
+        <Currency>EUR</Currency>
+
+        <DispatchTimeMax>5</DispatchTimeMax>
+
+        <PostalCode>${this.escapeXml(
+            postalCode
+        )}</PostalCode>
+
+        ${this.buildReturnPolicyXML()}
+
+        ${this.buildShippingDetailsXML()}
+
     </Item>
+
 </AddItemRequest>`;
+
+        console.log(
+            "\n========================================"
+        );
+
+        console.log(
+            "XML ERFOLGREICH ERSTELLT"
+        );
+
+        console.log(
+            "========================================"
+        );
+
+        console.log("\nRETURN POLICY:");
+
+        console.log(
+            "ReturnsAcceptedOption: ReturnsNotAccepted"
+        );
+
+        return xml;
     }
 }
+
+export default EbayXmlBuilderService;

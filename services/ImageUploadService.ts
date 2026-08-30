@@ -1,45 +1,151 @@
-import * as path from 'node:path';
-import * as fs from 'fs';
-import FormData from 'form-data';
-import fetch from 'node-fetch';
+import * as path from "node:path";
+import * as fs from "node:fs";
+
+import FormData from "form-data";
+import fetch from "node-fetch";
+
 import OsService from "#services/OsService";
-import {configDotenv} from "dotenv";
 
-configDotenv()
+class ImageUploadService {
+    private static readonly IMGBB_API_URL =
+        "https://api.imgbb.com/1/upload";
 
+    /**
+     * Ein einzelnes Bild hochladen.
+     */
+    static async uploadImage(
+        imageName: string
+    ): Promise<string> {
+        const apiKey =
+            process.env.IMGBB_API_KEY;
 
-interface ImgBBResponse {
-    data: {
-        url: string;
-    };
-    success: boolean;
-    status: number;
-}
-
-export default class ImageUploadService {
-    private static IMGBB_API_URL: string = 'https://api.imgbb.com/1/upload';
-
-    public static async uploadImage(imageName: string): Promise<string> {
-        const imagePath: string = path.join(OsService.getDirname(), '../images', imageName);
-        const formData: FormData = new FormData();
-        formData.append('image', fs.createReadStream(imagePath));
-
-        const response = await fetch(`${this.IMGBB_API_URL}?key=${process.env.IMGBB_API_KEY}`, {
-            method: 'POST',
-            body: formData,
-        });
-
-        const data: ImgBBResponse = await response.json() as ImgBBResponse;
-
-        if (data.success) {
-            return data.data.url
-        } else {
-            throw new Error(`Failed to upload image. Status: ${data.status}`);
+        if (!apiKey) {
+            throw new Error(
+                "IMGBB_API_KEY fehlt. Bitte überprüfe deine .env-Datei."
+            );
         }
+
+        if (
+            !imageName ||
+            typeof imageName !== "string"
+        ) {
+            throw new Error(
+                `Ungültiger Bildname: ${String(imageName)}`
+            );
+        }
+
+        const imagePath = path.join(
+            OsService.getDirname(),
+            "../images",
+            imageName
+        );
+
+        if (!fs.existsSync(imagePath)) {
+            throw new Error(
+                `Bilddatei nicht gefunden: ${imagePath}`
+            );
+        }
+
+        console.log(
+            `Lade Bild hoch: ${imagePath}`
+        );
+
+        const formData =
+            new FormData();
+
+        formData.append(
+            "image",
+            fs.createReadStream(imagePath)
+        );
+
+        const response = await fetch(
+            `${this.IMGBB_API_URL}?key=${apiKey}`,
+            {
+                method: "POST",
+
+                body: formData
+            }
+        );
+
+        const responseText =
+            await response.text();
+
+        console.log(
+            "ImgBB Status:",
+            response.status
+        );
+
+        console.log(
+            "ImgBB Antwort:",
+            responseText
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                `ImgBB HTTP Fehler ${response.status}: ${responseText}`
+            );
+        }
+
+        if (!responseText) {
+            throw new Error(
+                "ImgBB hat eine leere Antwort zurückgegeben."
+            );
+        }
+
+        let data: any;
+
+        try {
+            data =
+                JSON.parse(responseText);
+        } catch {
+            throw new Error(
+                `ImgBB hat keine gültige JSON-Antwort geliefert: ${responseText}`
+            );
+        }
+
+        if (
+            data.success &&
+            data.data?.url
+        ) {
+            console.log(
+                "Bild erfolgreich hochgeladen:",
+                data.data.url
+            );
+
+            return data.data.url;
+        }
+
+        throw new Error(
+            `ImgBB Upload fehlgeschlagen: ${JSON.stringify(data)}`
+        );
     }
 
-    public static async uploadMultipleImages(imageNames: string[]): Promise<string[]> {
-        const uploadPromises: Promise<string>[] = imageNames.map((imageName: string) => this.uploadImage(imageName));
-        return Promise.all(uploadPromises);
+    /**
+     * Mehrere Bilder hochladen.
+     */
+    static async uploadMultipleImages(
+        imageNames: string[]
+    ): Promise<string[]> {
+        if (
+            !Array.isArray(imageNames) ||
+            imageNames.length === 0
+        ) {
+            throw new Error(
+                "Es wurden keine Bilder zum Hochladen übergeben."
+            );
+        }
+
+        const imageUrls: string[] = [];
+
+        for (const imageName of imageNames) {
+            const imageUrl =
+                await this.uploadImage(imageName);
+
+            imageUrls.push(imageUrl);
+        }
+
+        return imageUrls;
     }
 }
+
+export default ImageUploadService;
