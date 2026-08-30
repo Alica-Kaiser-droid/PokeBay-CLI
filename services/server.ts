@@ -51,6 +51,147 @@ app.use(
 );
 
 
+
+/**
+ * Privater Zugriffsschutz für PokeBay
+ *
+ * Erwartet Environment Variables:
+ * POKEBAY_AUTH_USER
+ * POKEBAY_AUTH_PASSWORD
+ */
+const authUser =
+  process.env.POKEBAY_AUTH_USER;
+
+const authPassword =
+  process.env.POKEBAY_AUTH_PASSWORD;
+
+
+if (
+  !authUser ||
+  !authPassword
+) {
+
+  throw new Error(
+    "POKEBAY_AUTH_USER oder POKEBAY_AUTH_PASSWORD fehlt."
+  );
+
+}
+
+
+app.use(
+  (
+    req,
+    res,
+    next
+  ) => {
+
+    const authorization =
+      req.headers.authorization;
+
+
+    if (
+      !authorization ||
+      !authorization.startsWith(
+        "Basic "
+      )
+    ) {
+
+      res.setHeader(
+        "WWW-Authenticate",
+        'Basic realm="PokeBay Private"'
+      );
+
+      res.status(401).send(
+        "Authentifizierung erforderlich."
+      );
+
+      return;
+
+    }
+
+
+    try {
+
+      const encoded =
+        authorization.slice(
+          "Basic ".length
+        );
+
+      const decoded =
+        Buffer.from(
+          encoded,
+          "base64"
+        ).toString(
+          "utf8"
+        );
+
+      const separatorIndex =
+        decoded.indexOf(
+          ":"
+        );
+
+
+      if (
+        separatorIndex === -1
+      ) {
+
+        throw new Error(
+          "Ungültige Zugangsdaten."
+        );
+
+      }
+
+
+      const username =
+        decoded.slice(
+          0,
+          separatorIndex
+        );
+
+      const password =
+        decoded.slice(
+          separatorIndex + 1
+        );
+
+
+      if (
+        username !== authUser ||
+        password !== authPassword
+      ) {
+
+        res.setHeader(
+          "WWW-Authenticate",
+          'Basic realm="PokeBay Private"'
+        );
+
+        res.status(401).send(
+          "Ungültige Zugangsdaten."
+        );
+
+        return;
+
+      }
+
+
+      next();
+
+    } catch {
+
+      res.setHeader(
+        "WWW-Authenticate",
+        'Basic realm="PokeBay Private"'
+      );
+
+      res.status(401).send(
+        "Ungültige Zugangsdaten."
+      );
+
+    }
+
+  }
+);
+
+
 app.use(
   express.static(
     path.join(
