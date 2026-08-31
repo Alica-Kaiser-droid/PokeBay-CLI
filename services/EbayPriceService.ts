@@ -93,8 +93,8 @@ class EbayPriceService {
 
 
     return {
-      appId,
-      certId,
+      appId: appId.trim(),
+      certId: certId.trim(),
       isSandbox
     };
 
@@ -136,13 +136,70 @@ class EbayPriceService {
 
     const {
       appId,
-      certId
+      certId,
+      isSandbox
     } =
       this.getCredentials();
 
 
     const baseUrl =
       this.getBaseUrl();
+
+
+    const maskCredential =
+      (value: string) => {
+
+        if (value.length <= 8) {
+          return "[MASKED]";
+        }
+
+        return (
+          value.slice(0, 4) +
+          "..." +
+          value.slice(-4)
+        );
+
+      };
+
+
+    console.log("");
+    console.log("========================================");
+    console.log("EBAY OAUTH DIAGNOSE");
+    console.log("========================================");
+    console.log(
+      "Environment:",
+      isSandbox
+        ? "SANDBOX"
+        : "PRODUCTION"
+    );
+    console.log(
+      "Base URL:",
+      baseUrl
+    );
+    console.log(
+      "App ID vorhanden:",
+      Boolean(appId)
+    );
+    console.log(
+      "App ID Länge:",
+      appId.length
+    );
+    console.log(
+      "App ID maskiert:",
+      maskCredential(appId)
+    );
+    console.log(
+      "Cert ID vorhanden:",
+      Boolean(certId)
+    );
+    console.log(
+      "Cert ID Länge:",
+      certId.length
+    );
+    console.log(
+      "Cert ID maskiert:",
+      maskCredential(certId)
+    );
 
 
     const credentials =
@@ -158,26 +215,81 @@ class EbayPriceService {
     );
 
 
-    const response =
-      await axios.post<EbayTokenResponse>(
-        `${baseUrl}/identity/v1/oauth2/token`,
-        new URLSearchParams({
-          grant_type:
-            "client_credentials",
+    let response;
 
-          scope:
-            "https://api.ebay.com/oauth/api_scope"
-        }).toString(),
-        {
-          headers: {
-            "Authorization":
-              `Basic ${credentials}`,
+    try {
 
-            "Content-Type":
-              "application/x-www-form-urlencoded"
+      response =
+        await axios.post<EbayTokenResponse>(
+          `${baseUrl}/identity/v1/oauth2/token`,
+          new URLSearchParams({
+            grant_type:
+              "client_credentials",
+
+            scope:
+              "https://api.ebay.com/oauth/api_scope"
+          }).toString(),
+          {
+            headers: {
+              "Authorization":
+                `Basic ${credentials}`,
+
+              "Content-Type":
+                "application/x-www-form-urlencoded"
+            }
           }
-        }
-      );
+        );
+
+    } catch (error) {
+
+      if (
+        axios.isAxiosError(error)
+      ) {
+
+        console.error(
+          "========================================"
+        );
+
+        console.error(
+          "EBAY OAUTH FEHLER"
+        );
+
+        console.error(
+          "========================================"
+        );
+
+        console.error(
+          "Environment:",
+          this.getEnvironment()
+        );
+
+        console.error(
+          "Base URL:",
+          baseUrl
+        );
+
+        console.error(
+          "HTTP Status:",
+          error.response?.status ?? "unbekannt"
+        );
+
+        console.error(
+          "eBay Fehler:",
+          error.response?.data ?? error.message
+        );
+
+      } else {
+
+        console.error(
+          "Unbekannter eBay OAuth Fehler:",
+          error
+        );
+
+      }
+
+      throw error;
+
+    }
 
 
     this.accessToken =
