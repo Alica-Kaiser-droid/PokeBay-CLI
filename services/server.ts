@@ -266,6 +266,8 @@ app.post(
       console.log("========================================");
       console.log("Name:", name);
       console.log("Nummer:", number);
+      console.log("Nummer JSON:", JSON.stringify(number));
+      console.log("Nummer Typ:", typeof number);
 
 
       const card =
