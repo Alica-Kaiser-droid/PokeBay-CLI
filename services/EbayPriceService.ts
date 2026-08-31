@@ -280,12 +280,49 @@ class EbayPriceService {
     card: EbayPriceSearchRequest
   ): Promise<number | null> {
 
+    console.log("");
+    console.log("========================================");
+    console.log("EBAY ACTIVE PRICE START");
+    console.log("========================================");
+    console.log(
+      "Environment:",
+      this.getEnvironment()
+    );
+    console.log(
+      "App ID vorhanden:",
+      Boolean(
+        this.getEnvironment() === "SANDBOX"
+          ? process.env.EBAY_APP_ID_SANDBOX
+          : process.env.EBAY_APP_ID_PRODUCTION
+      )
+    );
+    console.log(
+      "Cert ID vorhanden:",
+      Boolean(
+        this.getEnvironment() === "SANDBOX"
+          ? process.env.EBAY_CERT_ID_SANDBOX
+          : process.env.EBAY_CERT_ID_PRODUCTION
+      )
+    );
+
     const token =
       await this.getAccessToken();
 
 
+    console.log(
+      "OAuth Token erhalten:",
+      Boolean(token)
+    );
+
+
     const baseUrl =
       this.getBaseUrl();
+
+
+    console.log(
+      "eBay Base URL:",
+      baseUrl
+    );
 
 
     const query =
@@ -390,6 +427,16 @@ class EbayPriceService {
     const items =
       response.data.itemSummaries ??
       [];
+
+
+    console.log(
+      "eBay API erfolgreich."
+    );
+
+    console.log(
+      "Gefundene Items:",
+      items.length
+    );
 
 
     /*
