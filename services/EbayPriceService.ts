@@ -298,35 +298,93 @@ class EbayPriceService {
     );
 
 
-    const response =
-      await axios.get<EbaySearchResponse>(
-        `${baseUrl}/buy/browse/v1/item_summary/search`,
-        {
-          params: {
+    let response;
 
-            q:
-              query,
+    try {
 
-            limit:
-              20
+      response =
+        await axios.get<EbaySearchResponse>(
+          `${baseUrl}/buy/browse/v1/item_summary/search`,
+          {
+            params: {
 
-          },
+              q:
+                query,
 
-          headers: {
+              limit:
+                20
 
-            "Authorization":
-              `Bearer ${token}`,
+            },
 
-            "X-EBAY-C-MARKETPLACE-ID":
-              "EBAY_DE",
+            headers: {
 
-            "Accept":
-              "application/json"
+              "Authorization":
+                `Bearer ${token}`,
 
+              "X-EBAY-C-MARKETPLACE-ID":
+                "EBAY_DE",
+
+              "Accept":
+                "application/json"
+
+            },
+
+            timeout:
+              20000
           }
+        );
 
-        }
-      );
+    } catch (error) {
+
+      if (
+        axios.isAxiosError(error)
+      ) {
+
+        console.error(
+          "eBay Active Price API Fehler"
+        );
+
+        console.error(
+          "HTTP Status:",
+          error.response?.status ??
+          "kein HTTP Status"
+        );
+
+        console.error(
+          "eBay Antwort:",
+          JSON.stringify(
+            error.response?.data ??
+            {
+              message:
+                error.message
+            },
+            null,
+            2
+          )
+        );
+
+        console.error(
+          "eBay URL:",
+          `${baseUrl}/buy/browse/v1/item_summary/search`
+        );
+
+        console.error(
+          "Marketplace:",
+          "EBAY_DE"
+        );
+
+      } else {
+
+        console.error(
+          "Unbekannter eBay Active Price Fehler:",
+          error
+        );
+
+      }
+
+      throw error;
+
+    }
 
 
     const items =
