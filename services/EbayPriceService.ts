@@ -11,7 +11,21 @@ export interface EbayPriceSearchRequest {
   language?: string;
 
   number?: string;
-  setName?: string;
+  
+
+    /*
+     * Gesamte offizielle Kartenanzahl des Sets.
+     *
+     * Beispiel:
+     *
+     * number = "019"
+     * setCardTotal = 165
+     *
+     * Daraus kann für die eBay-Suche
+     * "019/165" erzeugt werden.
+     */
+    setCardTotal?: number;
+setName?: string;
   variant?: string;
   condition?: string;
 }
@@ -315,127 +329,126 @@ class EbayPriceService {
 
   }
 
-
   private static buildQuery(
     card: EbayPriceSearchRequest
-  ) {
+  ): string {
+
+    /*
+     * Ziel:
+     *
+     * möglichst kurze und präzise eBay-Suche.
+     *
+     * Beispiel:
+     *
+     * Rattata 019/165
+     */
+
+    const translatedJapaneseName =
+      card.language === "ja"
+        ? PokemonNameService.getEnglishName(
+            card.name
+          )
+        : undefined;
+
+
+    const searchName =
+      card.language === "ja"
+        ? (
+            translatedJapaneseName ||
+            card.englishName ||
+            card.germanName ||
+            card.name
+          )
+        : card.name;
+
 
     const parts: string[] = [];
 
 
-      /*
-       * Japanische Kartennamen funktionieren für die
-       * eBay-Suche häufig schlechter als international
-       * verwendete Namen.
-       *
-       * Deshalb bevorzugen wir bei japanischen Karten:
-       *
-       * Englisch -> Deutsch -> Originalname
-       */
-      const translatedJapaneseName =
-        card.language === "ja"
-          ? PokemonNameService.getEnglishName(
-              card.name
-            )
-          : undefined;
-
-      const searchName =
-        card.language === "ja"
-          ? (
-              translatedJapaneseName ||
-              card.englishName ||
-              card.germanName ||
-              card.name
-            )
-          : card.name;
-
-      if (
-        card.language === "ja"
-      ) {
-        console.log(
-          "Japanischer Name für eBay:",
-          card.name
-        );
-
-        console.log(
-          "Englische Übersetzung:",
-          translatedJapaneseName ||
-          "(keine gefunden)"
-        );
-      }
-
-
-
-      if (searchName) {
-        parts.push(searchName);
-      }
-
-
-    if (card.number) {
-      parts.push(card.number);
-    }
-
-
-    if (card.setName) {
-      parts.push(card.setName);
-    }
-
-
+    /*
+     * Pokémon-Name
+     */
     if (
-      card.variant &&
-      card.variant !== "normal"
+      searchName
     ) {
 
-      const variantMap:
-        Record<string, string> = {
-
-        "reverse-holo":
-          "Reverse Holo",
-
-        "reverse_holo":
-          "Reverse Holo",
-
-        "pokeball":
-          "Pokeball",
-
-        "masterball":
-          "Masterball",
-
-        "full-art":
-          "Full Art",
-
-        "illustration-rare":
-          "Illustration Rare",
-
-        "special-illustration-rare":
-          "Special Illustration Rare",
-
-        "ultra-rare":
-          "Ultra Rare",
-
-        "hyper-rare":
-          "Hyper Rare",
-
-        "secret-rare":
-          "Secret Rare"
-      };
-
-
       parts.push(
-        variantMap[
-          card.variant
-        ] ??
-        card.variant
+        searchName.trim()
       );
 
     }
 
 
-    return parts
-      .filter(Boolean)
-      .join(" ");
+    /*
+     * Kartennummer.
+     *
+     * Mit Gesamtanzahl:
+     *
+     * 019/165
+     *
+     * Ohne Gesamtanzahl:
+     *
+     * 019
+     */
+    if (
+      card.number
+    ) {
+
+      const cardNumber =
+        card.number.trim();
+
+
+      if (
+        card.setCardTotal &&
+        Number.isFinite(
+          card.setCardTotal
+        ) &&
+        card.setCardTotal > 0
+      ) {
+
+        parts.push(
+          `${cardNumber}/${card.setCardTotal}`
+        );
+
+      } else {
+
+        parts.push(
+          cardNumber
+        );
+
+      }
+
+    }
+
+
+    /*
+     * Absichtlich NICHT hinzufügen:
+     *
+     * - Setname
+     * - Sprache
+     * - Zustand
+     * - Variante
+     *
+     * Dadurch bleibt die Suche kurz und präzise.
+     */
+
+    const query =
+      parts
+        .filter(Boolean)
+        .join(" ");
+
+
+    console.log(
+      "eBay Preisvergleich:",
+      query
+    );
+
+
+    return query;
 
   }
+
+
 
 
   static async getActivePrice(

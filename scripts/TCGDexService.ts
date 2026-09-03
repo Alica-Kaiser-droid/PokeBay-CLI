@@ -475,21 +475,32 @@ export class TcgDexService {
           continue;
 
         }
+          let setName =
+            fullCard.set.name ||
+            "";
 
+          /*
+           * Gesamte offizielle Kartenanzahl des Sets.
+           *
+           * Beispiel:
+           *
+           * Karte: 019
+           * Set:   165 Karten
+           *
+           * Ergebnis:
+           *
+           * 019/165
+           */
+          let setCardTotal:
+            number | undefined;
 
-        let setName =
-          fullCard.set.name ||
-          "";
-
-
-        /*
-         * Setname nur bei Bedarf
-         * zusätzlich abrufen.
-         */
-        if (
-          !setName
-        ) {
-
+          /*
+           * Vollständige Setdaten laden.
+           *
+           * Die Setdaten liefern sowohl den
+           * vollständigen Setnamen als auch die
+           * offizielle Gesamtzahl der Karten.
+           */
           try {
 
             const fullSet =
@@ -497,25 +508,49 @@ export class TcgDexService {
                 fullCard.set.id
               );
 
+            if (
+              !setName
+            ) {
 
-            setName =
-              fullSet.name;
+              setName =
+                fullSet.name;
+
+            }
+
+            const total =
+              fullSet.cardCount?.official ||
+              fullSet.cardCount?.total;
+
+            if (
+              typeof total === "number" &&
+              Number.isFinite(total) &&
+              total > 0
+            ) {
+
+              setCardTotal =
+                total;
+
+            }
 
           } catch (
             _error
           ) {
 
-            setName =
-              fullCard.set.id;
+            if (
+              !setName
+            ) {
+
+              setName =
+                fullCard.set.id;
+
+            }
 
           }
 
-        }
 
+          const isJapanese =
+            this.language === "ja";
 
-
-        const isJapanese =
-          this.language === "ja";
 
         let englishName:
           string | undefined;
@@ -632,6 +667,9 @@ export class TcgDexService {
 
           number:
             fullCard.localId,
+
+            setCardTotal,
+
 
           setId:
             fullCard.set.id,

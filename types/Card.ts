@@ -57,6 +57,19 @@ export interface PokemonCard {
 
   number: string;
 
+
+    /*
+     * Gesamte offizielle Kartenanzahl des Sets.
+     *
+     * Beispiel:
+     *
+     * number = "019"
+     * setCardTotal = 165
+     *
+     * Daraus kann für Suchanfragen
+     * "019/165" erzeugt werden.
+     */
+    setCardTotal?: number;
   setId: string;
   setName: string;
 
