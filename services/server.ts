@@ -734,6 +734,7 @@ app.post(
       console.log("German Name:", card.germanName);
       console.log("Language:", card.language);
       console.log("Number:", card.number);
+      console.log("Set Card Total:", card.setCardTotal);
       console.log("Set:", card.setName);
       console.log("========================================\n");
 

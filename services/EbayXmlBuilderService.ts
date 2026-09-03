@@ -84,23 +84,73 @@ class EbayXmlBuilderService {
      * Maximal 80 Zeichen.
      */
     private static computeTitle(card: Card): string {
+        const language =
+            String(
+                (card as any).language ||
+                ""
+            ).toLowerCase();
+
+        const germanName =
+            String(
+                (card as any).germanName ||
+                ""
+            ).trim();
+
+        const englishName =
+            String(
+                (card as any).englishName ||
+                ""
+            ).trim();
+
+        const originalName =
+            String(
+                card.name ||
+                ""
+            ).trim();
+
+        /*
+         * Kartennummer erzeugen.
+         *
+         * Beispiel:
+         *
+         * number = 019
+         * setCardTotal = 165
+         *
+         * Ergebnis:
+         *
+         * 019/165
+         */
         let formattedNumber = "";
 
         if (card.number) {
-            const number =
-                String(card.number);
+            const cardNumber =
+                String(card.number).trim();
 
-            const match =
-                number.match(
-                    /^(\d+)\s*\/\s*(\d+)$/
+            const setCardTotal =
+                Number(
+                    (card as any).setCardTotal
                 );
 
-            if (match) {
+            if (
+                Number.isFinite(setCardTotal) &&
+                setCardTotal > 0 &&
+                !cardNumber.includes("/")
+            ) {
                 formattedNumber =
-                    `${match[1].padStart(3, "0")}/${match[2]}`;
+                    `${cardNumber.padStart(3, "0")}/${setCardTotal}`;
             } else {
-                formattedNumber =
-                    number;
+                const match =
+                    cardNumber.match(
+                        /^(\d+)\s*\/\s*(\d+)$/
+                    );
+
+                if (match) {
+                    formattedNumber =
+                        `${match[1].padStart(3, "0")}/${match[2]}`;
+                } else {
+                    formattedNumber =
+                        cardNumber;
+                }
             }
         }
 
@@ -112,44 +162,101 @@ class EbayXmlBuilderService {
                     : "") ||
                 card.set ||
                 ""
-            );
+            ).trim();
 
+        /*
+         * Japanische Karten:
+         *
+         * Deutscher Name Englischer Name
+         * - Kartennummer/Setnummer Setname
+         * - japanisch
+         *
+         * Beispiel:
+         *
+         * Rattfratz Rattata
+         * - 019/165 Pokémon 151
+         * - japanisch
+         */
+        if (language === "ja") {
+            const nameParts: string[] = [];
+
+            if (germanName) {
+                nameParts.push(germanName);
+            }
+
+            if (
+                englishName &&
+                englishName !== germanName
+            ) {
+                nameParts.push(englishName);
+            }
+
+            /*
+             * Falls keine Übersetzungen vorhanden sind,
+             * bleibt wenigstens der originale Name erhalten.
+             */
+            if (nameParts.length === 0 && originalName) {
+                nameParts.push(originalName);
+            }
+
+            const titleParts: string[] = [];
+
+            if (nameParts.length > 0) {
+                titleParts.push(
+                    nameParts.join(" ")
+                );
+            }
+
+            const cardInfo =
+                [
+                    formattedNumber,
+                    setName
+                ]
+                    .filter(Boolean)
+                    .join(" ");
+
+            if (cardInfo) {
+                titleParts.push(cardInfo);
+            }
+
+            titleParts.push("japanisch");
+
+            const title =
+                titleParts.join(" - ");
+
+            return this.escapeXml(
+                title.slice(0, 80)
+            );
+        }
+
+        /*
+         * Bestehende Standardlogik
+         * für nicht-japanische Karten.
+         */
         const parts: string[] = [
             "Pokémon Karte",
         ];
 
-        if (card.name) {
-            parts.push(
-                String(card.name)
-            );
+        if (originalName) {
+            parts.push(originalName);
         }
 
         if (formattedNumber) {
-            parts.push(
-                formattedNumber
-            );
+            parts.push(formattedNumber);
         }
 
         if (setName) {
-            parts.push(
-                setName
-            );
+            parts.push(setName);
         }
 
         if (card.promo) {
-            parts.push(
-                "Promo"
-            );
+            parts.push("Promo");
         }
 
         if (card.reverseHolo) {
-            parts.push(
-                "Reverse Holo"
-            );
+            parts.push("Reverse Holo");
         } else if (card.holo) {
-            parts.push(
-                "Holo"
-            );
+            parts.push("Holo");
         }
 
         if (card.isGraded) {
@@ -162,9 +269,7 @@ class EbayXmlBuilderService {
                     `${card.gradeCompany} ${card.grade}`
                 );
             } else {
-                parts.push(
-                    "Graded"
-                );
+                parts.push("Graded");
             }
         }
 

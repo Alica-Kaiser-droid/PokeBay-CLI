@@ -351,15 +351,26 @@ class EbayPriceService {
         : undefined;
 
 
+        /*
+     * Für den deutschen eBay-Markt bevorzugen wir
+     * bei japanischen Karten den deutschen Namen.
+     *
+     * Reihenfolge:
+     *
+     * Deutsch -> Englisch -> Übersetzung -> Originalname
+     */
     const searchName =
       card.language === "ja"
         ? (
-            translatedJapaneseName ||
-            card.englishName ||
             card.germanName ||
+            card.englishName ||
+            translatedJapaneseName ||
             card.name
           )
-        : card.name;
+        : (
+            card.germanName ||
+            card.name
+          );
 
 
     const parts: string[] = [];
@@ -417,6 +428,21 @@ class EbayPriceService {
         );
 
       }
+
+    }
+
+
+    /*
+     * Japanische Karten auf dem deutschen
+     * eBay-Markt ausdrücklich kennzeichnen.
+     */
+    if (
+      card.language === "ja"
+    ) {
+
+      parts.push(
+        "japanisch"
+      );
 
     }
 

@@ -14,6 +14,21 @@ export interface PriceComparisonRequest {
   language?: string;
 
   number?: string;
+
+  /*
+   * Gesamte offizielle Kartenanzahl des Sets.
+   *
+   * Beispiel:
+   *
+   * number = "019"
+   * setCardTotal = 165
+   *
+   * Daraus kann für eBay erzeugt werden:
+   *
+   * 019/165
+   */
+  setCardTotal?: number;
+
   setName?: string;
   variant?: string;
   condition?: string;
