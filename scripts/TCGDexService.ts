@@ -260,16 +260,30 @@ export class TcgDexService {
 
 
     /*
-     * Nummer normalisieren.
+     * Kartennummer normalisieren.
      *
      * Unterstützt beispielsweise:
      *
      * 223
      * 223/091
      * 001/094
+     *
+     * Bei einer Nummer mit "/Gesamtzahl" wird zusätzlich
+     * die offizielle Kartenzahl des Sets berücksichtigt.
+     * Dadurch wird beispielsweise 019/165 nicht mit jeder
+     * beliebigen Karte Nummer 019 verwechselt.
      */
     let normalizedLocalNumber =
       "";
+
+    let normalizedTotalNumber =
+      "";
+
+    const numberParts =
+      cleanNumber
+        ? cleanNumber.split("/")
+        : [];
+
 
     if (
       cleanNumber
@@ -277,10 +291,21 @@ export class TcgDexService {
 
       normalizedLocalNumber =
         this.normalizeNumber(
-          cleanNumber
-            .split("/")
-            [0]
+          numberParts[0]
         );
+
+
+      if (
+        numberParts.length > 1 &&
+        numberParts[1]
+      ) {
+
+        normalizedTotalNumber =
+          this.normalizeNumber(
+            numberParts[1]
+          );
+
+      }
 
 
       candidates =
@@ -320,6 +345,89 @@ export class TcgDexService {
 
         candidates =
           exactNameCandidates;
+
+      }
+
+    }
+
+
+    /*
+     * Wenn zusätzlich die Gesamtzahl des Sets angegeben wurde,
+     * laden wir die Kandidaten zunächst vollständig und filtern
+     * anschließend nach set.cardCount.official.
+     *
+     * Beispiel:
+     * 019/165 -> lokale Nummer 019 und Setgröße 165.
+     */
+    if (
+      normalizedTotalNumber
+    ) {
+
+      const candidatesWithMatchingSetTotal:
+        CardSearchResult[] =
+        [];
+
+
+      for (
+        const candidate
+        of candidates
+      ) {
+
+        try {
+
+          const fullCard =
+            await this.getCard(
+              candidate.id
+            );
+
+
+          const officialCount =
+            fullCard.set
+              ?.cardCount
+              ?.official;
+
+
+          if (
+            this.normalizeNumber(
+              String(
+                officialCount ??
+                ""
+              )
+            ) ===
+            normalizedTotalNumber
+          ) {
+
+            candidatesWithMatchingSetTotal.push(
+              candidate
+            );
+
+          }
+
+        } catch (
+          error
+        ) {
+
+          console.error(
+            "TCGDex-Kandidat konnte für Setgröße nicht geladen werden:",
+            candidate.id,
+            error
+          );
+
+        }
+
+      }
+
+
+      /*
+       * Nur ersetzen, wenn die Setgröße tatsächlich
+       * einen oder mehrere passende Treffer liefert.
+       */
+      if (
+        candidatesWithMatchingSetTotal.length > 0
+      ) {
+
+        candidates =
+          candidatesWithMatchingSetTotal;
 
       }
 
@@ -424,6 +532,15 @@ export class TcgDexService {
           rarity:
             fullCard.rarity,
 
+          /*
+           * Nur echte Bild-URLs von TCGDex verwenden.
+           *
+           * Manche Karten, insbesondere ältere japanische
+           * Karten, besitzen in der TCGDex-API kein Bild.
+           * Für diese Karten bleibt image bewusst undefined,
+           * damit keine nicht existierende Asset-URL erzeugt
+           * wird.
+           */
           image:
             fullCard.image,
 
