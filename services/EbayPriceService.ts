@@ -1,4 +1,5 @@
 import axios from "axios";
+import { PokemonNameService } from "./PokemonNameService.js";
 
 
 export interface EbayPriceSearchRequest {
@@ -331,14 +332,38 @@ class EbayPriceService {
        *
        * Englisch -> Deutsch -> Originalname
        */
+      const translatedJapaneseName =
+        card.language === "ja"
+          ? PokemonNameService.getEnglishName(
+              card.name
+            )
+          : undefined;
+
       const searchName =
         card.language === "ja"
           ? (
+              translatedJapaneseName ||
               card.englishName ||
               card.germanName ||
               card.name
             )
           : card.name;
+
+      if (
+        card.language === "ja"
+      ) {
+        console.log(
+          "Japanischer Name für eBay:",
+          card.name
+        );
+
+        console.log(
+          "Englische Übersetzung:",
+          translatedJapaneseName ||
+          "(keine gefunden)"
+        );
+      }
+
 
 
       if (searchName) {
