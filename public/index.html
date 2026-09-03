@@ -1168,20 +1168,33 @@ let selectedCard = null;
           );
 
 
-          const select =
+          /*
+           * Visuelle Kartenauswahl.
+           * Ein <select> kann keine Bilder anzeigen,
+           * deshalb bekommt jede gefundene Karte
+           * eine eigene anklickbare Vorschau.
+           */
+          const cardSelection =
             document.createElement(
-              "select"
+              "div"
             );
 
 
-          select.style.width =
-            "100%";
+          cardSelection.className =
+            "card-selection-list";
 
-          select.style.padding =
-            "10px";
 
-          select.style.marginBottom =
+          cardSelection.style.display =
+            "grid";
+
+          cardSelection.style.gridTemplateColumns =
+            "repeat(auto-fill, minmax(150px, 1fr))";
+
+          cardSelection.style.gap =
             "12px";
+
+          cardSelection.style.marginBottom =
+            "16px";
 
 
           cards.forEach(
@@ -1190,22 +1203,207 @@ let selectedCard = null;
               index
             ) => {
 
-              const option =
+              const cardButton =
                 document.createElement(
-                  "option"
+                  "button"
                 );
 
 
-              option.value =
-                String(index);
+              cardButton.type =
+                "button";
 
 
-              option.textContent =
-                `${card.name} – ${card.number} – ${card.setName}`;
+              cardButton.style.display =
+                "flex";
+
+              cardButton.style.flexDirection =
+                "column";
+
+              cardButton.style.alignItems =
+                "center";
+
+              cardButton.style.textAlign =
+                "center";
+
+              cardButton.style.padding =
+                "10px";
+
+              cardButton.style.cursor =
+                "pointer";
+
+              cardButton.style.border =
+                "1px solid #ccc";
+
+              cardButton.style.borderRadius =
+                "8px";
+
+              cardButton.style.background =
+                "white";
 
 
-              select.appendChild(
-                option
+              const previewImage =
+                document.createElement(
+                  "img"
+                );
+
+
+              previewImage.alt =
+                card.name
+                  ? `${card.name} ${card.number ?? ""}`
+                  : "Pokémon Karte";
+
+
+              previewImage.loading =
+                "lazy";
+
+
+              previewImage.style.width =
+                "100%";
+
+              previewImage.style.maxWidth =
+                "140px";
+
+              previewImage.style.height =
+                "auto";
+
+              previewImage.style.maxHeight =
+                "195px";
+
+              previewImage.style.objectFit =
+                "contain";
+
+              previewImage.style.marginBottom =
+                "8px";
+
+
+              if (
+                card.image
+              ) {
+
+                const imageUrl =
+                  card.image.endsWith(
+                    ".webp"
+                  )
+                    ? card.image
+                    : card.image.replace(
+                        /\/$/,
+                        ""
+                      ) + "/high.webp";
+
+
+                previewImage.src =
+                  imageUrl;
+
+
+                previewImage.onerror =
+                  () => {
+
+                    previewImage.style.display =
+                      "none";
+
+                  };
+
+
+                cardButton.appendChild(
+                  previewImage
+                );
+
+              }
+
+
+              const cardName =
+                document.createElement(
+                  "strong"
+                );
+
+
+              cardName.textContent =
+                card.name ||
+                "Unbekannte Karte";
+
+
+              cardName.style.marginBottom =
+                "4px";
+
+
+              const cardDetails =
+                document.createElement(
+                  "span"
+                );
+
+
+              cardDetails.textContent =
+                [
+                  card.number,
+                  card.setName
+                ]
+                  .filter(Boolean)
+                  .join(" – ");
+
+
+              cardDetails.style.fontSize =
+                "0.85em";
+
+
+              cardButton.appendChild(
+                cardName
+              );
+
+
+              cardButton.appendChild(
+                cardDetails
+              );
+
+
+              cardButton.addEventListener(
+                "click",
+                () => {
+
+                  showSelectedCard(
+                    card
+                  );
+
+
+                  cardSelection
+                    .querySelectorAll(
+                      "button"
+                    )
+                    .forEach(
+                      (button) => {
+
+                        button.style.outline =
+                          "";
+
+                        button.style.outlineOffset =
+                          "";
+
+                      }
+                    );
+
+
+                  cardButton.style.outline =
+                    "3px solid #007bff";
+
+                  cardButton.style.outlineOffset =
+                    "2px";
+
+
+                  result.scrollIntoView({
+
+                    behavior:
+                      "smooth",
+
+                    block:
+                      "nearest"
+
+                  });
+
+                }
+              );
+
+
+              cardSelection.appendChild(
+                cardButton
               );
 
             }
@@ -1213,159 +1411,7 @@ let selectedCard = null;
 
 
           searchResults.appendChild(
-            select
-          );
-
-
-          const selectButton =
-            document.createElement(
-              "button"
-            );
-
-
-          selectButton.type =
-            "button";
-
-
-          selectButton.textContent =
-            "✓ Karte auswählen";
-
-
-          searchResults.appendChild(
-            selectButton
-          );
-
-
-          const showSelectedCard =
-            (card) => {
-
-              if (
-                !card ||
-                typeof card !== "object"
-              ) {
-
-                throw new Error(
-                  "Die ausgewählte Karte ist ungültig."
-                );
-
-              }
-
-
-              selectedCard =
-                card;
-
-
-              document.getElementById(
-                "cardName"
-              ).textContent =
-                selectedCard.name ?? "";
-
-
-          document.getElementById(
-            "cardNumber"
-          ).textContent =
-            selectedCard.number;
-
-
-          document.getElementById(
-            "cardSet"
-          ).textContent =
-            selectedCard.setName;
-
-
-          document.getElementById(
-            "cardSetId"
-          ).textContent =
-            selectedCard.setId;
-
-
-          document.getElementById(
-            "cardRarity"
-          ).textContent =
-            selectedCard.rarity ||
-            "-";
-
-
-          document.getElementById(
-            "cardLanguage"
-          ).textContent =
-            selectedCard.language;
-
-
-          const image =
-            document.getElementById(
-              "cardImage"
-            );
-
-
-          if (
-            selectedCard.image
-          ) {
-
-            image.src =
-              selectedCard.image.endsWith(".webp")
-                ? selectedCard.image
-                : selectedCard.image + "/high.webp";
-
-
-            image.style.display =
-              "block";
-
-          } else {
-
-            image.style.display =
-              "none";
-
-          }
-
-
-          result.style.display =
-            "block";
-
-
-          result.classList.remove(
-            "hidden"
-          );
-
-            };
-
-
-          selectButton.addEventListener(
-            "click",
-            () => {
-
-              const selectedIndex =
-                Number(
-                  select.value
-                );
-
-
-              const card =
-                cards[
-                  selectedIndex
-                ];
-
-
-              if (
-                !card
-              ) {
-
-                message.textContent =
-                  "❌ Bitte eine gültige Karte auswählen.";
-
-                message.className =
-                  "error";
-
-                return;
-
-              }
-
-
-              showSelectedCard(
-                card
-              );
-
-            }
+            cardSelection
           );
 
 
