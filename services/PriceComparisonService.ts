@@ -7,6 +7,12 @@ import EbayPriceService
 
 export interface PriceComparisonRequest {
   name: string;
+
+  englishName?: string;
+  germanName?: string;
+
+  language?: string;
+
   number?: string;
   setName?: string;
   variant?: string;

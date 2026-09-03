@@ -3,6 +3,12 @@ import axios from "axios";
 
 export interface EbayPriceSearchRequest {
   name: string;
+
+  englishName?: string;
+  germanName?: string;
+
+  language?: string;
+
   number?: string;
   setName?: string;
   variant?: string;
@@ -316,9 +322,28 @@ class EbayPriceService {
     const parts: string[] = [];
 
 
-    if (card.name) {
-      parts.push(card.name);
-    }
+      /*
+       * Japanische Kartennamen funktionieren für die
+       * eBay-Suche häufig schlechter als international
+       * verwendete Namen.
+       *
+       * Deshalb bevorzugen wir bei japanischen Karten:
+       *
+       * Englisch -> Deutsch -> Originalname
+       */
+      const searchName =
+        card.language === "ja"
+          ? (
+              card.englishName ||
+              card.germanName ||
+              card.name
+            )
+          : card.name;
+
+
+      if (searchName) {
+        parts.push(searchName);
+      }
 
 
     if (card.number) {

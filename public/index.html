@@ -2227,6 +2227,9 @@ async function compareCardPrice(index) {
           body:
             JSON.stringify({
               name: card.name,
+              englishName: card.englishName,
+              germanName: card.germanName,
+              language: card.language,
               number: card.number,
               setName: card.setName,
               variant,
@@ -2613,6 +2616,9 @@ async function compareCardPrice(index) {
           body:
             JSON.stringify({
               name: card.name,
+              englishName: card.englishName,
+              germanName: card.germanName,
+              language: card.language,
               number: card.number,
               setName: card.setName,
               variant,
@@ -3389,8 +3395,10 @@ document.addEventListener(
 
             body:
               JSON.stringify({
-                name:
-                  card.name,
+                name: card.name,
+                englishName: card.englishName,
+                germanName: card.germanName,
+                language: card.language,
 
                 number:
                   card.number,
@@ -3711,6 +3719,9 @@ async function compareCardPrice(index) {
           body:
             JSON.stringify({
               name: card.name,
+              englishName: card.englishName,
+              germanName: card.germanName,
+              language: card.language,
               number: card.number,
               setName: card.setName,
               variant,
