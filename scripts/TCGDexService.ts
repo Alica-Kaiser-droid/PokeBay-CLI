@@ -553,6 +553,29 @@ export class TcgDexService {
               ]);
 
 
+
+
+
+
+
+
+              console.log(
+                "TCGDex JAPAN TEST:",
+                {
+                  japaneseId:
+                    fullCard.id,
+
+                  japaneseName:
+                    fullCard.name,
+
+                  englishStatus:
+                    englishResponse.status,
+
+                  germanStatus:
+                    germanResponse.status,
+                }
+              );
+
             if (
               englishResponse.ok
             ) {
