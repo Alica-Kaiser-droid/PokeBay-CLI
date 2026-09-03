@@ -1,3 +1,5 @@
+import "dotenv/config";
+
 import express from "express";
 import multer from "multer";
 import EbayXmlBuilderService from "./EbayXmlBuilderService";
@@ -60,10 +62,12 @@ app.use(
  * POKEBAY_AUTH_PASSWORD
  */
 const authUser =
-  process.env.POKEBAY_AUTH_USER;
+  process.env.POKEBAY_AUTH_USER
+    ?.trim();
 
 const authPassword =
-  process.env.POKEBAY_AUTH_PASSWORD;
+  process.env.POKEBAY_AUTH_PASSWORD
+    ?.trim();
 
 
 if (
@@ -155,8 +159,8 @@ app.use(
 
 
       if (
-        username !== authUser ||
-        password !== authPassword
+        username.trim() !== authUser ||
+        password.trim() !== authPassword
       ) {
 
         res.setHeader(
@@ -224,38 +228,50 @@ app.post(
       const {
         name,
         number,
+        language = "de",
       } =
         req.body;
 
 
+      const cleanName =
+        typeof name === "string"
+          ? name.trim()
+          : "";
+
+
+      const cleanNumber =
+        typeof number === "string"
+          ? number.trim()
+          : "";
+
+
       if (
-        typeof name !== "string" ||
-        !name.trim()
+        !cleanName &&
+        !cleanNumber
       ) {
 
-        res.status(400).json({
+        return res.status(400).json({
           success: false,
           error:
-            "Bitte einen Kartennamen eingeben.",
+            "Bitte mindestens einen Kartennamen oder eine Kartennummer eingeben.",
         });
-
-        return;
 
       }
 
 
       if (
-        typeof number !== "string" ||
-        !number.trim()
+        ![
+          "de",
+          "en",
+          "ja",
+        ].includes(language)
       ) {
 
-        res.status(400).json({
+        return res.status(400).json({
           success: false,
           error:
-            'Bitte die Kartennummer im Format "001/094" eingeben.',
+            "Ungültige Sprache. Erlaubt sind Deutsch, Englisch oder Japanisch.",
         });
-
-        return;
 
       }
 
@@ -266,40 +282,45 @@ app.post(
       console.log("========================================");
       console.log("Name:", name);
       console.log("Nummer:", number);
+      console.log("Sprache:", language);
       console.log("Nummer JSON:", JSON.stringify(number));
       console.log("Nummer Typ:", typeof number);
 
 
-      const card =
-        await tcgDexService.findCard(
-          name.trim(),
-          number.trim()
+      const searchService =
+        new TcgDexService(
+          language
         );
 
 
-      if (!card) {
+      const cards =
+        await searchService.findCards(
+          cleanName,
+          cleanNumber
+        );
 
-        res.status(404).json({
+
+      if (
+        cards.length === 0
+      ) {
+
+        return res.status(404).json({
           success: false,
           error:
-            "Karte wurde nicht gefunden.",
+            "Keine passenden Karten gefunden.",
         });
-
-        return;
 
       }
 
 
       console.log(
-        "✓ Karte gefunden:",
-        card.name,
-        card.number
+        `✓ ${cards.length} Karte(n) gefunden.`
       );
 
 
       res.json({
         success: true,
-        card,
+        cards,
       });
 
     } catch (

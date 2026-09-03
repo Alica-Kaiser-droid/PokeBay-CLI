@@ -154,13 +154,22 @@ export class TcgDexService {
    * name   = "Myrapla"
    * number = "001/094"
    */
-  async findCard(
+  /**
+   * Flexible Kartensuche.
+   *
+   * Es reicht:
+   *
+   * - nur Name
+   * - nur Kartennummer
+   * - oder Name + Kartennummer
+   */
+  async findCards(
     name: string,
     number: string,
     variant: CardVariant = "normal",
     condition: CardCondition = "near-mint",
     quantity = 1
-  ): Promise<PokemonCard | null> {
+  ): Promise<PokemonCard[]> {
 
     const cleanName =
       name.trim();
@@ -169,253 +178,319 @@ export class TcgDexService {
       number.trim();
 
 
-    if (!cleanName) {
-
-      throw new Error(
-        "Bitte einen Kartennamen eingeben."
-      );
-
-    }
-
-
-    if (!cleanNumber) {
-
-      throw new Error(
-        "Bitte eine Kartennummer eingeben."
-      );
-
-    }
-
-
-    /*
-     * 001/094 zerlegen.
-     */
-    const parts =
-      cleanNumber
-        .split("/")
-        .map(
-          (part) =>
-            part.trim()
-        );
-
-
     if (
-      parts.length !== 2 ||
-      !parts[0] ||
-      !parts[1]
+      !cleanName &&
+      !cleanNumber
     ) {
 
       throw new Error(
-        'Bitte die Nummer im Format "001/094" eingeben.'
+        "Bitte mindestens einen Kartennamen oder eine Kartennummer eingeben."
       );
 
     }
-
-
-    const localNumber =
-      parts[0];
-
-    const setNumber =
-      parts[1];
-
-
-    const normalizedLocalNumber =
-      this.normalizeNumber(
-        localNumber
-      );
-
-    const normalizedSetNumber =
-      this.normalizeNumber(
-        setNumber
-      );
 
 
     console.log("");
     console.log("========================================");
-    console.log("TCGDEX-SUCHE");
+    console.log("TCGDEX-FLEXIBLE SUCHE");
     console.log("========================================");
-    console.log("Name:", cleanName);
-    console.log("Nummer:", cleanNumber);
+    console.log("Name:", cleanName || "(leer)");
+    console.log("Nummer:", cleanNumber || "(leer)");
+    console.log("Sprache:", this.language);
+
+
+    let candidates: CardSearchResult[] =
+      [];
 
 
     /*
-     * Zuerst nach Name suchen.
+     * Wenn ein Name vorhanden ist,
+     * zunächst über TCGDex danach suchen.
      */
-    const cards =
-      await this.searchByName(
-        cleanName
-      );
+    if (
+      cleanName
+    ) {
+
+      candidates =
+        await this.searchByName(
+          cleanName
+        );
+
+    }
 
 
     /*
-     * Dann exakt nach der
-     * Kartennummer filtern.
+     * Falls nur eine Nummer angegeben wurde,
+     * laden wir alle Karten der Sprache und
+     * filtern anschließend lokal.
+     *
+     * Für die ersten 20 Treffer werden später
+     * die vollständigen Kartendaten geladen.
      */
-    let candidates =
-      cards.filter(
-        (card) =>
-          this.normalizeNumber(
-            card.localId
-          ) === normalizedLocalNumber
-      );
+    if (
+      !cleanName &&
+      cleanNumber
+    ) {
+
+      const url =
+        new URL(
+          `${TCGDEX_BASE_URL}/${this.language}/cards`
+        );
+
+      const response =
+        await fetch(
+          url.toString()
+        );
+
+      if (
+        !response.ok
+      ) {
+
+        throw new Error(
+          `TCGdex-Suche fehlgeschlagen: ${response.status}`
+        );
+
+      }
+
+
+      candidates =
+        await response.json();
+
+    }
+
+
+    /*
+     * Nummer normalisieren.
+     *
+     * Unterstützt beispielsweise:
+     *
+     * 223
+     * 223/091
+     * 001/094
+     */
+    let normalizedLocalNumber =
+      "";
+
+    if (
+      cleanNumber
+    ) {
+
+      normalizedLocalNumber =
+        this.normalizeNumber(
+          cleanNumber
+            .split("/")
+            [0]
+        );
+
+
+      candidates =
+        candidates.filter(
+          (card) =>
+            this.normalizeNumber(
+              card.localId
+            ) ===
+            normalizedLocalNumber
+        );
+
+    }
 
 
     /*
      * Exakten Namen bevorzugen.
-     *
-     * Dadurch wird Myrapla gegenüber
-     * "Erikas Myrapla" bevorzugt.
      */
-    const exactNameCandidates =
-      candidates.filter(
-        (card) =>
-          this.normalizeText(
-            card.name
-          ) ===
-          this.normalizeText(
-            cleanName
-          )
-      );
-
-
     if (
-      exactNameCandidates.length > 0
+      cleanName
     ) {
 
-      candidates =
-        exactNameCandidates;
+      const exactNameCandidates =
+        candidates.filter(
+          (card) =>
+            this.normalizeText(
+              card.name
+            ) ===
+            this.normalizeText(
+              cleanName
+            )
+        );
+
+
+      if (
+        exactNameCandidates.length > 0
+      ) {
+
+        candidates =
+          exactNameCandidates;
+
+      }
 
     }
 
 
     console.log(
-      "Kandidaten:",
-      candidates.map(
-        (card) => card.id
-      )
+      "Treffer:",
+      candidates.length
     );
 
 
     /*
-     * Jeden Kandidaten prüfen.
+     * Nicht unbegrenzt viele Detail-Abfragen
+     * an TCGDex senden.
      */
+    candidates =
+      candidates.slice(
+        0,
+        20
+      );
+
+
+    const cards: PokemonCard[] =
+      [];
+
+
     for (
       const candidate
       of candidates
     ) {
 
-      const fullCard =
-        await this.getCard(
-          candidate.id
-        );
+      try {
+
+        const fullCard =
+          await this.getCard(
+            candidate.id
+          );
 
 
-      if (
-        !fullCard.set?.id
+        if (
+          !fullCard.set?.id
+        ) {
+
+          continue;
+
+        }
+
+
+        let setName =
+          fullCard.set.name ||
+          "";
+
+
+        /*
+         * Setname nur bei Bedarf
+         * zusätzlich abrufen.
+         */
+        if (
+          !setName
+        ) {
+
+          try {
+
+            const fullSet =
+              await this.getSet(
+                fullCard.set.id
+              );
+
+
+            setName =
+              fullSet.name;
+
+          } catch (
+            _error
+          ) {
+
+            setName =
+              fullCard.set.id;
+
+          }
+
+        }
+
+
+        cards.push({
+
+          tcgDexId:
+            fullCard.id,
+
+          name:
+            fullCard.name,
+
+          number:
+            fullCard.localId,
+
+          setId:
+            fullCard.set.id,
+
+          setName,
+
+          rarity:
+            fullCard.rarity,
+
+          image:
+            fullCard.image,
+
+          language:
+            this.language,
+
+          variant,
+
+          condition,
+
+          quantity:
+            Number.isFinite(quantity) &&
+            quantity > 0
+              ? Math.floor(quantity)
+              : 1,
+
+        });
+
+      } catch (
+        error
       ) {
 
-        continue;
-
-      }
-
-
-      const fullSet =
-        await this.getSet(
-          fullCard.set.id
+        console.error(
+          "TCGDex-Kandidat konnte nicht geladen werden:",
+          candidate.id,
+          error
         );
 
-
-      const possibleSetNumbers = [
-
-        fullSet.cardCount?.official,
-
-        fullSet.cardCount?.total,
-
-      ].filter(
-        (
-          value
-        ): value is number =>
-          value !== undefined
-      );
-
-
-      console.log(
-        "Prüfe:",
-        fullCard.name,
-        fullCard.localId,
-        fullSet.name,
-        possibleSetNumbers
-      );
-
-
-      const matchingSetNumber =
-        possibleSetNumbers.find(
-          (value) =>
-            this.normalizeNumber(
-              String(value)
-            ) === normalizedSetNumber
-        );
-
-
-      if (
-        matchingSetNumber === undefined
-      ) {
-
-        continue;
-
       }
-
-
-      console.log(
-        "✓ RICHTIGE KARTE:",
-        fullCard.name,
-        `${fullCard.localId}/${matchingSetNumber}`
-      );
-
-
-      return {
-
-        tcgDexId:
-          fullCard.id,
-
-        name:
-          fullCard.name,
-
-        number:
-          `${fullCard.localId}/${String(matchingSetNumber).padStart(3, "0")}`,
-
-        setId:
-          fullCard.set.id,
-
-        setName:
-          fullCard.set.name ??
-          fullSet.name,
-
-        rarity:
-          fullCard.rarity,
-
-        image:
-          fullCard.image,
-
-        language:
-          this.language,
-
-        variant,
-
-        condition,
-
-        quantity:
-          Number.isFinite(quantity) &&
-          quantity > 0
-            ? Math.floor(quantity)
-            : 1,
-
-      };
 
     }
 
 
-    return null;
+    return cards;
+
+  }
+
+
+  /**
+   * Kompatibilitäts-Methode.
+   *
+   * Liefert weiterhin den ersten Treffer
+   * zurück, falls anderer Code findCard()
+   * verwendet.
+   */
+  async findCard(
+    name: string,
+    number: string,
+    variant: CardVariant = "normal",
+    condition: CardCondition = "near-mint",
+    quantity = 1
+  ): Promise<PokemonCard | null> {
+
+    const cards =
+      await this.findCards(
+        name,
+        number,
+        variant,
+        condition,
+        quantity
+      );
+
+
+    return (
+      cards[0] ??
+      null
+    );
 
   }
 

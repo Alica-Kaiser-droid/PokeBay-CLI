@@ -424,7 +424,7 @@
       <h2>1. Karte suchen</h2>
 
       <p>
-        Gib den Kartennamen und die vollständige Kartennummer ein, z.B. "001/094".
+        Gib einen Kartennamen, eine Kartennummer oder beides ein. Bei mehreren Treffern kannst du die richtige Karte auswählen.
       </p>
 
 
@@ -442,7 +442,6 @@
               id="name"
               type="text"
               placeholder="z.B. Glurak"
-              required
             >
 
           </div>
@@ -457,9 +456,33 @@
             <input
               id="number"
               type="text"
-              placeholder="z.B. 223"
-              required
+              placeholder="z.B. 223 oder 001/094"
             >
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="language">
+              Sprache
+            </label>
+
+            <select id="language">
+
+              <option value="de" selected>
+                🇩🇪 Deutsch
+              </option>
+
+              <option value="en">
+                🇬🇧 Englisch
+              </option>
+
+              <option value="ja">
+                🇯🇵 Japanisch
+              </option>
+
+            </select>
 
           </div>
 
@@ -485,6 +508,12 @@
 
 
       <div id="message"></div>
+
+      <div
+        id="searchResults"
+        class="hidden"
+        style="margin-top: 20px;"
+      ></div>
 
     </div>
 
@@ -1003,6 +1032,12 @@ let selectedCard = null;
             .trim();
 
 
+        const language =
+          document
+            .getElementById("language")
+            .value;
+
+
         message.textContent =
           "Suche Karte...";
 
@@ -1047,7 +1082,10 @@ let selectedCard = null;
                   JSON.stringify({
 
                     name,
-                    number})
+                    number,
+                    language
+
+                  })
 
               }
             );
@@ -1070,8 +1108,131 @@ let selectedCard = null;
           }
 
 
-          selectedCard =
-            data.card;
+          const cards =
+            data.cards ||
+            (
+              data.card
+                ? [data.card]
+                : []
+            );
+
+
+          if (
+            cards.length === 0
+          ) {
+
+            throw new Error(
+              "Keine passenden Karten gefunden."
+            );
+
+          }
+
+
+          const searchResults =
+            document.getElementById(
+              "searchResults"
+            );
+
+
+          searchResults.innerHTML =
+            "";
+
+
+          searchResults.classList.remove(
+            "hidden"
+          );
+
+
+          const heading =
+            document.createElement(
+              "h3"
+            );
+
+
+          heading.textContent =
+            cards.length === 1
+              ? "Gefundene Karte"
+              : `Gefundene Karten (${cards.length})`;
+
+
+          searchResults.appendChild(
+            heading
+          );
+
+
+          const select =
+            document.createElement(
+              "select"
+            );
+
+
+          select.style.width =
+            "100%";
+
+          select.style.padding =
+            "10px";
+
+          select.style.marginBottom =
+            "12px";
+
+
+          cards.forEach(
+            (
+              card,
+              index
+            ) => {
+
+              const option =
+                document.createElement(
+                  "option"
+                );
+
+
+              option.value =
+                String(index);
+
+
+              option.textContent =
+                `${card.name} – ${card.number} – ${card.setName}`;
+
+
+              select.appendChild(
+                option
+              );
+
+            }
+          );
+
+
+          searchResults.appendChild(
+            select
+          );
+
+
+          const selectButton =
+            document.createElement(
+              "button"
+            );
+
+
+          selectButton.type =
+            "button";
+
+
+          selectButton.textContent =
+            "✓ Karte auswählen";
+
+
+          searchResults.appendChild(
+            selectButton
+          );
+
+
+          const showSelectedCard =
+            (card) => {
+
+              selectedCard =
+                card;
 
 
           document.getElementById(
@@ -1144,6 +1305,33 @@ let selectedCard = null;
 
           result.classList.remove(
             "hidden"
+          );
+
+            };
+
+
+          selectButton.addEventListener(
+            "click",
+            () => {
+
+              const selectedIndex =
+                Number(
+                  select.value
+                );
+
+
+              showSelectedCard(
+                cards[
+                  selectedIndex
+                ]
+              );
+
+            }
+          );
+
+
+          showSelectedCard(
+            cards[0]
           );
 
 

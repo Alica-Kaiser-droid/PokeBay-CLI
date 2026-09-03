@@ -658,33 +658,15 @@ export class EbayTitleService {
       "en":
         "Englisch",
 
-      "fr":
-        "Französisch",
-
-      "es":
-        "Spanisch",
-
-      "it":
-        "Italienisch",
-
-      "pt":
-        "Portugiesisch",
-
       "ja":
         "Japanisch",
-
-      "ko":
-        "Koreanisch",
-
-      "zh":
-        "Chinesisch",
 
     };
 
 
     return (
       languages[language]
-      ?? language
+      ?? ""
     );
 
   }
@@ -706,33 +688,15 @@ export class EbayTitleService {
       "en":
         "EN",
 
-      "fr":
-        "FR",
-
-      "es":
-        "ES",
-
-      "it":
-        "IT",
-
-      "pt":
-        "PT",
-
       "ja":
         "JP",
-
-      "ko":
-        "KR",
-
-      "zh":
-        "CN",
 
     };
 
 
     return (
       languages[language]
-      ?? language
+      ?? ""
     );
 
   }
