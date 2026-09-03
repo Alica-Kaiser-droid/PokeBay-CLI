@@ -1109,12 +1109,20 @@ let selectedCard = null;
 
 
           const cards =
-            data.cards ||
-            (
-              data.card
+            Array.isArray(
+              data.cards
+            )
+              ? data.cards.filter(
+                  (card) =>
+                    card &&
+                    typeof card === "object"
+                )
+              : (
+                  data.card &&
+                  typeof data.card === "object"
+                )
                 ? [data.card]
-                : []
-            );
+                : [];
 
 
           if (
