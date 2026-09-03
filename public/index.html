@@ -1169,6 +1169,177 @@ let selectedCard = null;
 
 
           /*
+           * Ausgewählte Karte im Ergebnisbereich anzeigen.
+           */
+          const showSelectedCard =
+            (card) => {
+
+              if (
+                !card ||
+                typeof card !== "object"
+              ) {
+
+                throw new Error(
+                  "Die ausgewählte Karte ist ungültig."
+                );
+
+              }
+
+
+              selectedCard =
+                card;
+
+
+              const cardNameElement =
+                document.getElementById(
+                  "cardName"
+                );
+
+              if (cardNameElement) {
+
+                cardNameElement.textContent =
+                  selectedCard.name ?? "";
+
+              }
+
+
+              const cardNumberElement =
+                document.getElementById(
+                  "cardNumber"
+                );
+
+              if (cardNumberElement) {
+
+                cardNumberElement.textContent =
+                  selectedCard.number ?? "";
+
+              }
+
+
+              const cardSetElement =
+                document.getElementById(
+                  "cardSet"
+                );
+
+              if (cardSetElement) {
+
+                cardSetElement.textContent =
+                  selectedCard.setName ?? "";
+
+              }
+
+
+              const cardSetIdElement =
+                document.getElementById(
+                  "cardSetId"
+                );
+
+              if (cardSetIdElement) {
+
+                cardSetIdElement.textContent =
+                  selectedCard.setId ?? "";
+
+              }
+
+
+              const cardRarityElement =
+                document.getElementById(
+                  "cardRarity"
+                );
+
+              if (cardRarityElement) {
+
+                cardRarityElement.textContent =
+                  selectedCard.rarity || "-";
+
+              }
+
+
+              const cardLanguageElement =
+                document.getElementById(
+                  "cardLanguage"
+                );
+
+              if (cardLanguageElement) {
+
+                cardLanguageElement.textContent =
+                  selectedCard.language ?? "";
+
+              }
+
+
+              const image =
+                document.getElementById(
+                  "cardImage"
+                );
+
+
+              if (
+                image &&
+                selectedCard.image
+              ) {
+
+                const imageUrl =
+                  selectedCard.image.endsWith(
+                    ".webp"
+                  )
+                    ? selectedCard.image
+                    : selectedCard.image.replace(
+                        /\/$/,
+                        ""
+                      ) + "/high.webp";
+
+
+                image.onerror =
+                  () => {
+
+                    image.style.display =
+                      "none";
+
+                  };
+
+
+                image.src =
+                  imageUrl;
+
+
+                image.style.display =
+                  "block";
+
+              } else if (image) {
+
+                image.removeAttribute(
+                  "src"
+                );
+
+                image.style.display =
+                  "none";
+
+              }
+
+
+              const resultElement =
+                document.getElementById(
+                  "result"
+                );
+
+
+              if (resultElement) {
+
+                resultElement.style.display =
+                  "block";
+
+
+                resultElement.classList.remove(
+                  "hidden"
+                );
+
+              }
+
+            };
+
+
+          /*
            * Visuelle Kartenauswahl.
            * Ein <select> kann keine Bilder anzeigen,
            * deshalb bekommt jede gefundene Karte
