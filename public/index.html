@@ -1231,14 +1231,26 @@ let selectedCard = null;
           const showSelectedCard =
             (card) => {
 
+              if (
+                !card ||
+                typeof card !== "object"
+              ) {
+
+                throw new Error(
+                  "Die ausgewählte Karte ist ungültig."
+                );
+
+              }
+
+
               selectedCard =
                 card;
 
 
-          document.getElementById(
-            "cardName"
-          ).textContent =
-            selectedCard.name;
+              document.getElementById(
+                "cardName"
+              ).textContent =
+                selectedCard.name ?? "";
 
 
           document.getElementById(
@@ -1320,18 +1332,52 @@ let selectedCard = null;
                 );
 
 
-              showSelectedCard(
+              const card =
                 cards[
                   selectedIndex
-                ]
+                ];
+
+
+              if (
+                !card
+              ) {
+
+                message.textContent =
+                  "❌ Bitte eine gültige Karte auswählen.";
+
+                message.className =
+                  "error";
+
+                return;
+
+              }
+
+
+              showSelectedCard(
+                card
               );
 
             }
           );
 
 
+          const firstCard =
+            cards[0];
+
+
+          if (
+            !firstCard
+          ) {
+
+            throw new Error(
+              "Die Suchergebnisse enthalten keine gültige Karte."
+            );
+
+          }
+
+
           showSelectedCard(
-            cards[0]
+            firstCard
           );
 
 
