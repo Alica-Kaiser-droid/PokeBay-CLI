@@ -33,10 +33,59 @@ export class EbayTitleService {
     card: PokemonCard
   ): string {
 
-    const name =
+    /*
+     * Japanische Karten erhalten einen
+     * suchfreundlichen Titel mit englischem
+     * und deutschem Namen.
+     *
+     * Der Zusatz "Japanisch" wird ausschließlich
+     * verwendet, wenn die Karte tatsächlich aus
+     * der japanischen Vorauswahl stammt.
+     */
+    const isJapanese =
+      card.language === "ja";
+
+    const englishName =
+      card.englishName
+        ? this.cleanCardName(
+            card.englishName
+          )
+        : "";
+
+    const germanName =
+      card.germanName
+        ? this.cleanCardName(
+            card.germanName
+          )
+        : "";
+
+    const originalName =
       this.cleanCardName(
         card.name
       );
+
+    /*
+     * Für japanische Karten verwenden wir
+     * englischen und deutschen Namen.
+     *
+     * Sind beide Namen identisch, wird der Name
+     * nur einmal verwendet.
+     */
+    const name =
+      isJapanese
+        ? this.joinParts([
+            englishName,
+            germanName &&
+            germanName.toLowerCase() !==
+              englishName.toLowerCase()
+              ? germanName
+              : "",
+            englishName ||
+            germanName
+              ? ""
+              : originalName
+          ])
+        : originalName;
 
 
     const number =
@@ -56,9 +105,34 @@ export class EbayTitleService {
 
 
     let language =
-      this.formatLanguage(
-        card.language
-      );
+      isJapanese
+        ? ""
+        : this.formatLanguage(
+            card.language
+          );
+
+
+    /*
+     * Bei japanischen Karten wird der Sprachhinweis
+     * direkt an den Setnamen angehängt.
+     *
+     * Dadurch entsteht das gewünschte Format:
+     *
+     * Englischer Name Deutscher Name Nummer Set - Japanisch
+     *
+     * und der Hinweis kann nicht durch die spätere
+     * Sprach-Kürzungsstufe verloren gehen.
+     */
+    if (
+      isJapanese
+    ) {
+
+      setName =
+        setName
+          ? `${setName} - Japanisch`
+          : "Japanisch";
+
+    }
 
 
     let condition =

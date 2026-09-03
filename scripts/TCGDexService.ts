@@ -513,6 +513,88 @@ export class TcgDexService {
         }
 
 
+
+        const isJapanese =
+          this.language === "ja";
+
+        let englishName:
+          string | undefined;
+
+        let germanName:
+          string | undefined;
+
+
+        /*
+         * Nur bei tatsächlich japanischer
+         * Vorauswahl zusätzliche Namen laden.
+         *
+         * Alle anderen Karten bleiben unverändert.
+         */
+        if (
+          isJapanese
+        ) {
+
+          try {
+
+            const [
+              englishResponse,
+              germanResponse
+            ] =
+              await Promise.all([
+
+                fetch(
+                  `https://api.tcgdex.net/v2/en/cards/${fullCard.id}`
+                ),
+
+                fetch(
+                  `https://api.tcgdex.net/v2/de/cards/${fullCard.id}`
+                )
+
+              ]);
+
+
+            if (
+              englishResponse.ok
+            ) {
+
+              const englishCard =
+                await englishResponse.json();
+
+              englishName =
+                englishCard?.name ||
+                undefined;
+
+            }
+
+
+            if (
+              germanResponse.ok
+            ) {
+
+              const germanCard =
+                await germanResponse.json();
+
+              germanName =
+                germanCard?.name ||
+                undefined;
+
+            }
+
+          } catch (
+            error
+          ) {
+
+            console.error(
+              "Alternative Kartennamen konnten nicht geladen werden:",
+              fullCard.id,
+              error
+            );
+
+          }
+
+        }
+
+
         cards.push({
 
           tcgDexId:
@@ -520,6 +602,10 @@ export class TcgDexService {
 
           name:
             fullCard.name,
+
+            englishName,
+
+            germanName,
 
           number:
             fullCard.localId,

@@ -1,9 +1,44 @@
 export type CardVariant =
   | "normal"
   | "holo"
-  | "reverse_holo"
+  | "reverse-holo"
   | "promo"
-  | "other";
+  | "other"
+  | "pokeball"
+  | "masterball"
+  | "ex"
+  | "gx"
+  | "v"
+  | "vmax"
+  | "vstar"
+  | "tag-team"
+  | "break"
+  | "radiant"
+  | "amazing-rare"
+  | "shiny"
+  | "shiny-holo"
+  | "full-art"
+  | "illustration-rare"
+  | "special-illustration-rare"
+  | "ultra-rare"
+  | "hyper-rare"
+  | "secret-rare"
+  | "rainbow-rare"
+  | "gold"
+  | "prism-star"
+  | "ace-spec"
+  | "trainer-gallery"
+  | "galarian-gallery"
+  | "classic-collection";
+
+export type CardCondition =
+  | "mint"
+  | "near-mint"
+  | "excellent"
+  | "good"
+  | "light-played"
+  | "played"
+  | "poor";
 
 export interface CardSearchResult {
   id: string;
@@ -16,6 +51,10 @@ export interface PokemonCard {
   tcgDexId: string;
 
   name: string;
+
+  englishName?: string;
+  germanName?: string;
+
   number: string;
 
   setId: string;
@@ -28,4 +67,14 @@ export interface PokemonCard {
   language: string;
 
   variant: CardVariant;
+
+  condition: CardCondition;
+
+  quantity: number;
+
+  photos?: string[];
+
+  price?: number;
+
+  title?: string;
 }
