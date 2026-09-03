@@ -726,6 +726,17 @@ app.post(
       }
 
 
+      console.log("\n========================================");
+      console.log("PREISVERGLEICH REQUEST DIAGNOSE");
+      console.log("========================================");
+      console.log("Name:", card.name);
+      console.log("English Name:", card.englishName);
+      console.log("German Name:", card.germanName);
+      console.log("Language:", card.language);
+      console.log("Number:", card.number);
+      console.log("Set:", card.setName);
+      console.log("========================================\n");
+
       const result =
         await PriceComparisonService.compare(
           card
