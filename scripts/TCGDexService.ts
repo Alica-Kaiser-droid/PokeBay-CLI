@@ -222,6 +222,46 @@ export class TcgDexService {
 
 
     /*
+     * Wenn die Namenssuche keinen Treffer liefert,
+     * aber eine Kartennummer vorhanden ist,
+     * alle Karten der Sprache laden.
+     *
+     * Das ist besonders wichtig bei japanischen Karten,
+     * wenn der eingegebene Name englisch oder deutsch ist.
+     */
+    if (
+      candidates.length === 0 &&
+      cleanNumber
+    ) {
+
+      const url =
+        new URL(
+          `${TCGDEX_BASE_URL}/${this.language}/cards`
+        );
+
+      const response =
+        await fetch(
+          url.toString()
+        );
+
+      if (
+        !response.ok
+      ) {
+
+        throw new Error(
+          `TCGdex-Suche fehlgeschlagen: ${response.status}`
+        );
+
+      }
+
+
+      candidates =
+        await response.json();
+
+    }
+
+
+    /*
      * Falls nur eine Nummer angegeben wurde,
      * laden wir alle Karten der Sprache und
      * filtern anschließend lokal.
