@@ -350,6 +350,31 @@ export class TcgDexService {
       }
 
 
+      console.log(
+        "Kandidaten vor Nummernfilter:",
+        candidates.length
+      );
+
+      console.log(
+        "Gesuchte lokale Nummer:",
+        normalizedLocalNumber
+      );
+
+      console.log(
+        "Erste Kandidaten:",
+        candidates.slice(0, 10).map(
+          (card) => ({
+            id: card.id,
+            name: card.name,
+            localId: card.localId,
+            normalizedLocalId:
+              this.normalizeNumber(
+                card.localId
+              )
+          })
+        )
+      );
+
       candidates =
         candidates.filter(
           (card) =>
@@ -358,6 +383,11 @@ export class TcgDexService {
             ) ===
             normalizedLocalNumber
         );
+
+      console.log(
+        "Kandidaten nach Nummernfilter:",
+        candidates.length
+      );
 
     }
 
