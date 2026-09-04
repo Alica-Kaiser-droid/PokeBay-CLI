@@ -84,6 +84,39 @@ class EbayXmlBuilderService {
      * Maximal 80 Zeichen.
      */
     private static computeTitle(card: Card): string {
+
+        /*
+         * Falls bereits ein Titel durch den
+         * ListingService erzeugt wurde, verwenden
+         * wir genau diesen Titel.
+         *
+         * Dadurch sind Listing-Vorschau und
+         * tatsächliches eBay-Listing identisch.
+         */
+        const existingTitle =
+            String(
+                (card as any).title ||
+                ""
+            ).trim();
+
+        if (
+            existingTitle
+        ) {
+
+            return this.escapeXml(
+                existingTitle.slice(0, 80)
+            );
+
+        }
+
+
+        /*
+         * Fallback:
+         *
+         * Falls kein vorberechneter Titel vorhanden
+         * ist, verwenden wir die bisherige
+         * Titelgenerierung.
+         */
         const language =
             String(
                 (card as any).language ||

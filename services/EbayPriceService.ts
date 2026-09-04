@@ -107,6 +107,19 @@ class EbayPriceService {
       normalizedVariant === "normal"
     ) {
 
+      /*
+       * Normale Blank-Karte:
+       *
+       * Alle ausdrücklich erkennbaren
+       * Sondervarianten ausschließen.
+       *
+       * Ziel:
+       *
+       * Eine normale Karte darf nicht durch
+       * Masterball-, Pokeball-, Holo- oder
+       * Reverse-Angebote im Preis verfälscht
+       * werden.
+       */
       const excludedPatterns = [
 
         /master\s*ball/i,
@@ -121,7 +134,21 @@ class EbayPriceService {
 
         /reverse\s*foil/i,
 
-        /holo\s*reverse/i
+        /holo\s*reverse/i,
+
+        /\breverse\b/i,
+
+        /\bholo\b/i,
+
+        /\bholofoil\b/i,
+
+        /\bfoil\b/i,
+
+        /parallel/i,
+
+        /cosmos\s*holo/i,
+
+        /cracked\s*ice/i
 
       ];
 
@@ -907,18 +934,34 @@ class EbayPriceService {
       );
 
 
-    const average =
-      filtered.reduce(
-        (sum, price) =>
-          sum + price,
-        0
-      ) /
-      filtered.length;
+    /*
+     * Robuste Preisermittlung:
+     *
+     * Für einzelne günstige Sammelkarten kann
+     * ein Durchschnitt durch wenige teure Listings
+     * stark verfälscht werden.
+     *
+     * Deshalb verwenden wir nach dem
+     * Ausreißer-Filter den Median.
+     */
+    const middle =
+      Math.floor(
+        filtered.length / 2
+      );
+
+
+    const median =
+      filtered.length % 2 === 1
+        ? filtered[middle]
+        : (
+            filtered[middle - 1] +
+            filtered[middle]
+          ) / 2;
 
 
     const result =
       Number(
-        average.toFixed(2)
+        median.toFixed(2)
       );
 
 
@@ -927,7 +970,11 @@ class EbayPriceService {
     );
 
     console.log(
-      `eBay Durchschnitt: ${result} €`
+      `eBay Angebote nach Ausreißerfilter: ${filtered.length}`
+    );
+
+    console.log(
+      `eBay Medianpreis: ${result} €`
     );
 
 
