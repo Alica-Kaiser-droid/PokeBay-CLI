@@ -71,7 +71,9 @@ class EbayXmlBuilderService {
          * fixed oder keine Angabe →
          * Sofort-Kaufen als Standard
          */
-        if (card.listingMode === "auction") {
+        if (
+            (card as any).listingMode === "auction"
+        ) {
             return "Chinese";
         }
 

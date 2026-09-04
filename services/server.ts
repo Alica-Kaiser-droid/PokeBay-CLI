@@ -14,6 +14,10 @@ import {
   TcgDexService,
 } from "../scripts/TCGDexService.js";
 
+import {
+  EbayTitleService,
+} from "../scripts/EbayTitleService.js";
+
 
 const __filename =
   fileURLToPath(
@@ -46,6 +50,10 @@ const tcgDexService =
   new TcgDexService(
     "de"
   );
+
+
+const ebayTitleService =
+  new EbayTitleService();
 
 
 app.use(
@@ -536,6 +544,30 @@ app.post(
       ) {
 
         try {
+
+          /*
+           * Den eBay-Titel im tatsächlichen
+           * Listing-Datenfluss erzeugen.
+           *
+           * Der Handy-/Frontend-Workflow sendet
+           * die Karten direkt an diesen Endpoint
+           * und verwendet ListingService nicht.
+           *
+           * Dadurch darf der XML Builder nicht
+           * auf den japanischen Originalnamen
+           * zurückfallen.
+           */
+          card.title =
+            ebayTitleService.generateTitle(
+              card
+            );
+
+
+          console.log(
+            "eBay Titel:",
+            card.title
+          );
+
 
           const xml =
             await EbayXmlBuilderService
