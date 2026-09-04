@@ -8,6 +8,66 @@ import type {
 } from "../types/Card.js";
 
 
+async function fetchWithRetry(
+  url: string,
+  attempts = 3
+): Promise<Response> {
+
+  let lastError: unknown;
+
+  for (
+    let attempt = 1;
+    attempt <= attempts;
+    attempt++
+  ) {
+
+    try {
+
+      return await fetch(
+        url,
+        {
+          signal:
+            AbortSignal.timeout(
+              20000
+            )
+        }
+      );
+
+    } catch (
+      error
+    ) {
+
+      lastError =
+        error;
+
+      console.error(
+        `TCGDex fetch failed (${attempt}/${attempts}):`,
+        error
+      );
+
+      if (
+        attempt < attempts
+      ) {
+
+        await new Promise(
+          (resolve) =>
+            setTimeout(
+              resolve,
+              attempt * 1500
+            )
+        );
+
+      }
+
+    }
+
+  }
+
+  throw lastError;
+
+}
+
+
 const TCGDEX_BASE_URL =
   "https://api.tcgdex.net/v2";
 
@@ -74,7 +134,7 @@ export class TcgDexService {
     );
 
     const response =
-      await fetch(
+      await fetchWithRetry(
         url.toString()
       );
 
@@ -111,7 +171,7 @@ export class TcgDexService {
   ): Promise<TcgDexCard> {
 
     const response =
-      await fetch(
+      await fetchWithRetry(
         `${TCGDEX_BASE_URL}/${this.language}/cards/${encodeURIComponent(cardId)}`
       );
 
@@ -133,7 +193,7 @@ export class TcgDexService {
   ): Promise<TcgDexSet> {
 
     const response =
-      await fetch(
+      await fetchWithRetry(
         `${TCGDEX_BASE_URL}/${this.language}/sets/${encodeURIComponent(setId)}`
       );
 
@@ -240,7 +300,7 @@ export class TcgDexService {
         );
 
       const response =
-        await fetch(
+        await fetchWithRetry(
           url.toString()
         );
 
@@ -280,7 +340,7 @@ export class TcgDexService {
         );
 
       const response =
-        await fetch(
+        await fetchWithRetry(
           url.toString()
         );
 
