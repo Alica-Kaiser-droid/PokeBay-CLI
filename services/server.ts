@@ -767,6 +767,7 @@ app.post(
       console.log("Language:", card.language);
       console.log("Number:", card.number);
       console.log("Set Card Total:", card.setCardTotal);
+      console.log("Set ID:", card.setId);
       console.log("Set:", card.setName);
       console.log("========================================\n");
 
