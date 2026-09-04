@@ -573,8 +573,44 @@ export class TcgDexService {
           }
 
 
+          /*
+           * Entscheidend ist die Sprache der tatsächlich
+           * gefundenen Karte, nicht die Sprache, mit der
+           * der TCGDexService erstellt wurde.
+           *
+           * Der Server verwendet beispielsweise "de",
+           * kann aber trotzdem eine japanische Karte
+           * zurückliefern.
+           */
+          /*
+           * Diagnose: Tatsächlich vorhandene Sprachdaten
+           * der geladenen TCGDex-Karte protokollieren.
+           */
+          console.log(
+            "TCGDex Karten-Sprache Diagnose:",
+            {
+              id:
+                fullCard.id,
+
+              name:
+                fullCard.name,
+
+              language:
+                (fullCard as any).language,
+
+              serviceLanguage:
+                this.language,
+
+              setId:
+                fullCard.set?.id,
+            }
+          );
+
           const isJapanese =
-            this.language === "ja";
+            String(
+              (fullCard as any).language ||
+              ""
+            ).toLowerCase() === "ja";
 
 
         let englishName:
