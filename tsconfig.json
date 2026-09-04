@@ -22,5 +22,10 @@
         "./constants/*"
       ]
     }
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "backup-*",
+    "**/*.bak.*"
+  ]
 }

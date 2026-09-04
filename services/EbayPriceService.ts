@@ -63,6 +63,159 @@ interface EbaySearchResponse {
 
 class EbayPriceService {
 
+  /**
+   * Prüft, ob ein eBay-Angebot zur gewünschten
+   * Kartenvariante passt.
+   *
+   * Besonders wichtig für normale Karten:
+   * Masterball-, Pokéball- und Reverse-Holo-
+   * Varianten dürfen deren Preis nicht erhöhen.
+   */
+  private static matchesVariant(
+    title: string,
+    variant?: string
+  ): boolean {
+
+    const normalizedTitle =
+      title
+        .toLowerCase()
+        .replace(
+          /[éèê]/g,
+          "e"
+        );
+
+    /*
+     * Keine Varianteninformation:
+     * Angebot nicht künstlich ausschließen.
+     */
+    if (!variant) {
+
+      return true;
+
+    }
+
+    const normalizedVariant =
+      variant.toLowerCase();
+
+
+    /*
+     * Normale Karte:
+     *
+     * Variantenangebote ausdrücklich ausschließen.
+     */
+    if (
+      normalizedVariant === "normal"
+    ) {
+
+      const excludedPatterns = [
+
+        /master\s*ball/i,
+
+        /masterball/i,
+
+        /poke\s*ball/i,
+
+        /pokeball/i,
+
+        /reverse\s*holo/i,
+
+        /reverse\s*foil/i,
+
+        /holo\s*reverse/i
+
+      ];
+
+
+      return !excludedPatterns.some(
+        (pattern) =>
+          pattern.test(
+            normalizedTitle
+          )
+      );
+
+    }
+
+
+    /*
+     * Pokéball-Variante:
+     * Nur eindeutig passende Angebote.
+     */
+    if (
+      normalizedVariant === "pokeball"
+    ) {
+
+      return (
+        /poke\s*ball/i.test(
+          normalizedTitle
+        ) ||
+        /pokeball/i.test(
+          normalizedTitle
+        )
+      ) &&
+      !(
+        /master\s*ball/i.test(
+          normalizedTitle
+        ) ||
+        /masterball/i.test(
+          normalizedTitle
+        )
+      );
+
+    }
+
+
+    /*
+     * Masterball-Variante:
+     * Nur eindeutig passende Angebote.
+     */
+    if (
+      normalizedVariant === "masterball"
+    ) {
+
+      return (
+        /master\s*ball/i.test(
+          normalizedTitle
+        ) ||
+        /masterball/i.test(
+          normalizedTitle
+        )
+      );
+
+    }
+
+
+    /*
+     * Reverse-Holo-Variante:
+     * Nur Angebote mit entsprechendem Hinweis.
+     */
+    if (
+      normalizedVariant === "reverse-holo"
+    ) {
+
+      return (
+        /reverse\s*holo/i.test(
+          normalizedTitle
+        ) ||
+        /reverse\s*foil/i.test(
+          normalizedTitle
+        ) ||
+        /holo\s*reverse/i.test(
+          normalizedTitle
+        )
+      );
+
+    }
+
+
+    /*
+     * Für andere Varianten zunächst keine
+     * aggressive Filterung durchführen.
+     */
+    return true;
+
+  }
+
+
   private static accessToken:
     string | null = null;
 
@@ -641,13 +794,53 @@ class EbayPriceService {
 
 
     /*
+     * Angebote anhand der gewünschten
+     * Kartenvariante filtern.
+     */
+    const variantFilteredItems =
+      items.filter(
+        (item) =>
+          this.matchesVariant(
+            item.title ?? "",
+            card.variant
+          )
+      );
+
+
+    console.log(
+      "Items nach Variantenfilter:",
+      variantFilteredItems.length
+    );
+
+
+    /*
+     * Zur Diagnose die tatsächlich für die
+     * Preisberechnung verwendeten Angebote zeigen.
+     */
+    variantFilteredItems.forEach(
+      (item) => {
+
+        console.log(
+          "eBay Preis-Kandidat:",
+          item.title ?? "(ohne Titel)",
+          "-",
+          item.price?.value ??
+          item.currentBidPrice?.value ??
+          "(ohne Preis)"
+        );
+
+      }
+    );
+
+
+    /*
      * Nur brauchbare Preise übernehmen.
      *
      * Bei Auktionen verwenden wir,
      * falls vorhanden, das aktuelle Gebot.
      */
     const prices =
-      items
+      variantFilteredItems
         .map(
           (item) => {
 

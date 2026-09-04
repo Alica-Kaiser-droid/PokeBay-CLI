@@ -381,10 +381,35 @@ export class TcgDexService {
             );
 
 
+          /*
+           * fullCard.set enthält laut API-Typ nur
+           * grundlegende Setinformationen.
+           *
+           * Für die offizielle Gesamtzahl laden wir
+           * deshalb die vollständigen Setdaten.
+           */
+          /*
+           * Eine Karte ohne Set kann nicht
+           * mit der offiziellen Setgröße
+           * verglichen werden.
+           */
+          if (
+            !fullCard.set?.id
+          ) {
+
+            continue;
+
+          }
+
+
+          const fullSet =
+            await this.getSet(
+              fullCard.set.id
+            );
+
           const officialCount =
-            fullCard.set
-              ?.cardCount
-              ?.official;
+            fullSet.cardCount?.official ??
+            fullSet.cardCount?.total;
 
 
           if (

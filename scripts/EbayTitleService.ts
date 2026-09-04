@@ -71,25 +71,63 @@ export class EbayTitleService {
      * Sind beide Namen identisch, wird der Name
      * nur einmal verwendet.
      */
+    /*
+     * Japanische Karten:
+     *
+     * Deutscher Name zuerst, danach englischer Name.
+     *
+     * Beispiel:
+     *
+     * Rattfratz Rattata
+     */
     const name =
       isJapanese
         ? this.joinParts([
-            englishName,
-            germanName &&
-            germanName.toLowerCase() !==
-              englishName.toLowerCase()
-              ? germanName
+            germanName,
+            englishName &&
+            englishName.toLowerCase() !==
+              germanName.toLowerCase()
+              ? englishName
               : "",
-            englishName ||
-            germanName
+            germanName ||
+            englishName
               ? ""
               : originalName
           ])
         : originalName;
 
 
-    const number =
+    /*
+     * Kartennummer inklusive offizieller
+     * Gesamtanzahl des Sets erzeugen.
+     *
+     * Beispiel:
+     *
+     * number = "019"
+     * setCardTotal = 165
+     *
+     * Ergebnis:
+     *
+     * 019/165
+     */
+    let number =
       card.number.trim();
+
+
+    if (
+      isJapanese &&
+      card.setCardTotal &&
+      Number.isFinite(
+        card.setCardTotal
+      ) &&
+      card.setCardTotal > 0 &&
+      !number.includes("/")
+    ) {
+
+      number =
+        `${number.padStart(3, "0")}/${card.setCardTotal}`;
+
+    }
 
 
     let setName =
