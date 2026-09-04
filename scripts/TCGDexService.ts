@@ -1,3 +1,5 @@
+import { PokemonNameService } from "../services/PokemonNameService.js";
+
 import type {
   CardCondition,
   CardSearchResult,
@@ -533,6 +535,27 @@ export class TcgDexService {
                 fullCard.set.id
               );
 
+            console.log(
+              "TCGDex Set-Diagnose:",
+              {
+                cardId:
+                  fullCard.id,
+
+                setId:
+                  fullCard.set.id,
+
+                setName:
+                  fullSet.name,
+
+                cardCount:
+                  fullSet.cardCount,
+
+                rawSet:
+                  fullSet,
+              }
+            );
+
+
             if (
               !setName
             ) {
@@ -574,144 +597,63 @@ export class TcgDexService {
 
 
           /*
-           * Entscheidend ist die Sprache der tatsächlich
-           * gefundenen Karte, nicht die Sprache, mit der
-           * der TCGDexService erstellt wurde.
+           * Japanische Kartennamen anhand japanischer
+           * Schriftzeichen erkennen.
            *
-           * Der Server verwendet beispielsweise "de",
-           * kann aber trotzdem eine japanische Karte
-           * zurückliefern.
+           * Der TCGDexService kann mit "de" erstellt
+           * worden sein und trotzdem eine Karte mit
+           * japanischem Namen zurückgeben.
            */
-          /*
-           * Diagnose: Tatsächlich vorhandene Sprachdaten
-           * der geladenen TCGDex-Karte protokollieren.
-           */
-          console.log(
-            "TCGDex Karten-Sprache Diagnose:",
-            {
-              id:
-                fullCard.id,
-
-              name:
-                fullCard.name,
-
-              language:
-                (fullCard as any).language,
-
-              serviceLanguage:
-                this.language,
-
-              setId:
-                fullCard.set?.id,
-            }
-          );
-
           const isJapanese =
-            String(
-              (fullCard as any).language ||
-              ""
-            ).toLowerCase() === "ja";
+            /[\u3040-\u30ff\u3400-\u9fff]/.test(
+              fullCard.name
+            );
 
 
-        let englishName:
-          string | undefined;
+          let englishName:
+            string | undefined;
 
-        let germanName:
-          string | undefined;
-
-
-        /*
-         * Nur bei tatsächlich japanischer
-         * Vorauswahl zusätzliche Namen laden.
-         *
-         * Alle anderen Karten bleiben unverändert.
-         */
-        if (
-          isJapanese
-        ) {
-
-          try {
-
-            const [
-              englishResponse,
-              germanResponse
-            ] =
-              await Promise.all([
-
-                fetch(
-                  `https://api.tcgdex.net/v2/en/cards/${fullCard.id}`
-                ),
-
-                fetch(
-                  `https://api.tcgdex.net/v2/de/cards/${fullCard.id}`
-                )
-
-              ]);
+          let germanName:
+            string | undefined;
 
 
-
-
-
-
-
-
-              console.log(
-                "TCGDex JAPAN TEST:",
-                {
-                  japaneseId:
-                    fullCard.id,
-
-                  japaneseName:
-                    fullCard.name,
-
-                  englishStatus:
-                    englishResponse.status,
-
-                  germanStatus:
-                    germanResponse.status,
-                }
-              );
-
-            if (
-              englishResponse.ok
-            ) {
-
-              const englishCard =
-                await englishResponse.json();
-
-              englishName =
-                englishCard?.name ||
-                undefined;
-
-            }
-
-
-            if (
-              germanResponse.ok
-            ) {
-
-              const germanCard =
-                await germanResponse.json();
-
-              germanName =
-                germanCard?.name ||
-                undefined;
-
-            }
-
-          } catch (
-            error
+          /*
+           * Japanische Pokémon-Namen über die bereits
+           * vorhandene zentrale Namensdatenbank auflösen.
+           *
+           * Dadurch sind wir nicht davon abhängig,
+           * dass dieselbe TCGDex Card-ID unter /en und
+           * /de existiert.
+           */
+          if (
+            isJapanese
           ) {
 
-            console.error(
-              "Alternative Kartennamen konnten nicht geladen werden:",
-              fullCard.id,
-              error
+            const names =
+              PokemonNameService.getNames(
+                fullCard.name
+              );
+
+            englishName =
+              names?.english;
+
+            germanName =
+              names?.german;
+
+
+            console.log(
+              "PokemonNameService Diagnose:",
+              {
+                japaneseName:
+                  fullCard.name,
+
+                englishName,
+
+                germanName,
+              }
             );
 
           }
-
-        }
 
 
         cards.push({
