@@ -29,6 +29,15 @@ export interface PriceComparisonRequest {
    */
   setCardTotal?: number;
 
+  /*
+   * TCGDex Set-ID.
+   *
+   * Beispiel:
+   *
+   * sv2a
+   */
+  setId?: string;
+
   setName?: string;
   variant?: string;
   condition?: string;
