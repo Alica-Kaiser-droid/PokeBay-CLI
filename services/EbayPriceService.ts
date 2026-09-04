@@ -25,7 +25,17 @@ export interface EbayPriceSearchRequest {
      * "019/165" erzeugt werden.
      */
     setCardTotal?: number;
-setName?: string;
+
+  /*
+   * TCGDex Set-ID.
+   *
+   * Beispiel:
+   *
+   * sv2a
+   */
+  setId?: string;
+
+  setName?: string;
   variant?: string;
   condition?: string;
 }
@@ -608,6 +618,29 @@ class EbayPriceService {
         );
 
       }
+
+    }
+
+
+    /*
+     * TCGDex Set-ID bei japanischen Karten verwenden.
+     *
+     * Beispiel:
+     *
+     * sv2a
+     *
+     * Dadurch werden Karten mit gleicher Nummer aus
+     * anderen Sets besser ausgeschlossen.
+     */
+    if (
+      card.language === "ja" &&
+      card.setId &&
+      card.setId.trim()
+    ) {
+
+      parts.push(
+        card.setId.trim()
+      );
 
     }
 
