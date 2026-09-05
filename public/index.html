@@ -1697,9 +1697,18 @@ let selectedCard = null;
          * wir als nächsten Schritt mit dem
          * EbayTitleService.
          */
+        const displayName =
+          selectedCard.language === "ja"
+            ? (
+                selectedCard.germanName ||
+                selectedCard.englishName ||
+                selectedCard.name
+              )
+            : selectedCard.name;
+
         const titleParts = [
           "Pokémon Karte",
-          selectedCard.name,
+          displayName,
           selectedCard.number
         ];
 
@@ -1913,9 +1922,18 @@ function renderAllListingsPreview() {
           : "";
 
 
+      const displayName =
+        card.language === "ja"
+          ? (
+              card.germanName ||
+              card.englishName ||
+              card.name
+            )
+          : card.name;
+
       const titleParts = [
         "Pokémon Karte",
-        card.name,
+        displayName,
         card.number
       ];
 
