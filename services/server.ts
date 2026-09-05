@@ -573,8 +573,8 @@ app.post(
 
 
           console.log(
-            "eBay Titel:",
-            card.title
+            "EBAY LISTING TITEL FINAL:",
+            JSON.stringify(card.title)
           );
 
 
