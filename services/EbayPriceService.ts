@@ -1,5 +1,6 @@
 import axios from "axios";
 import { PokemonNameService } from "./PokemonNameService.js";
+import { PokemonSetService } from "./PokemonSetService.js";
 
 
 export interface EbayPriceSearchRequest {
@@ -548,6 +549,11 @@ class EbayPriceService {
             card.name
           );
 
+
+    const translatedSetName =
+      card.language === "ja" && card.setId
+        ? PokemonSetService.getGermanName(card.setId)
+        : undefined;
 
     const parts: string[] = [];
 
