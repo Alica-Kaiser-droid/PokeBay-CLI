@@ -1706,17 +1706,15 @@ let selectedCard = null;
               )
             : selectedCard.name;
 
-        const titleParts = [
-          "Pokémon Karte",
-          displayName,
-          selectedCard.number
-        ];
+        const cardNumber = selectedCard.setCardTotal
+          ? `${selectedCard.number}/${selectedCard.setCardTotal}`
+          : selectedCard.number;
 
-        if (selectedCard.setName) {
-          titleParts.push(
-            `- ${selectedCard.setName}`
-          );
-        }
+        const titleParts = [
+          displayName,
+          cardNumber,
+          selectedCard.setId
+        ].filter(Boolean);
 
         if (
           variant &&
@@ -1931,17 +1929,15 @@ function renderAllListingsPreview() {
             )
           : card.name;
 
-      const titleParts = [
-        "Pokémon Karte",
-        displayName,
-        card.number
-      ];
+      const cardNumber = card.setCardTotal
+        ? `${card.number}/${card.setCardTotal}`
+        : card.number;
 
-      if (card.setName) {
-        titleParts.push(
-          `- ${card.setName}`
-        );
-      }
+      const titleParts = [
+        displayName,
+        cardNumber,
+        card.setId
+      ].filter(Boolean);
 
       if (
         variantValue &&
