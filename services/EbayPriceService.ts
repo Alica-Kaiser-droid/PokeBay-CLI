@@ -645,23 +645,6 @@ class EbayPriceService {
 
     }
 
-    /*
-     * Bei normalen Karten Sondervarianten bereits
-     * aus der eBay-Suche ausschließen.
-     */
-    if (
-      card.variant?.toLowerCase() === "normal"
-    ) {
-
-      parts.push(
-        "-Pokeball",
-        "-Masterball",
-        "-Reverse",
-        "-Holo"
-      );
-
-    }
-
 
     /*
      * Absichtlich NICHT hinzufügen:
