@@ -665,6 +665,13 @@ export class TcgDexService {
                 fullCard.set.id
               );
 
+            if (this.language === "ja") {
+              try {
+                const germanSet = await new TcgDexService("de").getSet(fullCard.set.id);
+                if (germanSet.name) setName = germanSet.name;
+              } catch {}
+            }
+
             console.log(
               "TCGDex Set-Diagnose:",
               {
