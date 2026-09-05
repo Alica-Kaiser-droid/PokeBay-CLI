@@ -18,6 +18,8 @@ import {
   EbayTitleService,
 } from "../scripts/EbayTitleService.js";
 
+import { PokemonSetService } from "./PokemonSetService.js";
+
 
 const __filename =
   fileURLToPath(
@@ -306,6 +308,14 @@ app.post(
           cleanName,
           cleanNumber
         );
+
+      for (const card of cards) {
+        if (card.language === "ja" && card.setId) {
+          card.setName =
+            PokemonSetService.getGermanName(card.setId) ||
+            card.setName;
+        }
+      }
 
 
       if (
