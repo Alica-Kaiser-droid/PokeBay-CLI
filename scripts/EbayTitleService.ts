@@ -173,8 +173,8 @@ export class EbayTitleService {
     ) {
 
       setName =
-        card.setId
-          ? `${card.setId} - Japanisch`
+        setName
+          ? `${setName} - Japanisch`
           : "Japanisch";
 
     }
