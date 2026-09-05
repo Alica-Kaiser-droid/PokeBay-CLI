@@ -322,46 +322,6 @@ export class TcgDexService {
 
 
     /*
-     * Falls nur eine Nummer angegeben wurde,
-     * laden wir alle Karten der Sprache und
-     * filtern anschließend lokal.
-     *
-     * Für die ersten 20 Treffer werden später
-     * die vollständigen Kartendaten geladen.
-     */
-    if (
-      !cleanName &&
-      cleanNumber
-    ) {
-
-      const url =
-        new URL(
-          `${TCGDEX_BASE_URL}/${this.language}/cards`
-        );
-
-      const response =
-        await fetchWithRetry(
-          url.toString()
-        );
-
-      if (
-        !response.ok
-      ) {
-
-        throw new Error(
-          `TCGdex-Suche fehlgeschlagen: ${response.status}`
-        );
-
-      }
-
-
-      candidates =
-        await response.json();
-
-    }
-
-
-    /*
      * Kartennummer normalisieren.
      *
      * Unterstützt beispielsweise:
