@@ -140,20 +140,6 @@ class EbayPriceService {
 
         /pokeball/i,
 
-        /reverse\s*holo/i,
-
-        /reverse\s*foil/i,
-
-        /holo\s*reverse/i,
-
-        /\breverse\b/i,
-
-        /\bholo\b/i,
-
-        /\bholofoil\b/i,
-
-        /\bfoil\b/i,
-
         /parallel/i,
 
         /cosmos\s*holo/i,
