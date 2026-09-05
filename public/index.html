@@ -1699,11 +1699,11 @@ let selectedCard = null;
          */
         const displayName =
           selectedCard.language === "ja"
-            ? (
-                selectedCard.germanName ||
-                selectedCard.englishName ||
-                selectedCard.name
-              )
+            ? [
+                selectedCard.germanName,
+                selectedCard.englishName
+              ].filter(Boolean).join(" ") ||
+              selectedCard.name
             : selectedCard.name;
 
         const cardNumber = selectedCard.setCardTotal
@@ -1922,11 +1922,11 @@ function renderAllListingsPreview() {
 
       const displayName =
         card.language === "ja"
-          ? (
-              card.germanName ||
-              card.englishName ||
-              card.name
-            )
+          ? [
+              card.germanName,
+              card.englishName
+            ].filter(Boolean).join(" ") ||
+            card.name
           : card.name;
 
       const cardNumber = card.setCardTotal
