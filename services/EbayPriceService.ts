@@ -539,8 +539,8 @@ class EbayPriceService {
     const searchName =
       card.language === "ja"
         ? (
-            card.germanName ||
             card.englishName ||
+            card.germanName ||
             translatedJapaneseName ||
             card.name
           )
