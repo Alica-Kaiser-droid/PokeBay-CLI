@@ -628,8 +628,13 @@ class EbayPriceService {
         card.setId.trim()
       );
 
-    }
+    } else if (card.language !== "ja" && card.setName && card.setName.trim()) {
 
+      parts.push(
+        card.setName.trim()
+      );
+
+    }
 
     /*
      * Japanische Karten auf dem deutschen
