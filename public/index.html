@@ -1713,7 +1713,7 @@ let selectedCard = null;
         const titleParts = [
           displayName,
           cardNumber,
-          selectedCard.setId
+          selectedCard.setName || selectedCard.setId
         ].filter(Boolean);
 
         if (
@@ -1721,7 +1721,7 @@ let selectedCard = null;
           variant.toLowerCase() !== "normal"
         ) {
           titleParts.push(
-            `- ${variant}`
+            `- ${variant === "holo" ? "Holo" : variant}`
           );
         }
 
