@@ -3,6 +3,7 @@ import type {
   CardVariant,
   PokemonCard,
 } from "../types/Card.js";
+import { PokemonSetService } from "../services/PokemonSetService.js";
 
 
 /**
@@ -134,6 +135,12 @@ export class EbayTitleService {
       this.cleanSetName(
         card.setName
       );
+
+    if (isJapanese && card.setId) {
+      setName =
+        PokemonSetService.getGermanName(card.setId) ||
+        setName;
+    }
 
 
     let variant =
