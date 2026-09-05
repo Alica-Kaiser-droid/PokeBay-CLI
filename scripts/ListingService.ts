@@ -165,6 +165,7 @@ export class ListingService {
     /*
      * Keine passende Karte gefunden.
      */
+    console.log("LISTING CARD:", { name: card?.name, englishName: card?.englishName, germanName: card?.germanName, number: card?.number, setName: card?.setName, language: card?.language });
     if (!card) {
 
       return null;
