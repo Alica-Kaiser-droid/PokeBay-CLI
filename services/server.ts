@@ -557,6 +557,15 @@ app.post(
            * auf den japanischen Originalnamen
            * zurückfallen.
            */
+          console.log("LISTING NAMEN:", {
+            name: card.name,
+            germanName: card.germanName,
+            englishName: card.englishName,
+            number: card.number,
+            setCardTotal: card.setCardTotal,
+            setId: card.setId
+          });
+
           card.title =
             ebayTitleService.generateTitle(
               card
