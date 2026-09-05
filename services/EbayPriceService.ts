@@ -618,10 +618,22 @@ class EbayPriceService {
      * Dadurch werden Karten mit gleicher Nummer aus
      * anderen Sets besser ausgeschlossen.
      */
-    if (card.setName && card.setName.trim()) {
-      parts.push(card.setName.trim());
-    } else if (card.language === "ja" && card.setId && card.setId.trim()) {
-      parts.push(card.setId.trim());
+    if (
+      card.language === "ja" &&
+      card.setId &&
+      card.setId.trim()
+    ) {
+
+      parts.push(
+        card.setId.trim()
+      );
+
+    } else if (card.language !== "ja" && card.setName && card.setName.trim()) {
+
+      parts.push(
+        card.setName.trim()
+      );
+
     }
 
     /*
