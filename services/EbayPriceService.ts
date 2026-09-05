@@ -843,6 +843,14 @@ class EbayPriceService {
      * Angebote anhand der gewünschten
      * Kartenvariante filtern.
      */
+    console.log(
+      "eBay Treffer vor Variantenfilter:",
+      items.map((item) => ({
+        title: item.title,
+        price: item.price?.value ?? item.currentBidPrice?.value
+      }))
+    );
+
     const variantFilteredItems =
       items.filter(
         (item) =>
