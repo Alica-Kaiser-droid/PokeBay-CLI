@@ -447,7 +447,9 @@
     "japanese": "ナイトワンダラー"
   },
   "SV9a": {
-    "japanese": "熱風のアリーナ"
+    "japanese": "熱風のアリーナ",
+    "english": "Hot Wind Arena",
+    "german": "Ewige Rivalen"
   },
   "SV3": {
     "japanese": "黒炎の支配者"
