@@ -583,8 +583,13 @@ ${nameValueLists}
             "Bei mehreren gekauften Karten werden die Versandkosten nach Möglichkeit zusammengefasst. Sollte der tatsächlich anfallende Versand günstiger sein als der berechnete Versandbetrag, erstatte ich Ihnen die zu viel gezahlten Versandkosten automatisch."
         );
         details.push("");
+        details.push("");
         details.push(
-            "Bei Fragen kannst du mich gerne über eBay kontaktieren."
+            "Schauen Sie sich gerne auch meine weiteren Angebote an – vielleicht ist noch die eine oder andere Karte für Sie dabei."
+        );
+        details.push("");
+        details.push(
+            "Bei Fragen können Sie mich gerne über eBay kontaktieren."
         );
 
         return `<![CDATA[
