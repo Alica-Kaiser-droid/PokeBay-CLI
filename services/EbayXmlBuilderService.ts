@@ -1,5 +1,6 @@
 import type { Card } from "#types/payload";
 import ImageUploadService from "#services/ImageUploadService";
+import { PokemonSetService } from "#services/PokemonSetService";
 
 class EbayXmlBuilderService {
     /**
@@ -242,10 +243,20 @@ class EbayXmlBuilderService {
                 );
             }
 
+            const englishSetName =
+                card.setId
+                    ? PokemonSetService.getEnglishName(card.setId) || ""
+                    : "";
+
+            const displaySetName =
+                setName && englishSetName && englishSetName !== setName
+                    ? `${setName} (${englishSetName})`
+                    : setName || englishSetName;
+
             const cardInfo =
                 [
                     formattedNumber,
-                    setName
+                    displaySetName
                 ]
                     .filter(Boolean)
                     .join(" ");
