@@ -6,6 +6,10 @@ export interface PokemonNames {
 
 const JAPANESE_TO_POKEMON_NAMES:
   Record<string, PokemonNames> = {
+  "オーガポン みどりのめん": { english: "Ogerpon Teal Mask", german: "Ogerpon Türkisgrüne Maske" },
+  "オーガポン かまどのめん": { english: "Ogerpon Hearthflame Mask", german: "Ogerpon Flammenmaske" },
+  "オーガポン いどのめん": { english: "Ogerpon Wellspring Mask", german: "Ogerpon Brunnenmaske" },
+  "オーガポン いしずえのめん": { english: "Ogerpon Cornerstone Mask", german: "Ogerpon Fundamentmaske" },
 
   "Abomasnow": {
     english: "Rexblisar",
