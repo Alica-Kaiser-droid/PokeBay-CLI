@@ -918,6 +918,17 @@ ${details.join("\n")}
             process.env.EBAY_CONDITION_ID ?? "3000"
         )}</ConditionID>
 
+        <ConditionDescriptors>
+            <ConditionDescriptor>
+                <Name>40001</Name>
+                <Values>
+                    <Value>${this.escapeXml(
+                        process.env.EBAY_CARD_CONDITION ?? "400010"
+                    )}</Value>
+                </Values>
+            </ConditionDescriptor>
+        </ConditionDescriptors>
+
         ${itemSpecificsXML}
 
         <Description>${description}</Description>
