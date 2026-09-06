@@ -10257,6 +10257,7 @@ const JAPANESE_TO_POKEMON_NAMES:
     german: "Machollo",
   },
 
+  "ペパーのリククラゲ": { english: "Peppers Tenterra", german: "Peppers Tenterra" },
 };
 
 
