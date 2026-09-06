@@ -921,11 +921,9 @@ ${details.join("\n")}
         <ConditionDescriptors>
             <ConditionDescriptor>
                 <Name>40001</Name>
-                <Values>
-                    <Value>${this.escapeXml(
-                        process.env.EBAY_CARD_CONDITION ?? "400010"
-                    )}</Value>
-                </Values>
+                <Value>${this.escapeXml(
+                    process.env.EBAY_CARD_CONDITION ?? "400010"
+                )}</Value>
             </ConditionDescriptor>
         </ConditionDescriptors>
 
