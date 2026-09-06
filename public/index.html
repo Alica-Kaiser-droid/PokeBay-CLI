@@ -1961,10 +1961,17 @@ function renderAllListingsPreview() {
         ? `${card.number}/${card.setCardTotal}`
         : card.number;
 
+      const displaySetName =
+        card.language === "ja" &&
+        card.setName &&
+        card.englishSetName
+          ? `${card.setName} (${card.englishSetName})`
+          : card.setName || card.setId;
+
       const titleParts = [
         displayName,
         cardNumber,
-        card.setName || card.setId
+        displaySetName
       ].filter(Boolean);
 
       if (

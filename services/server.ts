@@ -314,6 +314,10 @@ app.post(
           card.setName =
             PokemonSetService.getGermanName(card.setId) ||
             card.setName;
+
+          card.englishSetName =
+            PokemonSetService.getEnglishName(card.setId) ||
+            "";
         }
       }
 
