@@ -72,6 +72,7 @@ export interface PokemonCard {
     setCardTotal?: number;
   setId: string;
   setName: string;
+  englishSetName?: string;
 
   rarity?: string;
 
