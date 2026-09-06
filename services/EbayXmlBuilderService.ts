@@ -508,7 +508,7 @@ ${nameValueLists}
 
         if (card.language) {
             details.push(
-                `Sprache: ${card.language}`
+                `Sprache: ${card.language === "ja" ? "Japanisch" : card.language}`
             );
         }
 
@@ -577,6 +577,10 @@ ${nameValueLists}
         details.push("");
         details.push(
             "Die Karte wird sorgfältig verpackt und versendet."
+        );
+        details.push("");
+        details.push(
+            "Bei mehreren gekauften Karten werden die Versandkosten nach Möglichkeit zusammengefasst. Sollte der tatsächlich anfallende Versand günstiger sein als der berechnete Versandbetrag, erstatte ich Ihnen die zu viel gezahlten Versandkosten automatisch."
         );
         details.push("");
         details.push(
@@ -947,7 +951,7 @@ ${details.join("\n")}
 
         <Currency>EUR</Currency>
 
-        <DispatchTimeMax>5</DispatchTimeMax>
+        <DispatchTimeMax>3</DispatchTimeMax>
 
         <PostalCode>${this.escapeXml(
             postalCode
