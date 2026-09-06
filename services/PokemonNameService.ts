@@ -10258,6 +10258,14 @@ const JAPANESE_TO_POKEMON_NAMES:
   },
 
   "ペパーのリククラゲ": { english: "Peppers Tenterra", german: "Peppers Tenterra" },
+  "Nのゾロアークex": { english: "N's Zoroark ex", german: "Ns Zoroark ex" },
+  "リーリエのピッピex": { english: "Lillie's Clefairy ex", german: "Lillys Piepi ex" },
+  "ナンジャモのハラバリーex": { english: "Iono's Bellibolt ex", german: "Enigmaras Wampitz ex" },
+  "ホップのザシアンex": { english: "Hop's Zacian ex", german: "Hops Zacian ex" },
+  "Nのダルマッカ": { english: "N's Darumaka", german: "Ns Flampion" },
+  "Nのヒヒダルマ": { english: "N's Darmanitan", german: "Ns Flampivian" },
+  "ナンジャモのビリリダマ": { english: "Iono's Voltorb", german: "Enigmaras Voltobal" },
+
 };
 
 
