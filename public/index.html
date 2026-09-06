@@ -4118,6 +4118,20 @@ document
 
         console.log("EBAY SELECTED CARDS:", selectedCards);
 
+          const multiDiscount2 = Math.max(0, Math.min(100, Number(document.getElementById("multiDiscount2")?.value) || 0));
+        const multiDiscount3 = Math.max(0, Math.min(100, Number(document.getElementById("multiDiscount3")?.value) || 0));
+        const multiDiscount4 = Math.max(0, Math.min(100, Number(document.getElementById("multiDiscount4")?.value) || 0));
+
+        selectedCards.forEach((card) => {
+          const quantity = Number(card.quantity ?? 1);
+          const discount = quantity >= 4 ? multiDiscount4 : quantity >= 3 ? multiDiscount3 : quantity >= 2 ? multiDiscount2 : 0;
+          const price = Number(card.price);
+
+          if (Number.isFinite(price) && price > 0 && discount > 0) {
+            card.price = Math.round(price * (1 - discount / 100) * 100) / 100;
+          }
+        });
+
         formData.append(
           "cards",
           JSON.stringify(
