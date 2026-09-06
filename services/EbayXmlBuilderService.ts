@@ -605,7 +605,7 @@ ${details.join("\n")}
         const shippingCostRaw =
             process.env.EBAY_SHIPPING_COST ?? "1.10";
 
-        const shippingCost = Number(shippingCostRaw);
+        const shippingCost = Number(shippingCostRaw.replace(",", "."));
 
         if (
             !Number.isFinite(shippingCost) ||
