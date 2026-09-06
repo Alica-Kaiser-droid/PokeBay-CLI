@@ -10275,9 +10275,41 @@ export class PokemonNameService {
     japaneseName: string
   ): PokemonNames | undefined {
 
-    return JAPANESE_TO_POKEMON_NAMES[
-      japaneseName.trim()
-    ];
+    const name = japaneseName.trim();
+    const exact = JAPANESE_TO_POKEMON_NAMES[name];
+    if (exact) return exact;
+
+    const trainers: Record<string, [string, string]> = {
+      "Nの": ["Ns", "N's"],
+      "リーリエの": ["Lillys", "Lillie's"],
+      "ホップの": ["Hops", "Hop's"],
+      "ナンジャモの": ["Enigmaras", "Iono's"],
+      "ペパーの": ["Peppers", "Arven's"],
+      "カスミの": ["Mistys", "Misty's"],
+      "ダイゴの": ["Troys", "Steven's"],
+      "マリィの": ["Marys", "Marnie's"],
+      "ヒビキの": ["Klarins", "Ethan's"],
+      "シロナの": ["Cynthias", "Cynthia's"],
+      "エリカの": ["Erikas", "Erika's"],
+      "アオキの": ["Aokis", "Larry's"],
+      "ロケット団の": ["Team Rockets", "Team Rocket's"]
+    };
+
+    for (const prefix of Object.keys(trainers)) {
+      if (name.startsWith(prefix)) {
+        const pokemon = name.slice(prefix.length);
+        const base = JAPANESE_TO_POKEMON_NAMES[pokemon];
+        if (base) {
+          const [germanTrainer, englishTrainer] = trainers[prefix];
+          return {
+            german: germanTrainer + " " + base.german,
+            english: englishTrainer + " " + base.english
+          };
+        }
+      }
+    }
+
+    return undefined;
 
   }
 
