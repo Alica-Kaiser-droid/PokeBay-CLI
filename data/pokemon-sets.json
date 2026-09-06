@@ -524,19 +524,23 @@
     "japanese": "GXバトルブースト"
   },
   "M1L": {
-    "japanese": "メガブレイブ"
+    "japanese": "メガブレイブ",
+    "german": "Mega-Entwicklung"
   },
   "M2a": {
-    "japanese": "MEGAドリームex"
+    "japanese": "MEGAドリームex",
+    "german": "Erhabene Helden"
   },
   "M3": {
-    "japanese": "ムニキスゼロ"
+    "japanese": "ムニキスゼロ",
+    "german": "Optimale Ordnung"
   },
   "M6": {
     "japanese": "ストームエメラルダ"
   },
   "M5": {
-    "japanese": "アビスアイ"
+    "japanese": "アビスアイ",
+    "german": "Dunkelnacht"
   },
   "MC": {
     "japanese": "スタートデッキ100 バトルコレクション"
@@ -545,12 +549,15 @@
     "japanese": "メガ プロモカード"
   },
   "M2": {
-    "japanese": "インフェルノX"
+    "japanese": "インフェルノX",
+    "german": "Fatale Flammen"
   },
   "M1S": {
-    "japanese": "メガシンフォニア"
+    "japanese": "メガシンフォニア",
+    "german": "Mega-Entwicklung"
   },
   "M4": {
-    "japanese": "ニンジャスピナー"
+    "japanese": "ニンジャスピナー",
+    "german": "Wachsendes Chaos"
   }
 }
