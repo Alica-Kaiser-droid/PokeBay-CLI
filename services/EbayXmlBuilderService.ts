@@ -242,17 +242,10 @@ class EbayXmlBuilderService {
                 );
             }
 
-            const englishSetName =
-                String((card as any).englishSetName || "").trim();
-
             const cardInfo =
                 [
                     formattedNumber,
                     setName
-                        ? englishSetName && englishSetName !== setName
-                            ? `${setName} (${englishSetName})`
-                            : setName
-                        : englishSetName
                 ]
                     .filter(Boolean)
                     .join(" ");
