@@ -137,9 +137,18 @@ export class EbayTitleService {
       );
 
     if (isJapanese && card.setId) {
-      setName =
+      const germanSetName =
         PokemonSetService.getGermanName(card.setId) ||
         setName;
+
+      const englishSetName =
+        PokemonSetService.getEnglishName(card.setId) || "";
+
+      setName =
+        englishSetName &&
+        englishSetName.toLowerCase() !== germanSetName.toLowerCase()
+          ? `${germanSetName} (${englishSetName})`
+          : germanSetName;
     }
 
 
