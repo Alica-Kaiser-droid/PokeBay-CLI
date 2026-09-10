@@ -1952,10 +1952,7 @@ function renderAllListingsPreview() {
         card.language === "ja"
           ? [
               card.germanName,
-              card.englishName &&
-              card.englishName !== card.germanName
-                ? card.englishName
-                : null
+              card.englishName
             ].filter(Boolean).join(" ") ||
             card.name
           : card.name;
