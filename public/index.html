@@ -1952,7 +1952,10 @@ function renderAllListingsPreview() {
         card.language === "ja"
           ? [
               card.germanName,
-              card.englishName
+              card.englishName &&
+              card.englishName !== card.germanName
+                ? card.englishName
+                : null
             ].filter(Boolean).join(" ") ||
             card.name
           : card.name;
@@ -1973,6 +1976,10 @@ function renderAllListingsPreview() {
         cardNumber,
         displaySetName
       ].filter(Boolean);
+
+      if (card.language === "ja") {
+        titleParts.push("- Japanisch");
+      }
 
       if (
         variantValue &&

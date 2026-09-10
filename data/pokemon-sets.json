@@ -1,33 +1,48 @@
 {
   "PMCG1": {
-    "japanese": "拡張パック"
+    "japanese": "拡張パック",
+    "english": "Base Set",
+    "german": "Grundset"
   },
   "PMCG2": {
-    "japanese": "ポケモンジャングル"
+    "japanese": "ポケモンジャングル",
+    "english": "Jungle",
+    "german": "Jungle"
   },
   "PMCG3": {
-    "japanese": "化石の秘密"
+    "japanese": "化石の秘密",
+    "english": "Fossil",
+    "german": "Fossil"
   },
   "PMCG4": {
-    "japanese": "ロケット団"
+    "japanese": "ロケット団",
+    "english": "Team Rocket",
+    "german": "EX O Retorno da Equipe Rocket"
   },
   "PMCG5": {
-    "japanese": "リーダーズスタジアム"
+    "japanese": "リーダーズスタジアム",
+    "english": "Gym Heroes"
   },
   "PMCG6": {
     "japanese": "闇からの挑戦"
   },
   "neo1": {
-    "japanese": "金、銀、新世界へ..."
+    "japanese": "金、銀、新世界へ...",
+    "english": "Neo Genesis",
+    "german": "Neo Génesis"
   },
   "neo2": {
-    "japanese": "遺跡をこえて..."
+    "japanese": "遺跡をこえて...",
+    "english": "Neo Discovery",
+    "german": "Neo Entdeckung"
   },
   "neo3": {
-    "japanese": "めざめる伝説"
+    "japanese": "めざめる伝説",
+    "english": "Neo Revelation"
   },
   "neo4": {
-    "japanese": "闇、そして光へ..."
+    "japanese": "闇、そして光へ...",
+    "english": "Neo Destiny"
   },
   "VS1": {
     "japanese": "ポケモンカード★VS"
@@ -36,139 +51,216 @@
     "japanese": "ポケモンカード★web"
   },
   "E1": {
-    "japanese": "基本拡張パック"
+    "japanese": "基本拡張パック",
+    "english": "Expedition Base Set",
+    "german": "Expedition Base Set"
   },
   "E2": {
-    "japanese": "地図にない町"
+    "japanese": "地図にない町",
+    "english": "Aquapolis"
   },
   "E3": {
-    "japanese": "海からの風"
+    "japanese": "海からの風",
+    "english": "Aquapolis"
   },
   "E4": {
-    "japanese": "裂けた大地"
+    "japanese": "裂けた大地",
+    "english": "Skyridge",
+    "german": "Skyridge"
   },
   "E5": {
-    "japanese": "神秘なる山"
+    "japanese": "神秘なる山",
+    "english": "Skyridge",
+    "german": "Skyridge"
   },
   "ADV1": {
-    "japanese": "拡張パック"
+    "japanese": "拡張パック",
+    "english": "Base Set",
+    "german": "Grundset"
   },
   "ADV2": {
-    "japanese": "砂漠のきせき"
+    "japanese": "砂漠のきせき",
+    "english": "EX Sandstorm",
+    "german": "EX Sandsturm"
   },
   "ADV3": {
-    "japanese": "天空の覇者"
+    "japanese": "天空の覇者",
+    "english": "EX Dragon",
+    "german": "EX Drache"
   },
   "ADV4": {
     "japanese": "強化拡張パックex1マグマVSアクア ふたつの野望"
   },
   "ADV5": {
-    "japanese": "とかれた封印"
+    "japanese": "とかれた封印",
+    "english": "EX Hidden Legends"
   },
   "PCG1": {
-    "japanese": "伝説の飛翔"
+    "japanese": "伝説の飛翔",
+    "english": "EX FireRed & LeafGreen",
+    "german": "EX Feuerrot & Blattgrün"
   },
   "PCG2": {
-    "japanese": "蒼空の激突"
+    "japanese": "蒼空の激突",
+    "english": "EX Deoxys"
   },
   "PCG3": {
-    "japanese": "ロケット団の逆襲"
+    "japanese": "ロケット団の逆襲",
+    "english": "EX Team Rocket Returns",
+    "german": "EX O Retorno da Equipe Rocket"
   },
   "PCG4": {
-    "japanese": "金の空、銀の海"
+    "japanese": "金の空、銀の海",
+    "english": "EX Unseen Forces",
+    "german": "EX Verborgene Mächte"
   },
   "PCG5": {
-    "japanese": "まぼろしの森"
+    "japanese": "まぼろしの森",
+    "english": "EX Legend Maker",
+    "german": "EX Legend Maker"
   },
   "PCG6": {
-    "japanese": "ホロンの研究塔"
+    "japanese": "ホロンの研究塔",
+    "english": "EX Delta Species",
+    "german": "EX Delta Species"
   },
   "PCG7": {
-    "japanese": "ホロンの幻影"
+    "japanese": "ホロンの幻影",
+    "english": "EX Holon Phantoms",
+    "german": "EX Holon Phantoms"
   },
   "PCG8": {
-    "japanese": "きせきの結晶"
+    "japanese": "きせきの結晶",
+    "english": "EX Crystal Guardians",
+    "german": "EX Crystal Guardians"
   },
   "PCG9": {
-    "japanese": "さいはての攻防"
+    "japanese": "さいはての攻防",
+    "english": "EX Dragon Frontiers",
+    "german": "EX Dragon Frontiers"
   },
   "PCG10": {
-    "japanese": "ワールドチャンピオンズパック"
+    "japanese": "ワールドチャンピオンズパック",
+    "english": "EX Power Keepers",
+    "german": "EX Power Keepers"
   },
   "L1a": {
-    "japanese": "ハートゴールドコレクション"
+    "japanese": "ハートゴールドコレクション",
+    "english": "HeartGold & SoulSilver",
+    "german": "HeartGold SoulSilver"
   },
   "L1b": {
-    "japanese": "ソウルシルバーコレクション"
+    "japanese": "ソウルシルバーコレクション",
+    "english": "HeartGold & SoulSilver",
+    "german": "HeartGold SoulSilver"
   },
   "L2": {
-    "japanese": "よみがえる伝説"
+    "japanese": "よみがえる伝説",
+    "english": "Undaunted",
+    "german": "Unerschrocken"
   },
   "LL": {
     "japanese": "強化パック ロストリンク"
   },
   "L3": {
-    "japanese": "頂上大激突"
+    "japanese": "頂上大激突",
+    "english": "Triumphant",
+    "german": "Triumph"
   },
   "XY1b": {
-    "japanese": "コレクションY"
+    "japanese": "コレクションY",
+    "english": "XY"
   },
   "XY1a": {
-    "japanese": "コレクションX"
+    "japanese": "コレクションX",
+    "english": "XY"
   },
   "XY2": {
-    "japanese": "ワイルドブレイズ"
+    "japanese": "ワイルドブレイズ",
+    "english": "Flashfire",
+    "german": "Flammenmeer"
   },
   "XY3": {
-    "japanese": "ライジングフィスト"
+    "japanese": "ライジングフィスト",
+    "english": "Furious Fists",
+    "german": "Fliegende Fäuste"
   },
   "XY4": {
-    "japanese": "ファントムゲート"
+    "japanese": "ファントムゲート",
+    "english": "Phantom Forces",
+    "german": "Phantomkräfte"
   },
   "XY5a": {
-    "japanese": "ガイアボルケーノ"
+    "japanese": "ガイアボルケーノ",
+    "english": "Primal Clash",
+    "german": "Protoschock"
   },
   "XY5b": {
-    "japanese": "タイダルストーム"
+    "japanese": "タイダルストーム",
+    "english": "Primal Clash",
+    "german": "Protoschock"
   },
   "CP1": {
-    "japanese": "マグマ団VSアクア団 ダブルクライシス"
+    "japanese": "マグマ団VSアクア団 ダブルクライシス",
+    "english": "Double Crisis"
   },
   "XY6": {
-    "japanese": "エメラルドブレイク"
+    "japanese": "エメラルドブレイク",
+    "english": "Roaring Skies",
+    "german": "Drachenleuchten"
   },
   "XY7": {
-    "japanese": "バンデットリング"
+    "japanese": "バンデットリング",
+    "english": "Ancient Origins",
+    "german": "Ewiger Anfang"
   },
   "CP2": {
-    "japanese": "伝説キラコレクション"
+    "japanese": "伝説キラコレクション",
+    "english": "BREAKthrough",
+    "german": "TURBOstart"
   },
   "XY8a": {
-    "japanese": "青い衝撃"
+    "japanese": "青い衝撃",
+    "english": "BREAKthrough",
+    "german": "TURBOstart"
   },
   "XY8b": {
-    "japanese": "赤い閃光"
+    "japanese": "赤い閃光",
+    "english": "BREAKthrough",
+    "german": "TURBOstart"
   },
   "XY9": {
-    "japanese": "破天の怒り"
+    "japanese": "破天の怒り",
+    "english": "BREAKpoint",
+    "german": "TURBOfieber"
   },
   "CP3": {
-    "japanese": "ポケキュンコレクション"
+    "japanese": "ポケキュンコレクション",
+    "english": "Generations 's Radiant Collection",
+    "german": "Generationen"
   },
   "XY10": {
-    "japanese": "めざめる超王"
+    "japanese": "めざめる超王",
+    "english": "Fates Collide",
+    "german": "Schicksalsschmiede"
   },
   "CP4": {
     "japanese": "プレミアムチャンピオンパック EX×M×BREAK"
   },
   "XY11b": {
-    "japanese": "冷酷の反逆者"
+    "japanese": "冷酷の反逆者",
+    "english": "Steam Siege",
+    "german": "Dampfkessel"
   },
   "XY11a": {
-    "japanese": "爆熱の闘士"
+    "japanese": "爆熱の闘士",
+    "english": "Steam Siege",
+    "german": "Dampfkessel"
   },
   "CP5": {
-    "japanese": "冷酷の反逆者"
+    "japanese": "冷酷の反逆者",
+    "english": "Steam Siege",
+    "german": "Dampfkessel"
   },
   "CP6": {
     "japanese": "ポケットモンスターカードゲーム 拡張パック 20th Anniversary"
@@ -183,272 +275,438 @@
     "japanese": "コレクションムーン"
   },
   "SM1+": {
-    "japanese": "サン＆ムーン"
+    "japanese": "サン＆ムーン",
+    "english": "Guardians Rising",
+    "german": "Stunde der Wächter"
   },
   "SM2L": {
-    "japanese": "アローラの月光"
+    "japanese": "アローラの月光",
+    "english": "Guardians Rising",
+    "german": "Stunde der Wächter"
   },
   "SM2K": {
-    "japanese": "キミを待つ島々"
+    "japanese": "キミを待つ島々",
+    "english": "Guardians Rising",
+    "german": "Stunde der Wächter"
   },
   "sm2+": {
-    "japanese": "新たなる試練の向こう"
+    "japanese": "新たなる試練の向こう",
+    "english": "Burning Shadows",
+    "german": "Nacht in Flammen"
   },
   "SM3H": {
-    "japanese": "闘う虹を見たか"
+    "japanese": "闘う虹を見たか",
+    "english": "Burning Shadows",
+    "german": "Nacht in Flammen"
   },
   "SM3N": {
-    "japanese": "光を喰らう闇"
+    "japanese": "光を喰らう闇",
+    "english": "Burning Shadows",
+    "german": "Nacht in Flammen"
   },
   "SM3+": {
-    "japanese": "ひかる伝説"
+    "japanese": "ひかる伝説",
+    "english": "Shining Legends",
+    "german": "Schimmernde Legenden"
   },
   "SM4S": {
-    "japanese": "覚醒の勇者"
+    "japanese": "覚醒の勇者",
+    "english": "Crimson Invasion",
+    "german": "Aufziehen der Sturmröte"
   },
   "SM4A": {
-    "japanese": "超次元の暴獣"
+    "japanese": "超次元の暴獣",
+    "english": "Crimson Invasion",
+    "german": "Aufziehen der Sturmröte"
   },
   "SM4+": {
-    "japanese": "GXバトルブースト"
+    "japanese": "GXバトルブースト",
+    "english": "Ultra Prism",
+    "german": "Ultra-Prisma"
   },
   "SM5S": {
-    "japanese": "ウルトラサン"
+    "japanese": "ウルトラサン",
+    "english": "Ultra Prism",
+    "german": "Ultra-Prisma"
   },
   "SM5M": {
-    "japanese": "ウルトラムーン"
+    "japanese": "ウルトラムーン",
+    "english": "Ultra Prism",
+    "german": "Ultra-Prisma"
   },
   "SM5+": {
-    "japanese": "ウルトラフォース"
+    "japanese": "ウルトラフォース",
+    "english": "Forbidden Light",
+    "german": "Grauen der Lichtfinsternis"
   },
   "SM6": {
-    "japanese": "禁断の光"
+    "japanese": "禁断の光",
+    "english": "Forbidden Light",
+    "german": "Grauen der Lichtfinsternis"
   },
   "SM6a": {
-    "japanese": "ドラゴンストーム"
+    "japanese": "ドラゴンストーム",
+    "english": "Dragon Majesty",
+    "german": "Majestät der Drachen"
   },
   "SM6b": {
-    "japanese": "チャンピオンロード"
+    "japanese": "チャンピオンロード",
+    "english": "Celestial Storm",
+    "german": "Sturm am Firmament"
   },
   "SM7": {
-    "japanese": "裂空のカリスマ"
+    "japanese": "裂空のカリスマ",
+    "english": "Celestial Storm",
+    "german": "Sturm am Firmament"
   },
   "SM7b": {
-    "japanese": "フェアリーライズ"
+    "japanese": "フェアリーライズ",
+    "english": "Lost Thunder",
+    "german": "Echo des Donners"
   },
   "SM7a": {
-    "japanese": "迅雷スパーク"
+    "japanese": "迅雷スパーク",
+    "english": "Lost Thunder",
+    "german": "Echo des Donners"
   },
   "SM8": {
-    "japanese": "超爆インパクト"
+    "japanese": "超爆インパクト",
+    "english": "Lost Thunder",
+    "german": "Echo des Donners"
   },
   "SM8b": {
-    "japanese": "GXウルトラシャイニー"
+    "japanese": "GXウルトラシャイニー",
+    "english": "Hidden Fates's Shiny Vault",
+    "german": "Verborgenes Schicksal"
   },
   "SM8a": {
-    "japanese": "ダークオーダー"
+    "japanese": "ダークオーダー",
+    "english": "Team Up",
+    "german": "Teams sind Trumpf"
   },
   "SM9": {
-    "japanese": "タッグボルト"
+    "japanese": "タッグボルト",
+    "english": "Team Up",
+    "german": "Teams sind Trumpf"
   },
   "SM9a": {
-    "japanese": "ナイトユニゾン"
+    "japanese": "ナイトユニゾン",
+    "english": "Unbroken Bonds",
+    "german": "Kräfte im Einklang"
   },
   "SM9b": {
-    "japanese": "フルメタルウォール"
+    "japanese": "フルメタルウォール",
+    "english": "Unbroken Bonds",
+    "german": "Kräfte im Einklang"
   },
   "SM10": {
-    "japanese": "ダブルブレイズ"
+    "japanese": "ダブルブレイズ",
+    "english": "Unbroken Bonds",
+    "german": "Kräfte im Einklang"
   },
   "SM10a": {
-    "japanese": "ジージーエンド"
+    "japanese": "ジージーエンド",
+    "english": "Unified Minds",
+    "german": "Bund der Gleichgesinnten"
   },
   "SMP2": {
     "japanese": "名探偵ピカチュウ"
   },
   "SM10b": {
-    "japanese": "スカイレジェンド"
+    "japanese": "スカイレジェンド",
+    "english": "Hidden Fates and Unified Minds",
+    "german": "Bund der Gleichgesinnten"
   },
   "SM11": {
-    "japanese": "ミラクルツイン"
+    "japanese": "ミラクルツイン",
+    "english": "Unified Minds",
+    "german": "Bund der Gleichgesinnten"
   },
   "SM11a": {
-    "japanese": "リミックスバウト"
+    "japanese": "リミックスバウト",
+    "english": "Cosmic Eclipse",
+    "german": "Welten im Wandel"
   },
   "SM11b": {
-    "japanese": "ドリームリーグ"
+    "japanese": "ドリームリーグ",
+    "english": "Cosmic Eclipse",
+    "german": "Welten im Wandel"
   },
   "SM12": {
-    "japanese": "オルタージェネシス"
+    "japanese": "オルタージェネシス",
+    "english": "Cosmic Eclipse",
+    "german": "Welten im Wandel"
   },
   "SM12a": {
     "japanese": "TAG TEAM GX タッグオールスターズ"
   },
   "S1W": {
-    "japanese": "ソード"
+    "japanese": "ソード",
+    "english": "Sword & Shield",
+    "german": "Schwert & Schild"
   },
   "S1H": {
-    "japanese": "シールド"
+    "japanese": "シールド",
+    "english": "Sword & Shield",
+    "german": "Schwert & Schild"
   },
   "S1a": {
-    "japanese": "VMAXライジング"
+    "japanese": "VMAXライジング",
+    "english": "Rebel Clash",
+    "german": "Clash der Rebellen"
   },
   "S2": {
-    "japanese": "反逆クラッシュ"
+    "japanese": "反逆クラッシュ",
+    "english": "Rebel Clash",
+    "german": "Clash der Rebellen"
   },
   "S3": {
-    "japanese": "ムゲンゾーン"
+    "japanese": "ムゲンゾーン",
+    "english": "Darkness Ablaze",
+    "german": "Flammende Finsternis"
   },
   "S3a": {
-    "japanese": "伝説の鼓動"
+    "japanese": "伝説の鼓動",
+    "english": "Vivid Voltage",
+    "german": "Farbenschock"
   },
   "CS2b": {
-    "japanese": "トリプレットビート"
+    "japanese": "トリプレットビート",
+    "english": "Paldea Evolved",
+    "german": "Entwicklungen in Paldea"
   },
   "CS2.5": {
-    "japanese": "トリプレットビート"
+    "japanese": "トリプレットビート",
+    "english": "Paldea Evolved",
+    "german": "Entwicklungen in Paldea"
   },
   "CS4": {
-    "japanese": "トリプレットビート"
+    "japanese": "トリプレットビート",
+    "english": "Paldea Evolved",
+    "german": "Entwicklungen in Paldea"
   },
   "CS1.5": {
-    "japanese": "トリプレットビート"
+    "japanese": "トリプレットビート",
+    "english": "Paldea Evolved",
+    "german": "Entwicklungen in Paldea"
   },
   "CS3.5": {
-    "japanese": "トリプレットビート"
+    "japanese": "トリプレットビート",
+    "english": "Paldea Evolved",
+    "german": "Entwicklungen in Paldea"
   },
   "CS3b": {
-    "japanese": "トリプレットビート"
+    "japanese": "トリプレットビート",
+    "english": "Paldea Evolved",
+    "german": "Entwicklungen in Paldea"
   },
   "CS2a": {
-    "japanese": "トリプレットビート"
+    "japanese": "トリプレットビート",
+    "english": "Paldea Evolved",
+    "german": "Entwicklungen in Paldea"
   },
   "CS3a": {
-    "japanese": "トリプレットビート"
+    "japanese": "トリプレットビート",
+    "english": "Paldea Evolved",
+    "german": "Entwicklungen in Paldea"
   },
   "CS4a": {
-    "japanese": "トリプレットビート"
+    "japanese": "トリプレットビート",
+    "english": "Paldea Evolved",
+    "german": "Entwicklungen in Paldea"
   },
   "CS1a": {
-    "japanese": "トリプレットビート"
+    "japanese": "トリプレットビート",
+    "english": "Paldea Evolved",
+    "german": "Entwicklungen in Paldea"
   },
   "CS1b": {
-    "japanese": "トリプレットビート"
+    "japanese": "トリプレットビート",
+    "english": "Paldea Evolved",
+    "german": "Entwicklungen in Paldea"
   },
   "CS4b": {
-    "japanese": "トリプレットビート"
+    "japanese": "トリプレットビート",
+    "english": "Paldea Evolved",
+    "german": "Entwicklungen in Paldea"
   },
   "CSA": {
-    "japanese": "トリプレットビート"
+    "japanese": "トリプレットビート",
+    "english": "Paldea Evolved",
+    "german": "Entwicklungen in Paldea"
   },
   "CS3D": {
-    "japanese": "トリプレットビート"
+    "japanese": "トリプレットビート",
+    "english": "Paldea Evolved",
+    "german": "Entwicklungen in Paldea"
   },
   "CS4Da": {
-    "japanese": "トリプレットビート"
+    "japanese": "トリプレットビート",
+    "english": "Paldea Evolved",
+    "german": "Entwicklungen in Paldea"
   },
   "S5a": {
-    "japanese": "双璧のファイター"
+    "japanese": "双璧のファイター",
+    "english": "Chilling Reign",
+    "german": "Schaurige Herrschaft"
   },
   "S6K": {
-    "japanese": "漆黒のガイスト"
+    "japanese": "漆黒のガイスト",
+    "english": "Chilling Reign",
+    "german": "Schaurige Herrschaft"
   },
   "S8b": {
-    "japanese": "VMAXクライマックス"
+    "japanese": "VMAXクライマックス",
+    "english": "Brilliant Stars , Astral Radiance , Lost Origin , and Silver Tempest",
+    "german": "Strahlende Sterne"
   },
   "S4a": {
-    "japanese": "シャイニースターV"
+    "japanese": "シャイニースターV",
+    "english": "Shining Fates",
+    "german": "Glänzendes Schicksal"
   },
   "S10b": {
-    "japanese": "Pokémon GO"
+    "japanese": "Pokémon GO",
+    "english": "Pokémon GO"
   },
   "S10D": {
-    "japanese": "タイムゲイザー"
+    "japanese": "タイムゲイザー",
+    "english": "Astral Radiance",
+    "german": "Astralglanz"
   },
   "S12a": {
-    "japanese": "VSTARユニバース"
+    "japanese": "VSTARユニバース",
+    "english": "Crown Zenith",
+    "german": "Zenit der Könige"
   },
   "S9a": {
-    "japanese": "バトルリージョン"
+    "japanese": "バトルリージョン",
+    "english": "Astral Radiance and Lost Origin",
+    "german": "Astralglanz"
   },
   "S5I": {
-    "japanese": "一撃マスター"
+    "japanese": "一撃マスター",
+    "english": "Battle Styles",
+    "german": "Kampfstile"
   },
   "S10a": {
-    "japanese": "ダークファンタズマ"
+    "japanese": "ダークファンタズマ",
+    "english": "Lost Origin",
+    "german": "Verlorener Ursprung"
   },
   "S8a": {
     "japanese": "25th アニバーサリーコレクション"
   },
   "S6H": {
-    "japanese": "白銀のランス"
+    "japanese": "白銀のランス",
+    "english": "Chilling Reign",
+    "german": "Schaurige Herrschaft"
   },
   "S11": {
-    "japanese": "ロストアビス"
+    "japanese": "ロストアビス",
+    "english": "Lost Origin",
+    "german": "Verlorener Ursprung"
   },
   "S11a": {
-    "japanese": "白熱のアルカナ"
+    "japanese": "白熱のアルカナ",
+    "english": "Silver Tempest",
+    "german": "Silberne Sturmwinde"
   },
   "S7R": {
-    "japanese": "蒼空ストリーム"
+    "japanese": "蒼空ストリーム",
+    "english": "Evolving Skies",
+    "german": "Drachenwandel"
   },
   "S9": {
-    "japanese": "スターバース"
+    "japanese": "スターバース",
+    "english": "Brilliant Stars",
+    "german": "Strahlende Sterne"
   },
   "S5R": {
-    "japanese": "連撃マスター"
+    "japanese": "連撃マスター",
+    "english": "Battle Styles",
+    "german": "Kampfstile"
   },
   "S2a": {
-    "japanese": "爆炎ウォーカー"
+    "japanese": "爆炎ウォーカー",
+    "english": "Darkness Ablaze",
+    "german": "Flammende Finsternis"
   },
   "S7D": {
-    "japanese": "摩天パーフェクト"
+    "japanese": "摩天パーフェクト",
+    "english": "Evolving Skies",
+    "german": "Drachenwandel"
   },
   "S4": {
-    "japanese": "仰天のボルテッカー"
+    "japanese": "仰天のボルテッカー",
+    "english": "Vivid Voltage",
+    "german": "Farbenschock"
   },
   "S6a": {
-    "japanese": "イーブイヒーローズ"
+    "japanese": "イーブイヒーローズ",
+    "english": "Fusion Strike and Evolving Skies",
+    "german": "Drachenwandel"
   },
   "S8": {
-    "japanese": "フュージョンアーツ"
+    "japanese": "フュージョンアーツ",
+    "english": "Fusion Strike",
+    "german": "Fusionsangriff"
   },
   "S12": {
-    "japanese": "パラダイムトリガー"
+    "japanese": "パラダイムトリガー",
+    "english": "Silver Tempest",
+    "german": "Silberne Sturmwinde"
   },
   "S10P": {
-    "japanese": "スペースジャグラー"
+    "japanese": "スペースジャグラー",
+    "english": "Astral Radiance",
+    "german": "Astralglanz"
   },
   "SV1V": {
-    "japanese": "バイオレットex"
+    "japanese": "バイオレットex",
+    "english": "Scarlet & Violet",
+    "german": "Karmesin & Purpur"
   },
   "SV9": {
-    "japanese": "バトルパートナーズ"
+    "japanese": "バトルパートナーズ",
+    "english": "Journey Together",
+    "german": "Reisegefährten"
   },
   "SV11B": {
-    "japanese": "ブラックボルト"
+    "japanese": "ブラックボルト",
+    "english": "Black Bolt & White Flare"
   },
   "SV4M": {
-    "japanese": "未来の一閃"
+    "japanese": "未来の一閃",
+    "english": "Paradox Rift",
+    "german": "Paradoxrift"
   },
   "SV4a": {
-    "japanese": "レイジングサーフ"
+    "japanese": "レイジングサーフ",
+    "english": "Paradox Rift",
+    "german": "Paradoxrift"
   },
   "SV-P": {
     "japanese": "スカーレット&バイオレット プロモカード"
   },
   "SV6": {
-    "japanese": "変幻の仮面"
+    "japanese": "変幻の仮面",
+    "english": "Twilight Masquerade",
+    "german": "Maskerade im Zwielicht"
   },
   "SV3a": {
-    "japanese": "レイジングサーフ"
+    "japanese": "レイジングサーフ",
+    "english": "Paradox Rift",
+    "german": "Paradoxrift"
   },
   "SV6a": {
-    "japanese": "ナイトワンダラー"
+    "japanese": "ナイトワンダラー",
+    "english": "Shrouded Fable",
+    "german": "Nebel der Sagen"
   },
   "SV9a": {
     "japanese": "熱風のアリーナ",
-    "english": "Hot Wind Arena",
+    "english": "Destined Rivals",
     "german": "Ewige Rivalen"
   },
   "SV3": {
@@ -457,13 +715,19 @@
     "german": "Obsidianflammen"
   },
   "SV5a": {
-    "japanese": "クリムゾンヘイズ"
+    "japanese": "クリムゾンヘイズ",
+    "english": "Twilight Masquerade",
+    "german": "Maskerade im Zwielicht"
   },
   "SV8a": {
-    "japanese": "テラスタルフェスex"
+    "japanese": "テラスタルフェスex",
+    "english": "Prismatic Evolutions",
+    "german": "Prismatische Entwicklungen"
   },
   "SV1a": {
-    "japanese": "トリプレットビート"
+    "japanese": "トリプレットビート",
+    "english": "Paldea Evolved",
+    "german": "Entwicklungen in Paldea"
   },
   "SVLN": {
     "japanese": "スターターセット テラスタイプ：ステラ ニンフィアex"
@@ -475,75 +739,111 @@
     "japanese": "デッキビルドBOX ステラミラクル"
   },
   "SV2P": {
-    "japanese": "スノーハザード"
+    "japanese": "スノーハザード",
+    "english": "Paldea Evolved",
+    "german": "Entwicklungen in Paldea"
   },
   "SV7": {
-    "japanese": "ステラミラクル"
+    "japanese": "ステラミラクル",
+    "english": "Stellar Crown",
+    "german": "Stellarkrone"
   },
   "SV2a": {
     "japanese": "ポケモンカード151",
-    "english": "Pokémon Card 151",
-    "german": "151"
+    "english": "151"
   },
   "SV5M": {
-    "japanese": "サイバージャッジ"
+    "japanese": "サイバージャッジ",
+    "english": "Temporal Forces",
+    "german": "Gewalten der Zeit"
   },
   "SV10": {
-    "japanese": "ロケット団の栄光"
+    "japanese": "ロケット団の栄光",
+    "english": "Destined Rivals",
+    "german": "Ewige Rivalen"
   },
   "SV8": {
-    "japanese": "超電ブレイカー"
+    "japanese": "超電ブレイカー",
+    "english": "Surging Sparks",
+    "german": "Stürmische Funken"
   },
   "SV7a": {
-    "japanese": "楽園ドラゴーナ"
+    "japanese": "楽園ドラゴーナ",
+    "english": "Surging Sparks",
+    "german": "Stürmische Funken"
   },
   "SV1S": {
-    "japanese": "スカーレットex"
+    "japanese": "スカーレットex",
+    "english": "Scarlet & Violet",
+    "german": "Karmesin & Purpur"
   },
   "SV4K": {
-    "japanese": "古代の咆哮"
+    "japanese": "古代の咆哮",
+    "english": "Paradox Rift",
+    "german": "Paradoxrift"
   },
   "SV11W": {
-    "japanese": "ホワイトフレア"
+    "japanese": "ホワイトフレア",
+    "english": "Black Bolt & White Flare"
   },
   "SV2D": {
-    "japanese": "クレイバースト"
+    "japanese": "クレイバースト",
+    "english": "Paldea Evolved",
+    "german": "Entwicklungen in Paldea"
   },
   "SV5K": {
-    "japanese": "ワイルドフォース"
+    "japanese": "ワイルドフォース",
+    "english": "Temporal Forces",
+    "german": "Gewalten der Zeit"
   },
   "SM2p": {
-    "japanese": "新たなる試練の向こう"
+    "japanese": "新たなる試練の向こう",
+    "english": "Burning Shadows",
+    "german": "Nacht in Flammen"
   },
   "SM3p": {
-    "japanese": "ひかる伝説"
+    "japanese": "ひかる伝説",
+    "english": "Shining Legends",
+    "german": "Schimmernde Legenden"
   },
   "SM1p": {
-    "japanese": "サン＆ムーン"
+    "japanese": "サン＆ムーン",
+    "english": "Guardians Rising",
+    "german": "Stunde der Wächter"
   },
   "SM5p": {
-    "japanese": "ウルトラフォース"
+    "japanese": "ウルトラフォース",
+    "english": "Forbidden Light",
+    "german": "Grauen der Lichtfinsternis"
   },
   "SM4p": {
-    "japanese": "GXバトルブースト"
+    "japanese": "GXバトルブースト",
+    "english": "Ultra Prism",
+    "german": "Ultra-Prisma"
   },
   "M1L": {
     "japanese": "メガブレイブ",
+    "english": "Mega Evolution",
     "german": "Mega-Entwicklung"
   },
   "M2a": {
     "japanese": "MEGAドリームex",
+    "english": "Ascended Heroes",
     "german": "Erhabene Helden"
   },
   "M3": {
     "japanese": "ムニキスゼロ",
+    "english": "Perfect Order",
     "german": "Optimale Ordnung"
   },
   "M6": {
-    "japanese": "ストームエメラルダ"
+    "japanese": "ストームエメラルダ",
+    "english": "Delta Reign",
+    "german": "Delta-Herrschaft"
   },
   "M5": {
     "japanese": "アビスアイ",
+    "english": "Pitch Black",
     "german": "Dunkelnacht"
   },
   "MC": {
@@ -554,14 +854,808 @@
   },
   "M2": {
     "japanese": "インフェルノX",
+    "english": "Phantasmal Flames",
     "german": "Fatale Flammen"
   },
   "M1S": {
     "japanese": "メガシンフォニア",
+    "english": "Mega Evolution",
     "german": "Mega-Entwicklung"
   },
   "M4": {
     "japanese": "ニンジャスピナー",
+    "english": "Chaos Rising",
     "german": "Wachsendes Chaos"
+  },
+  "miscp": {
+    "english": "Miscellaneous Promos"
+  },
+  "base1": {
+    "english": "Base Set",
+    "german": "Grundset"
+  },
+  "base2": {
+    "english": "Jungle",
+    "german": "Dschungel"
+  },
+  "basep": {
+    "english": "Wizards Black Star Promos",
+    "german": "Wizards Black Star Promos"
+  },
+  "wp": {
+    "english": "W Promotional"
+  },
+  "base3": {
+    "english": "Fossil",
+    "german": "Fossil"
+  },
+  "jumbo": {
+    "english": "Jumbo cards"
+  },
+  "base4": {
+    "english": "Base Set 2"
+  },
+  "base5": {
+    "english": "Team Rocket",
+    "german": "Team Rocket"
+  },
+  "gym1": {
+    "english": "Gym Heroes"
+  },
+  "gym2": {
+    "english": "Gym Challenge"
+  },
+  "si1": {
+    "english": "Southern Islands"
+  },
+  "lc": {
+    "english": "Legendary Collection"
+  },
+  "sp": {
+    "english": "Sample"
+  },
+  "ecard1": {
+    "english": "Expedition Base Set",
+    "german": "Expedition"
+  },
+  "bog": {
+    "english": "Best of game"
+  },
+  "ecard2": {
+    "english": "Aquapolis",
+    "german": "Aquapolis"
+  },
+  "ecard3": {
+    "english": "Skyridge",
+    "german": "Skyridge"
+  },
+  "ex1": {
+    "english": "Ruby & Sapphire",
+    "german": "EX Rubin & Saphir"
+  },
+  "ex2": {
+    "english": "Sandstorm",
+    "german": "EX Sandsturm"
+  },
+  "np": {
+    "english": "Nintendo Black Star Promos"
+  },
+  "ex3": {
+    "english": "Dragon",
+    "german": "EX Drache"
+  },
+  "ex4": {
+    "english": "Team Magma vs Team Aqua",
+    "german": "EX Team Magma vs Team Aqua"
+  },
+  "ex5": {
+    "english": "Hidden Legends"
+  },
+  "ex5.5": {
+    "english": "Poké Card Creator Pack"
+  },
+  "tk-ex-latia": {
+    "english": "EX trainer Kit (Latias)"
+  },
+  "tk-ex-latio": {
+    "english": "EX trainer Kit (Latios)"
+  },
+  "pop1": {
+    "english": "POP Series 1"
+  },
+  "ex6": {
+    "english": "FireRed & LeafGreen",
+    "german": "EX Feuerrot & Blattgrün"
+  },
+  "ex7": {
+    "english": "Team Rocket Returns"
+  },
+  "ex8": {
+    "english": "Deoxys",
+    "german": "EX Deoxys"
+  },
+  "ex9": {
+    "english": "Emerald",
+    "german": "EX Smaragd"
+  },
+  "pop2": {
+    "english": "POP Series 2"
+  },
+  "ex10": {
+    "english": "Unseen Forces",
+    "german": "EX Verborgene Mächte"
+  },
+  "exu": {
+    "english": "Unseen Forces Unown Collection",
+    "german": "EX Verborgene Mächte Icognito"
+  },
+  "ex11": {
+    "english": "Delta Species",
+    "german": "EX Delta Species"
+  },
+  "ex12": {
+    "english": "Legend Maker",
+    "german": "EX Legend Maker"
+  },
+  "tk-ex-m": {
+    "english": "EX trainer Kit 2 (Minun)"
+  },
+  "tk-ex-p": {
+    "english": "EX trainer Kit 2 (Plusle)"
+  },
+  "pop3": {
+    "english": "POP Series 3"
+  },
+  "ex13": {
+    "english": "Holon Phantoms",
+    "german": "EX Holon Phantoms"
+  },
+  "pop4": {
+    "english": "POP Series 4"
+  },
+  "ex14": {
+    "english": "Crystal Guardians",
+    "german": "EX Crystal Guardians"
+  },
+  "ex15": {
+    "english": "Dragon Frontiers",
+    "german": "EX Dragon Frontiers"
+  },
+  "ex16": {
+    "english": "Power Keepers",
+    "german": "EX Power Keepers"
+  },
+  "pop5": {
+    "english": "POP Series 5"
+  },
+  "dpp": {
+    "english": "DP Black Star Promos",
+    "german": "Promo DP"
+  },
+  "dp1": {
+    "english": "Diamond & Pearl",
+    "german": "Diamant & Perl"
+  },
+  "dp2": {
+    "english": "Mysterious Treasures",
+    "german": "Geheimnisvolle Schätze"
+  },
+  "pop6": {
+    "english": "POP Series 6"
+  },
+  "tk-dp-l": {
+    "english": "DP trainer Kit (Lucario)"
+  },
+  "tk-dp-m": {
+    "english": "DP trainer Kit (Manaphy)"
+  },
+  "dp3": {
+    "english": "Secret Wonders",
+    "german": "Rätselhafte Wunder"
+  },
+  "dp4": {
+    "english": "Great Encounters",
+    "german": "Epische Begegnungen"
+  },
+  "pop7": {
+    "english": "POP Series 7"
+  },
+  "dp5": {
+    "english": "Majestic Dawn",
+    "german": "Majestätischer Morgen"
+  },
+  "dp6": {
+    "english": "Legends Awakened",
+    "german": "Erwachte Legenden"
+  },
+  "pop8": {
+    "english": "POP Series 8"
+  },
+  "dp7": {
+    "english": "Stormfront",
+    "german": "Sturmtief"
+  },
+  "pl1": {
+    "english": "Platinum",
+    "german": "Platin"
+  },
+  "pop9": {
+    "english": "POP Series 9"
+  },
+  "pl2": {
+    "english": "Rising Rivals",
+    "german": "Aufstieg der Rivalen"
+  },
+  "pl3": {
+    "english": "Supreme Victors",
+    "german": "Ultimative Sieger"
+  },
+  "pl4": {
+    "english": "Arceus",
+    "german": "Arceus"
+  },
+  "ru1": {
+    "english": "Pokémon Rumble"
+  },
+  "hgss1": {
+    "english": "HeartGold SoulSilver",
+    "german": "HeartGold SoulSilver"
+  },
+  "hgssp": {
+    "english": "HGSS Black Star Promos",
+    "german": "Promo HGSS"
+  },
+  "tk-hs-r": {
+    "english": "HS trainer Kit (Raichu)"
+  },
+  "tk-hs-g": {
+    "english": "HS trainer Kit (Gyarados)"
+  },
+  "hgss2": {
+    "english": "Unleashed",
+    "german": "Entfesselt"
+  },
+  "hgss3": {
+    "english": "Undaunted",
+    "german": "Unerschrocken"
+  },
+  "hgss4": {
+    "english": "Triumphant",
+    "german": "Triumph"
+  },
+  "col1": {
+    "english": "Call of Legends",
+    "german": "Ruf der Legenden"
+  },
+  "bw1": {
+    "english": "Black & White",
+    "german": "Schwarz & Weiß"
+  },
+  "bwp": {
+    "english": "BW Black Star Promos",
+    "german": "SW Promokarten"
+  },
+  "2011bw": {
+    "english": "McDonald's Collection 2011"
+  },
+  "bw2": {
+    "english": "Emerging Powers",
+    "german": "Aufstreben der Mächtigen"
+  },
+  "tk-bw-e": {
+    "english": "BW trainer Kit (Excadrill)"
+  },
+  "tk-bw-z": {
+    "english": "BW trainer Kit (Zoroark)"
+  },
+  "bw3": {
+    "english": "Noble Victories",
+    "german": "Königliche Siege"
+  },
+  "bw4": {
+    "english": "Next Destinies",
+    "german": "Kommende Schicksale"
+  },
+  "bw5": {
+    "english": "Dark Explorers",
+    "german": "Erforscher der Finsternis"
+  },
+  "2012bw": {
+    "english": "McDonald's Collection 2012"
+  },
+  "bw6": {
+    "english": "Dragons Exalted",
+    "german": "Hoheit der Drachen"
+  },
+  "dv1": {
+    "english": "Dragon Vault",
+    "german": "Drachengruft"
+  },
+  "bw7": {
+    "english": "Boundaries Crossed",
+    "german": "Überschrittene Schwellen"
+  },
+  "bw8": {
+    "english": "Plasma Storm",
+    "german": "Plasma-Sturm"
+  },
+  "bw9": {
+    "english": "Plasma Freeze",
+    "german": "Plasma-Frost"
+  },
+  "bw10": {
+    "english": "Plasma Blast",
+    "german": "Plasma-Blaster"
+  },
+  "xyp": {
+    "english": "XY Black Star Promos",
+    "german": "XY Promokarten"
+  },
+  "rc": {
+    "english": "Radiant Collection"
+  },
+  "bw11": {
+    "english": "Legendary Treasures"
+  },
+  "xy0": {
+    "english": "Kalos Starter Set",
+    "german": "Willkommen in Kalos"
+  },
+  "xy1": {
+    "english": "XY",
+    "german": "XY"
+  },
+  "xya": {
+    "english": "Yellow A Alternate",
+    "german": "Gelbes-A-Alternativkarten"
+  },
+  "tk-xy-n": {
+    "english": "XY trainer Kit (Noivern)"
+  },
+  "tk-xy-sy": {
+    "english": "XY trainer Kit (Sylveon)"
+  },
+  "xy2": {
+    "english": "Flashfire",
+    "german": "Flammenmeer"
+  },
+  "2014xy": {
+    "english": "McDonald's Collection 2014"
+  },
+  "xy3": {
+    "english": "Furious Fists",
+    "german": "Fliegende Fäuste"
+  },
+  "tk-xy-b": {
+    "english": "XY trainer Kit (Bisharp)"
+  },
+  "tk-xy-w": {
+    "english": "XY trainer Kit (Wigglytuff)"
+  },
+  "xy4": {
+    "english": "Phantom Forces",
+    "german": "Phantomkräfte"
+  },
+  "xy5": {
+    "english": "Primal Clash",
+    "german": "Protoshock"
+  },
+  "dc1": {
+    "english": "Double Crisis"
+  },
+  "tk-xy-latio": {
+    "english": "XY trainer Kit (Latios)"
+  },
+  "tk-xy-latia": {
+    "english": "XY trainer Kit (Latias)"
+  },
+  "xy6": {
+    "english": "Roaring Skies",
+    "german": "Drachenleuchten"
+  },
+  "xy7": {
+    "english": "Ancient Origins",
+    "german": "Ewiger Anfang"
+  },
+  "xy8": {
+    "english": "BREAKthrough",
+    "german": "TURBOstart"
+  },
+  "2015xy": {
+    "english": "McDonald's Collection 2015"
+  },
+  "xy9": {
+    "english": "BREAKpoint",
+    "german": "TURBOfieber"
+  },
+  "g1": {
+    "english": "Generations",
+    "german": "Generationen"
+  },
+  "tk-xy-p": {
+    "english": "XY trainer Kit (Pikachu Libre)"
+  },
+  "tk-xy-su": {
+    "english": "XY trainer Kit (Suicune)"
+  },
+  "xy10": {
+    "english": "Fates Collide",
+    "german": "Schicksalsschmiede"
+  },
+  "xy11": {
+    "english": "Steam Siege",
+    "german": "Dampfkessel"
+  },
+  "2016xy": {
+    "english": "McDonald's Collection 2016"
+  },
+  "xy12": {
+    "english": "Evolutions",
+    "german": "Evolution"
+  },
+  "sm1": {
+    "english": "Sun & Moon",
+    "german": "Sonne & Mond"
+  },
+  "smp": {
+    "english": "SM Black Star Promos",
+    "german": "SM Promokarten"
+  },
+  "tk-sm-r": {
+    "english": "SM trainer Kit (Alolan Raichu)"
+  },
+  "tk-sm-l": {
+    "english": "SM trainer Kit (Lycanroc)"
+  },
+  "sm2": {
+    "english": "Guardians Rising",
+    "german": "Stunde der Wächter"
+  },
+  "2017sm": {
+    "english": "McDonald's Collection 2017"
+  },
+  "sm3": {
+    "english": "Burning Shadows",
+    "german": "Nacht in Flammen"
+  },
+  "sm3.5": {
+    "english": "Shining Legends",
+    "german": "Schimmernde Legenden"
+  },
+  "sm4": {
+    "english": "Crimson Invasion",
+    "german": "Aufziehen der Sturmröte"
+  },
+  "sm5": {
+    "english": "Ultra Prism",
+    "german": "Ultra-Prisma"
+  },
+  "sm6": {
+    "english": "Forbidden Light",
+    "german": "Grauen Der Lichtfinsternis"
+  },
+  "sm7": {
+    "english": "Celestial Storm",
+    "german": "Sturm Am Firmament"
+  },
+  "sm7.5": {
+    "english": "Dragon Majesty",
+    "german": "Majestät Der Drachen"
+  },
+  "2018sm": {
+    "english": "McDonald's Collection 2018"
+  },
+  "sm8": {
+    "english": "Lost Thunder",
+    "german": "Echo des Donners"
+  },
+  "sm9": {
+    "english": "Team Up",
+    "german": "Teams Sind Trumpf"
+  },
+  "det1": {
+    "english": "Detective Pikachu",
+    "german": "Meisterdetektiv Pikachu"
+  },
+  "sm10": {
+    "english": "Unbroken Bonds",
+    "german": "Kräfte im Einklang"
+  },
+  "sm11": {
+    "english": "Unified Minds",
+    "german": "Bund der Gleichgesinnten"
+  },
+  "sma": {
+    "english": "Hidden Fates Shiny Vault",
+    "german": "Verborgenes Schicksal Glitzer-Tresor"
+  },
+  "sm115": {
+    "english": "Hidden Fates",
+    "german": "Verborgenes Schicksal"
+  },
+  "2019sm": {
+    "english": "McDonald's Collection 2019"
+  },
+  "sm12": {
+    "english": "Cosmic Eclipse",
+    "german": "Welten im Wandel"
+  },
+  "swshp": {
+    "english": "SWSH Black Star Promos",
+    "german": "SCSC Promokarten"
+  },
+  "swsh1": {
+    "english": "Sword & Shield",
+    "german": "Schwert & Schild"
+  },
+  "swsh2": {
+    "english": "Rebel Clash",
+    "german": "Clash der Rebellen"
+  },
+  "swsh3": {
+    "english": "Darkness Ablaze",
+    "german": "Flammende Finsternis"
+  },
+  "fut2020": {
+    "english": "Pokémon Futsal 2020"
+  },
+  "swsh3.5": {
+    "english": "Champion's Path",
+    "german": "Weg des Champs"
+  },
+  "swsh4": {
+    "english": "Vivid Voltage",
+    "german": "Farbenschock"
+  },
+  "2021swsh": {
+    "english": "McDonald's Collection 2021"
+  },
+  "swsh4.5": {
+    "english": "Shining Fates",
+    "german": "Glänzendes Schicksal"
+  },
+  "swsh4.5sv": {
+    "english": "Shining Fates Shiny Vault",
+    "german": "Glänzendes Schicksal Glitzer-Tresor"
+  },
+  "swsh5": {
+    "english": "Battle Styles",
+    "german": "Kampfstile"
+  },
+  "swsh6": {
+    "english": "Chilling Reign",
+    "german": "Schaurige Herrschaft"
+  },
+  "swsh7": {
+    "english": "Evolving Skies",
+    "german": "Drachenwandel"
+  },
+  "cel25cc": {
+    "english": "Celebrations Classic Collection",
+    "german": "Celebrations Klassische Kollektion"
+  },
+  "cel25": {
+    "english": "Celebrations",
+    "german": "Celebrations"
+  },
+  "swsh8": {
+    "english": "Fusion Strike",
+    "german": "Fusionsangriff"
+  },
+  "swsh9tg": {
+    "english": "Brilliant Stars Trainer Gallery",
+    "german": "Strahlende Sterne Trainer-Galerie"
+  },
+  "swsh9": {
+    "english": "Brilliant Stars",
+    "german": "Strahlende Sterne"
+  },
+  "swsh10": {
+    "english": "Astral Radiance",
+    "german": "Astralglanz"
+  },
+  "swsh10tg": {
+    "english": "Astral Radiance Trainer Gallery",
+    "german": "Astralglanz Trainer-Galerie"
+  },
+  "swsh10.5": {
+    "english": "Pokémon GO",
+    "german": "Pokémon GO"
+  },
+  "2022swsh": {
+    "english": "McDonald's Collection 2022"
+  },
+  "swsh11": {
+    "english": "Lost Origin",
+    "german": "Verlorener Ursprung"
+  },
+  "swsh11tg": {
+    "english": "Lost Origin Trainer Gallery",
+    "german": "Verlorener Ursprung Trainer-Galerie"
+  },
+  "swsh12": {
+    "english": "Silver Tempest",
+    "german": "Silberne Sturmwinde"
+  },
+  "swsh12tg": {
+    "english": "Silver Tempest Trainer Gallery",
+    "german": "Silberne Sturmwinde Trainer-Galerie"
+  },
+  "swsh12.5": {
+    "english": "Crown Zenith",
+    "german": "Zenit der Könige"
+  },
+  "swsh12.5gg": {
+    "english": "Crown Zenith Galarian Gallery",
+    "german": "Zenit der Könige Galar-Galerie"
+  },
+  "sv01": {
+    "english": "Scarlet & Violet",
+    "german": "Karmesin & Purpur"
+  },
+  "sve": {
+    "english": "Scarlet & Violet Energy",
+    "german": "Karmesin & Purpur Energie"
+  },
+  "svp": {
+    "english": "SVP Black Star Promos",
+    "german": "SVP Black Star Promos"
+  },
+  "sv02": {
+    "english": "Paldea Evolved",
+    "german": "Entwicklungen in Paldea"
+  },
+  "2023sv": {
+    "english": "McDonald's Collection 2023"
+  },
+  "sv03": {
+    "english": "Obsidian Flames",
+    "german": "Obsidian Flammen"
+  },
+  "sv03.5": {
+    "english": "151",
+    "german": "151"
+  },
+  "mfb": {
+    "english": "My First Battle"
+  },
+  "sv04": {
+    "english": "Paradox Rift",
+    "german": "Paradoxrift"
+  },
+  "sv04.5": {
+    "english": "Paldean Fates",
+    "german": "Paldeas Schicksale"
+  },
+  "sv05": {
+    "english": "Temporal Forces",
+    "german": "Gewalten der Zeit"
+  },
+  "sv06": {
+    "english": "Twilight Masquerade",
+    "german": "Maskerade im Zwielicht"
+  },
+  "sv06.5": {
+    "english": "Shrouded Fable",
+    "german": "Nebel der Sagen"
+  },
+  "sv07": {
+    "english": "Stellar Crown",
+    "german": "Stellarkrone"
+  },
+  "P-A": {
+    "english": "Promos-A",
+    "german": "PROMO-A"
+  },
+  "A1": {
+    "english": "Genetic Apex",
+    "german": "Unschlagbare Gene"
+  },
+  "sv08": {
+    "english": "Surging Sparks",
+    "german": "Stürmische Funken"
+  },
+  "2024sv": {
+    "english": "McDonald's Collection 2024"
+  },
+  "A1a": {
+    "english": "Mythical Island",
+    "german": "Mysteriöse Insel"
+  },
+  "sv08.5": {
+    "english": "Prismatic Evolutions",
+    "german": "Prismatische Entwicklungen"
+  },
+  "A2": {
+    "english": "Space-Time Smackdown",
+    "german": "Kollision von Raum und Zeit"
+  },
+  "A2a": {
+    "english": "Triumphant Light",
+    "german": "Licht des Triumphs"
+  },
+  "A2b": {
+    "english": "Shining Revelry",
+    "german": "Glänzendes Festival"
+  },
+  "sv09": {
+    "english": "Journey Together",
+    "german": "Reisegefährten"
+  },
+  "A3": {
+    "english": "Celestial Guardians",
+    "german": "Hüter des Firmaments"
+  },
+  "A3a": {
+    "english": "Extradimensional Crisis"
+  },
+  "sv10": {
+    "english": "Destined Rivals",
+    "german": "Ewige Rivalen"
+  },
+  "A3b": {
+    "english": "Eevee Grove"
+  },
+  "sv10.5b": {
+    "english": "Black Bolt",
+    "german": "Schwarze Blitze"
+  },
+  "sv10.5w": {
+    "english": "White Flare",
+    "german": "Weiße Flammen"
+  },
+  "A4": {
+    "english": "Wisdom of Sea and Sky"
+  },
+  "A4a": {
+    "english": "Secluded Springs",
+    "german": "Verborgene Quelle"
+  },
+  "mee": {
+    "english": "Mega Evolution Energy",
+    "german": "Mega-Entwicklung Energie"
+  },
+  "me01": {
+    "english": "Mega Evolution",
+    "german": "Mega-Entwicklung"
+  },
+  "mep": {
+    "english": "MEP Black Star Promos",
+    "german": "MEP Black Star Promos"
+  },
+  "B1": {
+    "english": "Mega Rising"
+  },
+  "me02": {
+    "english": "Phantasmal Flames",
+    "german": "Fatale Flammen"
+  },
+  "B1a": {
+    "english": "Crimson Blaze",
+    "german": "Feuerrote Flammen"
+  },
+  "B2": {
+    "english": "Fantastical Parade",
+    "german": "Traumhafte Parade"
+  },
+  "me02.5": {
+    "english": "Ascended Heroes",
+    "german": "Erhabene Helden"
+  },
+  "B2a": {
+    "english": "Paldean Wonders",
+    "german": "Paldean Wonders"
+  },
+  "me03": {
+    "english": "Perfect Order",
+    "german": "Optimale Ordnung"
+  },
+  "me04": {
+    "english": "Chaos Rising",
+    "german": "Wachsendes Chaos"
+  },
+  "me05": {
+    "english": "Pitch Black",
+    "german": "Dunkelnacht"
   }
 }
