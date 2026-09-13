@@ -2729,6 +2729,22 @@ if (photosInput) {
 }
 
 
+if (photosInput) {
+
+  photosInput.addEventListener(
+    "change",
+    () => {
+
+      addPhotos(photosInput.files);
+
+      photosInput.value = "";
+
+    }
+  );
+
+}
+
+
 
 
 
