@@ -2043,9 +2043,20 @@ function renderAllListingsPreview() {
 
       const titleParts = [
         displayName,
-        cardNumber,
-        displaySetName
+        cardNumber
       ].filter(Boolean);
+
+      if (card.language === "ja" && card.setId) {
+        titleParts.push(card.setId);
+      }
+
+      if (displaySetName) {
+        titleParts.push(
+          card.language === "ja" && card.englishSetName
+            ? `${card.setName} (${card.englishSetName})`
+            : displaySetName
+        );
+      }
 
       if (card.language === "ja") {
         titleParts.push("- Japanisch");
