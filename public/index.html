@@ -1725,12 +1725,14 @@ let selectedCard = null;
          * wir als nächsten Schritt mit dem
          * EbayTitleService.
          */
+        const names = [
+          selectedCard.germanName,
+          selectedCard.englishName
+        ].filter(Boolean);
+
         const displayName =
           selectedCard.language === "ja"
-            ? [
-                selectedCard.germanName,
-                selectedCard.englishName
-              ].filter(Boolean).join(" ") ||
+            ? [...new Set(names)].join(" ") ||
               selectedCard.name
             : selectedCard.name;
 
@@ -1738,19 +1740,86 @@ let selectedCard = null;
           ? `${selectedCard.number}/${selectedCard.setCardTotal}`
           : selectedCard.number;
 
+        const displaySetName =
+          selectedCard.language === "ja" &&
+          selectedCard.setId &&
+          selectedCard.setName &&
+          selectedCard.englishSetName
+            ? `${selectedCard.setId} ${selectedCard.setName} (${selectedCard.englishSetName})`
+            : selectedCard.language === "ja" &&
+              selectedCard.setId
+              ? `${selectedCard.setId} ${selectedCard.setName || ""}`.trim()
+              : selectedCard.setName || selectedCard.setId;
+
+        const conditionAbbreviations = {
+          "mint": "M",
+          "near-mint": "NM",
+          "excellent": "EX",
+          "good": "GD",
+          "light-played": "LP",
+          "played": "PL",
+          "poor": "POOR"
+        };
+
+        const variantAbbreviations = {
+          "holo": "Holo",
+          "reverse-holo": "RH",
+          "pokeball": "PB",
+          "masterball": "MB",
+          "ex": "EX",
+          "gx": "GX",
+          "v": "V",
+          "vmax": "VMAX",
+          "vstar": "VSTAR",
+          "full-art": "FA",
+          "illustration-rare": "IR",
+          "special-illustration-rare": "SIR",
+          "ultra-rare": "UR",
+          "hyper-rare": "HR",
+          "secret-rare": "SR",
+          "promo": "Promo",
+          "other": "Other"
+        };
+
         const titleParts = [
           displayName,
           cardNumber,
-          selectedCard.setName || selectedCard.setId
+          displaySetName
         ].filter(Boolean);
 
         if (
-          variant &&
-          variant.toLowerCase() !== "normal"
+          selectedCard.language === "ja"
         ) {
-          titleParts.push(
-            `- ${variant === "holo" ? "Holo" : variant}`
-          );
+          titleParts.push("- Japanisch");
+        }
+
+        const variantText =
+          variantAbbreviations[
+            String(variant || "").toLowerCase()
+          ];
+
+        if (
+          variantText &&
+          String(variant || "").toLowerCase() !== "normal"
+        ) {
+          titleParts.push(`- ${variantText}`);
+        }
+
+        const conditionElement =
+          document.getElementById("condition");
+
+        const condition =
+          conditionElement
+            ? conditionElement.value
+            : "";
+
+        const conditionText =
+          conditionAbbreviations[
+            condition
+          ];
+
+        if (conditionText) {
+          titleParts.push(conditionText);
         }
 
         const title =
@@ -1948,12 +2017,14 @@ function renderAllListingsPreview() {
           : "";
 
 
+      const cardNames = [
+        card.germanName,
+        card.englishName
+      ].filter(Boolean);
+
       const displayName =
         card.language === "ja"
-          ? [
-              card.germanName,
-              card.englishName
-            ].filter(Boolean).join(" ")
+          ? [...new Set(cardNames)].join(" ") || card.name
           : card.name;
 
       const cardNumber = card.setCardTotal
@@ -1980,13 +2051,55 @@ function renderAllListingsPreview() {
         titleParts.push("- Japanisch");
       }
 
+      const variantAbbreviations = {
+        "holo": "Holo",
+        "reverse-holo": "RH",
+        "pokeball": "PB",
+        "masterball": "MB",
+        "ex": "EX",
+        "gx": "GX",
+        "v": "V",
+        "vmax": "VMAX",
+        "vstar": "VSTAR",
+        "full-art": "FA",
+        "illustration-rare": "IR",
+        "special-illustration-rare": "SIR",
+        "ultra-rare": "UR",
+        "hyper-rare": "HR",
+        "secret-rare": "SR",
+        "promo": "Promo",
+        "other": "Other"
+      };
+
+      const conditionAbbreviations = {
+        "mint": "M",
+        "near-mint": "NM",
+        "excellent": "EX",
+        "good": "GD",
+        "light-played": "LP",
+        "played": "PL",
+        "poor": "POOR"
+      };
+
+      const variantText =
+        variantAbbreviations[
+          String(variantValue || "").toLowerCase()
+        ];
+
       if (
-        variantValue &&
-        variantValue.toLowerCase() !== "normal"
+        variantText &&
+        String(variantValue || "").toLowerCase() !== "normal"
       ) {
-        titleParts.push(
-          `- ${variantValue === "holo" ? "Holo" : variantValue}`
-        );
+        titleParts.push(`- ${variantText}`);
+      }
+
+      const conditionText =
+        conditionAbbreviations[
+          String(conditionValue || "").toLowerCase()
+        ];
+
+      if (conditionText) {
+        titleParts.push(conditionText);
       }
 
       const title =
