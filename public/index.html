@@ -1962,10 +1962,13 @@ function renderAllListingsPreview() {
 
       const displaySetName =
         card.language === "ja" &&
+        card.setId &&
         card.setName &&
         card.englishSetName
-          ? `${card.setName} (${card.englishSetName})`
-          : card.setName || card.setId;
+          ? `${card.setId} ${card.setName} (${card.englishSetName})`
+          : card.language === "ja" && card.setId
+            ? `${card.setId} ${card.setName || ""}`.trim()
+            : card.setName || card.setId;
 
       const titleParts = [
         displayName,
@@ -4224,6 +4227,53 @@ document
               selectedCards.length -
               successCount
             }`
+          );
+
+          const resetButton =
+            document.createElement("button");
+
+          resetButton.type = "button";
+          resetButton.textContent = "↻ Neue Karte";
+          resetButton.className = "green-button";
+          resetButton.style.marginTop = "15px";
+
+          resetButton.addEventListener(
+            "click",
+            () => {
+
+              selectedCards.length = 0;
+              selectedCard = null;
+
+              Object.keys(cardPhotos).forEach(
+                key => delete cardPhotos[key]
+              );
+
+              searchForm.reset();
+
+              searchResults.innerHTML = "";
+              searchResults.classList.add("hidden");
+
+              result.classList.add("hidden");
+              preview.classList.add("hidden");
+              listingFormContainer.classList.add("hidden");
+
+              message.textContent =
+                "Bereit für die nächste Karte.";
+              message.className = "success";
+
+              renderCardList();
+
+              resetButton.remove();
+
+              document
+                .getElementById("name")
+                ?.focus();
+
+            }
+          );
+
+          message.parentElement?.appendChild(
+            resetButton
           );
 
           return;
