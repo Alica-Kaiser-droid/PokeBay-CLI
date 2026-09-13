@@ -1808,14 +1808,14 @@ let selectedCard = null;
         const conditionElement =
           document.getElementById("condition");
 
-        const condition =
+        const titleCondition =
           conditionElement
             ? conditionElement.value
             : "";
 
         const conditionText =
           conditionAbbreviations[
-            condition
+            titleCondition
           ];
 
         if (conditionText) {
